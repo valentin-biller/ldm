@@ -4,4 +4,36 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "matplotlib",
+    "monai[all]",
+    "torch",
+    "tqdm",
+    "monai-generative",
+    "lpips>=0.1.4",
+    "nibabel>=5.3.2",
+    "torchsummary>=1.5.1",
+    "mlflow>=3.1.0",
+    "pytorch-lightning>=2.5.2",
+    "loguru>=0.7.3",
+    "ants>=0.0.7",
+    "brainles-preprocessing>=0.4.0",
+    "itk-elastix>=0.23.0",
+    "numpy>=1.26.4",
+    "brats>=0.0.20",
+    "omegaconf>=2.3.0",
+]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu128", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu128", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+monai-generative = { git = "https://github.com/Project-MONAI/GenerativeModels.git" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

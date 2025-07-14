@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH --job-name=vb-master
+#SBATCH --output=/vol/miltank/users/bilv/ldm/slurm/%x-%A.out
+#SBATCH --error=/vol/miltank/users/bilv/ldm/slurm/%x-%A.err
+#SBATCH --mail-user=valentin.biller@tum.de
+#SBATCH --mail-type=ALL
+#SBATCH --partition=universe,asteroids
+#SBATCH --qos=master
+#SBATCH --time=0-168:00:00
+#SBATCH --gres=gpu:0,gpumem:0G
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=128G
+
+cd /vol/miltank/users/bilv/ldm
+uv run python -c "
+from inference_diffusion import generate_conditioning
+generate_conditioning()
+"
