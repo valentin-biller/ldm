@@ -1,6 +1,10 @@
 import sys
-sys.path.append('/vol/miltank/users/bilv/ldm/maisi')
-sys.path.append('/vol/miltank/users/bilv/gbm_bench')
+from pathlib import Path
+dir_current = Path(__file__).resolve().parent
+path_maisi = dir_current.parent / 'maisi'
+path_gbm_bench = dir_current.parent / 'gbm_bench'
+sys.path.append(str(path_maisi))
+sys.path.append(str(path_gbm_bench))
 
 import numpy as np
 if not hasattr(np, 'bool'):
@@ -20,7 +24,7 @@ import nibabel as nib
 from pathlib import Path
 
 from monai import transforms
-from generative.networks.schedulers import DDIMScheduler
+from generative.networks.schedulers import DDIMScheduler, DDPMScheduler
 
 from .data import create_conditioning
 from .maisi_autoencoder import MaisiAutoencoder
@@ -38,9 +42,10 @@ class LatentDiffusion(pl.LightningModule):
         self,
         path_autoencoder=None,
         dir_output_model=None,
+        small_model=False,
         learning_rate=1e-4,
         num_train_timesteps=1000,
-        num_inference_steps=50,
+        num_inference_steps=100,
         beta_start=0.0001,
         beta_end=0.02,
         **kwargs
@@ -50,37 +55,70 @@ class LatentDiffusion(pl.LightningModule):
         
         self.path_autoencoder = path_autoencoder
         self.dir_output_model = dir_output_model
+        self.small_model = small_model
         
-        small_num_channels = (64, 128, 256)
-        small_num_head_channels = (0, 128, 256)
+        small_num_channels = (32, 64, 128)  # (64, 128, 256)
+        small_num_head_channels = (32, 64, 128)  # (0, 128, 256)
         big_num_channels = (128, 256, 512)
         big_num_head_channels = (0, 256, 512)
+        
+        if self.small_model:
+            config_unet = {
+                "spatial_dims": 3,
+                "in_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
+                "out_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
+                "num_res_blocks": [2, 2, 2],
+                "num_channels": small_num_channels if self.small_model else big_num_channels,  # 64, 128, 256 or 128, 256, 512
+                "attention_levels": (False, True, True),
+                "norm_num_groups": 32,
+                "resblock_updown": True,
+                "num_head_channels": small_num_head_channels if self.small_model else big_num_head_channels,  # 0, 128, 256 or 0, 256, 512
+                "transformer_num_layers": 8,
+                "use_flash_attention": True,
+                "with_conditioning": False,
+                "cross_attention_dim": None
+            }
+            config_controlnet = {
+                "spatial_dims": 3,
+                "in_channels": 4,
+                "num_res_blocks": [2, 2, 2],
+                "num_channels": small_num_channels if self.small_model else big_num_channels,  # 64, 128, 256 or 128, 256, 512
+                "attention_levels": (False, True, True),
+                "norm_num_groups": 32,
+                "resblock_updown": True,
+                "num_head_channels": small_num_head_channels if self.small_model else big_num_head_channels,  # 0, 128, 256 or 0, 256, 512
+                "transformer_num_layers": 8,
+                "use_flash_attention": True,
+                "with_conditioning": False,
+                "cross_attention_dim": None
+            }
+            config_conditioning_embedding_num_channels = (16,)
+        else:
+            config_unet = {
+                "spatial_dims": 3,
+                "in_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
+                "out_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
+                "num_res_blocks": [2, 2, 2],
+                "num_channels": small_num_channels if small_model else big_num_channels,  # 64, 128, 256 or 128, 256, 512
+                "attention_levels": (False, True, True),
+                "num_head_channels": small_num_head_channels if small_model else big_num_head_channels,  # 0, 128, 256 or 0, 256, 512
+            }
+            config_controlnet = {
+                "spatial_dims": 3,
+                "in_channels": 4,
+                "num_res_blocks": [2, 2, 2],
+                "num_channels": small_num_channels if small_model else big_num_channels,  # 64, 128, 256 or 128, 256, 512
+                "attention_levels": (False, True, True),
+                "num_head_channels": small_num_head_channels if small_model else big_num_head_channels,  # 0, 128, 256 or 0, 256, 512
+            }
+            config_conditioning_embedding_num_channels = (128,)
 
-        small_model = False
-
-        config_unet = {
-            "spatial_dims": 3,
-            "in_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
-            "out_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
-            "num_res_blocks": [2, 2, 2],
-            "num_channels": small_num_channels if small_model else big_num_channels,  # 64, 128, 256 or 128, 256, 512
-            "attention_levels": (False, True, True),
-            "num_head_channels": small_num_head_channels if small_model else big_num_head_channels,  # 0, 128, 256 or 0, 256, 512
-        }
-        config_controlnet = {
-            "spatial_dims": 3,
-            "in_channels": 4,
-            "num_res_blocks": [2, 2, 2],
-            "num_channels": small_num_channels if small_model else big_num_channels,  # 64, 128, 256 or 128, 256, 512
-            "attention_levels": (False, True, True),
-            "num_head_channels": small_num_head_channels if small_model else big_num_head_channels,  # 0, 128, 256 or 0, 256, 512
-        }
         # Initialize UNet and ControlNet
         self.unet = DiffusionModelUNetMaisi(**config_unet)
         self.controlnet = ControlNetMaisi(
             **config_controlnet, 
             conditioning_embedding_in_channels=4,
-            conditioning_embedding_num_channels=(128,),
+            conditioning_embedding_num_channels=config_conditioning_embedding_num_channels,
         )
         # Initialize ControlNet weights from UNet
         self.controlnet.load_state_dict(self.unet.state_dict(), strict=False)
@@ -91,7 +129,8 @@ class LatentDiffusion(pl.LightningModule):
             beta_start=beta_start,
             beta_end=beta_end,
             schedule="linear_beta",
-            prediction_type="epsilon"
+            prediction_type="epsilon",
+            clip_sample=False,
         )
         
         # Loss function
@@ -151,7 +190,7 @@ class LatentDiffusion(pl.LightningModule):
         loss = self.loss_fn(noise_pred, noise)
 
         # Log training metrics
-        self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+        self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True)
 
         return loss
     
@@ -179,7 +218,7 @@ class LatentDiffusion(pl.LightningModule):
         val_loss = self.loss_fn(reconstructed_t1, original_t1)
         
         # Log validation metrics
-        self.log('val_loss', val_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('val_loss', val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         
         return {
             'val_loss': val_loss,
@@ -422,7 +461,7 @@ class LatentDiffusion(pl.LightningModule):
         patients = self.validation_outputs_for_saving['patient']
 
         # Create output directory
-        output_dir = Path(self.dir_output_model).parent / f'epoch_{self.current_epoch+1:04d}'
+        output_dir = Path(self.dir_output_model).parent / 'images' / f'epoch_{self.current_epoch+1:04d}'
         output_dir.mkdir(parents=True, exist_ok=True)
 
         for i, patient in enumerate(patients):

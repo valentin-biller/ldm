@@ -20,7 +20,7 @@ dir_metrics = dir_output_model / "metrics"
 path_data = "/vol/miltank/users/bilv/data"
 path_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
 path_autoencoder = "/vol/miltank/users/bilv/ldm/maisi/maisi_vae.pt"
-path_diffusion = "/vol/miltank/users/bilv/master-thesis/models/ldm-diffusion/output/12.07.2025-12:34:41_3/checkpoints/last.ckpt"
+path_diffusion = "/vol/miltank/users/bilv/ldm/diffusion.ckpt"
 
 
 def inference(mode):
@@ -38,14 +38,15 @@ def inference(mode):
     # Load model from checkpoint
     model = LatentDiffusion.load_from_checkpoint(
         path_diffusion,
-        challenge_mode=True,  # Set to True for challenge mode
+        path_autoencoder=path_autoencoder,
         dir_output_model=dir_output_model,
+        small_model=False,
     )
 
     # Initialize trainer
     trainer = pl.Trainer(
         accelerator='gpu',
-        devices=1,
+        devices=torch.cuda.device_count(),
         logger=False,
         enable_progress_bar=True
     )
@@ -82,9 +83,6 @@ def generate_conditioning():
     import sys
     sys.path.append('/vol/miltank/users/bilv/gbm_bench')
     from gbm_bench.preprocessing.preprocess import preprocess_nifti
-
-    dir_output_model = Path('/vol/miltank/users/bilv/ldm/output')  # muss weg
-    path_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"  # muss weg
 
     temp = Path(dir_output_model) / f"temp_{random.randint(10000, 99999)}"
     temp.mkdir(parents=True, exist_ok=True)
@@ -128,7 +126,7 @@ def generate_conditioning():
 
 
 if __name__ == "__main__":
-    mode = 'inference_challenge'  # 'inference' or 'inference_challenge'
+    mode = 'inference'  # 'inference' or 'inference_challenge'
     inference(mode)
     # calculate_metrics(dir_metrics)
     # generate_conditioning()

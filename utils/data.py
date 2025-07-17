@@ -32,6 +32,7 @@ class DataModule(pl.LightningDataModule):
     
     def __init__(
         self,
+        debug=False,
         mode='training',  # training, inference, inference_challenge
         path_data=None,
         path_data_challenge=None,
@@ -42,6 +43,7 @@ class DataModule(pl.LightningDataModule):
         **kwargs
     ):
         super().__init__()
+        self.debug = debug
         self.mode = mode
         self.path_data = path_data
         self.path_data_challenge = path_data_challenge
@@ -55,8 +57,15 @@ class DataModule(pl.LightningDataModule):
         pl.seed_everything(42)
     
     def setup(self, stage=None): 
-        challenge_patients = sorted(list(os.listdir(self.path_data_challenge)))
-        challenge_patients_identifier = set([folder.split('-')[2] for folder in challenge_patients])
+
+        if self.path_data_challenge is None:
+            challenge_patients = []
+            path_challenge_patients_identifier = str(Path(__file__).resolve().parent / 'challenge_patients_identifier.txt')
+            with open(path_challenge_patients_identifier, 'r') as f:
+                challenge_patients_identifier = set([line.strip() for line in f.readlines()])
+        else:
+            challenge_patients = sorted(list(os.listdir(self.path_data_challenge)))
+            challenge_patients_identifier = set([folder.split('-')[2] for folder in challenge_patients])
 
         patients = []
         for folder in sorted(os.listdir(self.path_data)):
@@ -69,6 +78,8 @@ class DataModule(pl.LightningDataModule):
                 patients.append(folder)
         
         # Split by patient IDs
+        if self.debug:
+            patients = patients[:10]
         n_train = int(len(patients) * self.train_val_split)
         n_val = len(patients) - n_train
         patients_train, patients_val = random_split(patients, [n_train, n_val])

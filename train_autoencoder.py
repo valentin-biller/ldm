@@ -113,8 +113,8 @@ discriminator = PatchDiscriminator(
 ).to(device)
 
 if resume[0]:
-    autoencoder = MaisiAutoencoder(path_autoencoder=dir_output_model + "/autoencoder.pt", device=device).model
-    discriminator.load_state_dict(torch.load(dir_output_model + "/discriminator.pt", map_location=device))
+    autoencoder = MaisiAutoencoder(path_autoencoder=resume[1].replace('discriminator', 'autoencoder'), device=device).model
+    discriminator.load_state_dict(torch.load(resume[1], map_location=device))
 else:
     autoencoder = MaisiAutoencoder(path_autoencoder=path_autoencoder, device=device).model
 

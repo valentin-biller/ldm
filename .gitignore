@@ -1,5 +1,5 @@
 output
-slurm
+diffusion.ckpt
 
 # Python-generated files
 __pycache__/

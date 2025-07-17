@@ -7,8 +7,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --partition=universe,asteroids
 #SBATCH --qos=master
-#SBATCH --time=0-168:00:00
-#SBATCH --gres=gpu:4,gpumem:80G
+#SBATCH --time=7-00:00:00
+#SBATCH --gres=gpu:2,gpumem:80G
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=128G
 
