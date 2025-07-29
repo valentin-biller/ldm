@@ -1,8 +1,8 @@
 import csv
-from fileinput import filename
 import json
 import shutil
 import random
+import argparse
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -19,26 +19,6 @@ from utils.data import DataModule, create_conditioning
 from utils.trainer import LatentDiffusion
 
 
-mode = 'inference'  # 'inference' or 'inference_challenge' or 'inference_conditioning'
-debug = True
-
-model_ = 'big_old'
-scheduler_ = 'ddim'
-
-
-dir_output_model = Path(f"/vol/miltank/users/bilv/ldm/output{'_debug' if debug else ''}")
-dir_metrics = dir_output_model / "metrics"
-
-path_data = Path("/vol/miltank/users/bilv/data")
-path_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
-
-dir_current = Path(__file__).resolve().parent
-path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
-path_diffusion = dir_current / 'models' / f'diffusion_{model_}_{scheduler_}.ckpt'
-
-path_psnr = dir_metrics / "psnr.csv"
-
-
 def inference():
     # Initialize data module
     datamodule = DataModule(
@@ -47,17 +27,12 @@ def inference():
         oversampling=True,
         path_data=path_data,
         path_data_challenge=path_data_challenge,
+        dir_output_model=dir_output_model,
         latent_shape=(60, 60, 40),
-        batch_size=1,
-        num_workers=1
+        batch_size=4,
+        num_workers=4,
     )
     datamodule.setup()
-
-    ### DEBUG
-    for i in range(10):
-        sample = datamodule.dataset_val[i]
-    return
-    ### DEBUG
 
     # Load model from checkpoint
     model = LatentDiffusion.load_from_checkpoint(
@@ -66,6 +41,7 @@ def inference():
         dir_output_model=dir_output_model,
         model_=model_,
         scheduler_=scheduler_,
+        denoising=denoising,
         num_inference_steps=100,
     )
 
@@ -91,8 +67,15 @@ def calculate_metrics():
     
     for file_csv in files_csv:
         metric_name = file_csv.stem
+        file_csv_filtered = file_csv.with_name(f"filtered_{file_csv.name}")
         
         df = pd.read_csv(file_csv)
+        df = df.drop_duplicates(['patient', 'mask'], keep='first').sort_values(by=['patient', 'mask'])
+        if len(df) != 2163:
+            print(f"WARNING: Expected 2163 unique (patient, mask) entries, found {len(df)} in {file_csv}")
+        df.to_csv(file_csv_filtered, index=False)
+
+        df = pd.read_csv(file_csv_filtered)
         values = df['value'].values
 
         stats[metric_name] = {
@@ -233,41 +216,30 @@ def generate_conditioning():
     import sys
     sys.path.append('/vol/miltank/users/bilv/gbm_bench')
     from gbm_bench.preprocessing.preprocess import preprocess_nifti
-
+    
     temp = Path(dir_output_model) / f"temp_{random.randint(10000, 99999)}"
     temp.mkdir(parents=True, exist_ok=True)
 
-    # for dir_patient in tqdm(sorted(list(Path(path_data_challenge).iterdir()))):
-    #     path_conditioning = dir_patient / 'conditioning.pt'
-    #     if path_conditioning.exists():
-    #         continue
+    for dir_patient in tqdm(sorted(list(path_data_challenge.iterdir()))):
+        path_conditioning = dir_patient / 'conditioning.pt'
+        path_conditioning_old = dir_patient / 'conditioning_old.pt'
 
-    #     patient = dir_patient.name
-    #     path_original_t1_voided = dir_patient / f"{patient}-t1n-voided.nii.gz"
-    #     path_original_mask = dir_patient / f"{patient}-mask.nii.gz"
-
-    # WEG #############################
-    paths_original_t1_voided = {}
-    paths_original_mask = {}
-    for path_patient in tqdm(sorted(list(dir_output_model.iterdir()))):
-        if path_patient.is_dir():
+        if path_conditioning.exists():
             continue
-        file_patient = str(path_patient.name)
-        if 'original_voided_mirrored' in file_patient:
-            patient_mask = file_patient[:-len('_original_voided_mirrored.nii.gz')]
-            paths_original_t1_voided[patient_mask] = path_patient
-        elif 'original_mask_mirrored' in file_patient:
-            patient_mask = file_patient[:-len('_original_mask_mirrored.nii.gz')]
-            paths_original_mask[patient_mask] = path_patient
-    for patient_mask in tqdm(sorted(paths_original_t1_voided.keys())):
-        patient = patient_mask[:-5]
-        mask = patient_mask[-4:]
-        path_original_t1_voided = paths_original_t1_voided[patient_mask]
-        path_original_mask = paths_original_mask[patient_mask]
-        temp_patient = temp / patient_mask  # e.g., temp/BraTS2021_00012_0000
-        # WEG #############################
 
-        # temp_patient = temp / patient
+        patient = dir_patient.name
+
+        path_original_t1_voided = dir_patient / f"{patient}-t1n-voided.nii.gz"
+        path_original_mask = dir_patient / f"{patient}-mask.nii.gz"
+        path_inverted_mask = dir_patient / f"{patient}-mask-inverted.nii.gz"
+
+        img_inverted_mask = nib.load(path_original_mask)
+        data_inverted_mask = img_inverted_mask.get_fdata()
+        affine_inverted_mask = img_inverted_mask.affine
+        inverted_mask = (data_inverted_mask == 0).astype(np.float32)
+        nib.save(nib.Nifti1Image(inverted_mask, affine_inverted_mask), path_inverted_mask)
+
+        temp_patient = temp / patient
         temp_patient.mkdir(parents=True, exist_ok=True)
 
         preprocess_nifti(
@@ -281,19 +253,25 @@ def generate_conditioning():
             is_skull_stripped=True,
             # tumorseg_file=Path(temp_dir),
             cuda_device='0',
-            registration_mask_file=path_original_mask
+            registration_mask_file=path_inverted_mask
         )
 
-        # path_original_tissue_segmentation = temp_patient / 'processed' / 'tissue_segmentation' / 'tissue_seg.nii.gz'
-        # original_tissue_segmentation = nib.load(path_original_tissue_segmentation).get_fdata()  # 240, 240, 155
-        # original_tissue_segmentation = torch.as_tensor(original_tissue_segmentation).float()
-        # original_growth_model = torch.zeros_like(original_tissue_segmentation)
-        # original_conditioning = create_conditioning(original_growth_model, original_tissue_segmentation)
-        # original_conditioning = torch.as_tensor(original_conditioning).float()  # 4, 240, 240, 155
+        ### temp
+        path_original_tissue_segmentation = temp_patient / 'processed' / 'tissue_segmentation' / 'tissue_seg.nii.gz'
+        path_temp_tissue_segmentation = dir_patient / 'tissue_segmentation.nii.gz'
+        shutil.copy(path_original_tissue_segmentation, path_temp_tissue_segmentation)
+        ### temp
 
-        # torch.save(original_conditioning, path_conditioning)
+        path_original_tissue_segmentation = temp_patient / 'processed' / 'tissue_segmentation' / 'tissue_seg.nii.gz'
+        original_tissue_segmentation = nib.load(path_original_tissue_segmentation).get_fdata()  # 240, 240, 155
+        original_tissue_segmentation = torch.as_tensor(original_tissue_segmentation).float()
+        original_growth_model = torch.zeros_like(original_tissue_segmentation)
+        original_conditioning = create_conditioning(original_growth_model, original_tissue_segmentation)
+        original_conditioning = torch.as_tensor(original_conditioning).float()  # 4, 240, 240, 155
 
-        # shutil.rmtree(temp_patient)
+        torch.save(original_conditioning, path_conditioning)
+
+        shutil.rmtree(temp_patient)
 
 def create_slices():
 
@@ -428,8 +406,46 @@ def create_failure():
         plt.close(fig)
 
 if __name__ == "__main__":
-    # inference()
-    # calculate_metrics()
-    generate_conditioning()
-    # create_slices()
-    # create_failure()
+    parser = argparse.ArgumentParser(description="Inference  Diffusion")
+    parser.add_argument('--function', type=str, default='inference', choices=['inference', 'calculate_metrics', 'generate_conditioning', 'create_slices', 'create_failure'], help='Function')
+    parser.add_argument('--debug', action='store_true', help='Debug Mode')
+    parser.add_argument('--model', type=str, default='big', choices=['small', 'big', 'big_old'], help='Model')
+    parser.add_argument('--scheduler', type=str, default='ddpm', choices=['ddpm', 'ddim'], help='Scheduler')
+    parser.add_argument('--version', type=int, default=1, help='Version')
+    parser.add_argument('--mode', type=str, default='inference', choices=['inference', 'inference_challenge', 'inference_conditioning'], help='Mode')
+    parser.add_argument('--denoising', type=str, default='repaint', choices=['repaint', 'own'], help='Denoising')
+    args = parser.parse_args()
+
+    debug = args.debug
+    model_ = args.model
+    scheduler_ = args.scheduler
+    version_ = args.version
+    mode = args.mode
+    denoising = args.denoising
+
+    print(f"Debug: {debug}, Model: {model_}, Scheduler: {scheduler_}, Version: {version_}, Mode: {mode}, Denoising: {denoising}")
+
+    dir_output_model = Path(f"/vol/miltank/users/bilv/ldm/output{'_debug' if debug else ''}")
+    dir_output_model = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / mode / denoising
+    dir_metrics = dir_output_model / "metrics"
+
+    path_data = Path("/vol/miltank/users/bilv/data")
+    path_data_challenge = Path("/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation")
+    path_data_pseudo = Path("/vol/miltank/users/bilv/ldm/pseudo/reconstructed_challenge")
+
+    dir_current = Path(__file__).resolve().parent
+    path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
+    path_diffusion = dir_current / 'models' / f'diffusion_{model_}_{scheduler_}_v{version_}.ckpt'
+
+    path_psnr = dir_metrics / "psnr.csv"
+
+    if args.function == 'inference':
+        inference()
+    elif args.function == 'calculate_metrics':
+        calculate_metrics()
+    elif args.function == 'generate_conditioning':
+        generate_conditioning()
+    elif args.function == 'create_slices':
+        create_slices()
+    elif args.function == 'create_failure':
+        create_failure()

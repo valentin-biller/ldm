@@ -45,6 +45,7 @@ class DataModule(pl.LightningDataModule):
         oversampling=True,
         path_data=None,
         path_data_challenge=None,
+        dir_output_model=None,
         latent_shape=None,
         batch_size=2,
         num_workers=4,
@@ -57,13 +58,14 @@ class DataModule(pl.LightningDataModule):
         self.oversampling = oversampling
         self.path_data = path_data
         self.path_data_challenge = path_data_challenge
+        self.dir_output_model = dir_output_model
         self.latent_shape = latent_shape
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.train_val_split = train_val_split
 
-        assert self.mode in ['training', 'inference', 'inference_challenge'], f"Invalid mode: {self.mode}. Choose from: training, inference, inference_challenge"
-
+        assert self.mode in ['training', 'inference', 'inference_challenge', 'inference_conditioning'], f"Invalid mode: {self.mode}. Choose from: training, inference, inference_challenge"
+    
         self.print_length = 25
         pl.seed_everything(42)
     
@@ -95,8 +97,27 @@ class DataModule(pl.LightningDataModule):
         patients_train = [patients[i] for i in patients_train.indices]
         patients_val = [patients[i] for i in patients_val.indices]
 
+        # For Inference filter patients that are not in the dir_output_model
+        if self.dir_output_model is not None:
+            files_completed = list((self.dir_output_model / 'reconstructed').iterdir())
+            if self.mode in ['inference', 'inference_conditioning']:
+                patient_masks = {}
+                for file in files_completed:
+                    name = file.name
+                    patient_mask = name[:-7]
+                    patient = patient_mask[:-5]
+                    mask = patient_mask[-4:]
+                    patient_masks.setdefault(patient, set()).add(mask)
+                patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
+                patients_val = [patient for patient in patients_val if patient not in patients_completed]
+                self._print_numbers('Completed', patients_completed)
+            elif self.mode == 'inference_challenge':
+                patients_completed = [file.name[:-21] for file in files_completed]
+                patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
+                self._print_numbers('Completed', patients_completed)
+
         print(self.print_length * '=')
-        if self.mode in ['training', 'inference']:
+        if self.mode in ['training', 'inference', 'inference_conditioning']:
             self._print_numbers('Total', patients)
             self._print_numbers('Train', patients_train)
             self._print_numbers('Val', patients_val)
@@ -178,7 +199,7 @@ class DataModule(pl.LightningDataModule):
         return self.dataloader_val
     
     def test_dataloader(self):
-        if self.mode == 'inference':
+        if self.mode in ['inference', 'inference_conditioning']:
             return self.dataloader_val
         elif self.mode == 'inference_challenge':
             return self.dataloader_challenge
@@ -236,13 +257,14 @@ class DataSet(Dataset):
         self.mode = mode
         self.path_data = path_data
         self.path_data_challenge = path_data_challenge
+
         self.latent_shape = latent_shape
         self.patients = patients
     
         if self.mode in ['training', 'inference_challenge']:
             self.samples = self.patients
 
-        elif self.mode == 'inference':
+        elif self.mode in ['inference', 'inference_conditioning']:
             self.samples = []
             for patient_id in self.patients:
                 # Check for mask files 0000, 0001, 0002
@@ -315,44 +337,52 @@ class DataSet(Dataset):
                 'latent_conditioning': latent_conditioning.float(),
             }
 
-        elif self.mode == 'inference':
+        elif self.mode in ['inference', 'inference_conditioning']:
             patient, mask = self.samples[idx]
 
             original_t1, affine = self._get_data(self._get_file_modality(patient, 't1'), affine=True)
             original_t1 = self._process_modality(original_t1)  # 1, 240, 240, 155
 
+            original_t1_voided = self._process_modality(self._get_data(self._get_file_modality_voided(patient, mask, 't1')))  # 1, 240, 240, 155
+            original_t1_voided_autoencoder = self._process_modality_autoencoder(original_t1_voided)  # 1, 240, 240, 160
+            
+            original_mask_healty = self._process_mask(self._get_data(self._get_file_mask(patient, mask, healthy=True)))  # 1, 240, 240, 155
+            original_mask = self._process_mask(self._get_data(self._get_file_mask(patient, mask)))  # 1, 240, 240, 155
+            latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
+            
+            # original_t1_voided_mirrored_margin, original_mask_mirrored_margin = self._mirror_known_region(original_t1_voided, original_mask, mode='margin')
+            # original_t1_voided_mirrored_margin_autoencoder = self._process_modality_autoencoder(original_t1_voided_mirrored_margin)  # 1, 240, 240, 160
+            # latent_mask_mirrored_margin = self._process_interpolation(original_mask_mirrored_margin)  # 1, 60, 60, 40
+
             original_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))  # 240, 240, 155
-            original_growth_model = torch.zeros_like(torch.as_tensor(original_tissue_segmentation))  # 240, 240, 155
+            if self.mode == 'inference':
+                original_growth_model = torch.zeros_like(torch.as_tensor(original_tissue_segmentation))  # 240, 240, 155
+            elif self.mode == 'inference_conditioning':
+                original_growth_model = self._get_data(self._get_file_growth_model(patient))  # 240, 240, 155
             original_conditioning = create_conditioning(original_growth_model, original_tissue_segmentation, tensor=True)  # 4, 240, 240, 155
             latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
 
-            original_t1_voided = self._process_modality(self._get_data(self._get_file_modality_voided(patient, mask, 't1')))  # 1, 240, 240, 155
-            original_t1_voided_autoencoder = self._process_modality_autoencoder(original_t1_voided)  # 1, 240, 240, 160
-
-            original_mask = self._process_mask(self._get_data(self._get_file_mask(patient, mask)))  # 1, 240, 240, 155
-            latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
-            original_mask_healty = self._process_mask(self._get_data(self._get_file_mask(patient, mask, healthy=True)))  # 1, 240, 240, 155
-            
-            original_voided_mirrored, original_mask_mirrored = self._mirror_known_region(original_t1_voided, original_mask, mode='margin')
-            original_voided_mirrored, original_mask_mirrored = self._mirror_known_region(original_t1_voided, original_mask, mode='whole')
-            assert original_voided_mirrored.shape == (1, 240, 240, 155), f"Expected shape (1, 240, 240, 155), got {original_voided_mirrored.shape}"
-            assert original_mask_mirrored.shape == (1, 240, 240, 155), f"Expected shape (1, 240, 240, 155), got {original_mask_mirrored.shape}"
-            nib.save(nib.Nifti1Image(original_voided_mirrored[0].astype(np.float32), affine), Path('/vol/miltank/users/bilv/ldm/output_debug') / f'{patient}_{mask}_original_voided_mirrored.nii.gz')
-            nib.save(nib.Nifti1Image(original_mask_mirrored[0].astype(np.float32), affine), Path('/vol/miltank/users/bilv/ldm/output_debug') / f'{patient}_{mask}_original_mask_mirrored.nii.gz')
-
             return {
+                'mode': self.mode,
                 'patient': patient,
                 'mask': mask,
+                'affine': affine,
+
                 'original_t1': original_t1.float(),
-                'original_conditioning': original_conditioning.float(),
-                'latent_conditioning': latent_conditioning.float(),
                 'original_t1_voided': original_t1_voided.float(),
                 'original_t1_voided_autoencoder': original_t1_voided_autoencoder.float(),
+                # 'original_t1_voided_mirrored_margin': original_t1_voided_mirrored_margin.float(),
+                # 'original_t1_voided_mirrored_margin_autoencoder': original_t1_voided_mirrored_margin_autoencoder.float(),
+
+                'original_mask_healthy': original_mask_healty.float(),
                 'original_mask': original_mask.float(),
                 'latent_mask': latent_mask.float(),
-                'original_mask_healthy': original_mask_healty.float(),
-                'affine': affine,
-            }
+                # 'original_mask_mirrored_margin': original_mask_mirrored_margin.float(),
+                # 'latent_mask_mirrored_margin': latent_mask_mirrored_margin.float(),
+
+                'original_conditioning': original_conditioning.float(),
+                'latent_conditioning': latent_conditioning.float(),
+            }            
 
         elif self.mode == 'inference_challenge':
             patient = self.samples[idx]
@@ -367,6 +397,18 @@ class DataSet(Dataset):
             original_mask = self._process_mask(self._get_data(path_data_challenge_mask))  # 1, 240, 240, 155
             latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
 
+            # original_t1_voided_mirrored_margin, original_mask_mirrored_margin = self._mirror_known_region(original_t1_voided, original_mask, mode='margin')
+            # original_t1_voided_mirrored_margin_autoencoder = self._process_modality_autoencoder(original_t1_voided_mirrored_margin)  # 1, 240, 240, 160
+            # latent_mask_mirrored_margin = self._process_interpolation(original_mask_mirrored_margin)  # 1, 60, 60, 40
+
+            # original_t1_voided_mirrored_whole, original_mask_mirrored_whole = self._mirror_known_region(original_t1_voided, original_mask, mode='whole')
+            # path_original_t1_voided_mirrored_whole = Path(self.path_data_challenge) / patient / f"{patient}-t1n-voided-mirrored-whole.nii.gz"
+            # path_original_mask_mirrored_whole = Path(self.path_data_challenge) / patient / f"{patient}-mask-mirrored-whole.nii.gz"
+            # if not path_original_t1_voided_mirrored_whole.exists():
+            #     nib.save(nib.Nifti1Image(original_t1_voided_mirrored_whole[0].numpy(), affine), path_original_t1_voided_mirrored_whole)
+            # if not path_original_mask_mirrored_whole.exists():
+            #     nib.save(nib.Nifti1Image(original_mask_mirrored_whole[0].numpy(), affine), path_original_mask_mirrored_whole)
+
             path_original_conditioning = Path(self.path_data_challenge) / patient / 'conditioning.pt'
             if path_original_conditioning.exists():
                 exists_conditioning = True
@@ -376,19 +418,30 @@ class DataSet(Dataset):
                 exists_conditioning = False
                 original_conditioning = torch.zeros(4, 240, 240, 155)
                 latent_conditioning = torch.zeros(4, self.latent_shape[0], self.latent_shape[1], self.latent_shape[2])
-            
+
             return {
+                'mode': self.mode,
                 'patient': patient,
+                'affine': affine,
+
                 'original_t1_voided': original_t1_voided.float(),
                 'original_t1_voided_autoencoder': original_t1_voided_autoencoder.float(),
+                # 'original_t1_voided_mirrored_margin': original_t1_voided_mirrored_margin.float(),
+                # 'original_t1_voided_mirrored_margin_autoencoder': original_t1_voided_mirrored_margin_autoencoder.float(),
+
                 'original_mask': original_mask.float(),
                 'latent_mask': latent_mask.float(),
-                'path_original_t1_voided': str(path_data_challenge_t1_voided),
-                'path_original_mask': str(path_data_challenge_mask),
-                'affine': affine,
+                # 'original_mask_mirrored_margin': original_mask_mirrored_margin.float(),
+                # 'latent_mask_mirrored_margin': latent_mask_mirrored_margin.float(),
+
                 'original_conditioning': original_conditioning.float(),
                 'latent_conditioning': latent_conditioning.float(),
                 'exists_conditioning': exists_conditioning,
+
+                'path_original_t1_voided': str(path_data_challenge_t1_voided),
+                'path_original_mask': str(path_data_challenge_mask),
+                # 'path_original_t1_voided_mirrored_whole': str(path_original_t1_voided_mirrored_whole),
+                # 'path_original_mask_mirrored_whole': str(path_original_mask_mirrored_whole),
             }
         
     def _mirror_known_region(self, original_voided, original_mask, margin=3, mode='margin'):
@@ -409,14 +462,18 @@ class DataSet(Dataset):
 
         # Find connected "clouds" of 1s in the mask
         labeled_mask_unfiltered, num_features_unfiltered = label(original_mask_c == 1)
-        min_voxels = 100
+        min_voxels = 500
         num_features = []
         for i in range(1, num_features_unfiltered + 1):
             feature_mask = (labeled_mask_unfiltered == i).astype(np.uint8)
             if feature_mask.sum() >= min_voxels:
                 num_features.append(i)
         labeled_mask = labeled_mask_unfiltered * np.isin(labeled_mask_unfiltered, num_features)
-        assert len(num_features) == 2, f"Expected 2 valid features, got {len(num_features)}"
+        if len(num_features) != 2:
+            for i in range(1, num_features_unfiltered + 1):
+                feature_mask = (labeled_mask_unfiltered == i).astype(np.uint8)
+                print(f"Feature {i}: {feature_mask.sum()} voxels")
+        # assert len(num_features) == 2, f"Expected 2 valid features, got {len(num_features)}"
 
         # A region is on the border if it's adjacent to the background (latent == 0).
         background_mask = (original_voided_c == 0)
@@ -466,7 +523,7 @@ class DataSet(Dataset):
                         brain_surface_mask,
                         feature_mask_coords_to_update,
                     )
-                    print("Best Shift", best_shift)
+                    # print("Best Shift", best_shift)
                     feature_mask_coords_to_update = feature_mask_coords_to_update + best_shift
                 elif mode == 'whole':
                     feature_mask_coords_to_update = feature_mask_coords
@@ -477,14 +534,16 @@ class DataSet(Dataset):
 
                 # Update the voided and the mask
                 original_voided_c[feature_mask_coords_to_update_tuple] = original_voided_c[feature_mask_coords_mirrored_to_copy_tuple]
+
+                feature_mask_coords_to_update_mask = original_voided_c[feature_mask_coords_to_update_tuple] != 0
+                feature_mask_coords_to_update_tuple = tuple(feature_mask_coords_to_update[feature_mask_coords_to_update_mask].T)
                 original_mask_c[feature_mask_coords_to_update_tuple] = 0
 
             # Place the updated 3D volumes back into the 4D batch tensor.
             original_voided_mirrored[0] = original_voided_c
             original_mask_mirrored[0] = original_mask_c
 
-        return original_voided_mirrored, original_mask_mirrored
-    
+        return torch.as_tensor(original_voided_mirrored), torch.as_tensor(original_mask_mirrored)
 
     def _find_best_shift(self, feature_mask, brain_surface_mask, feature_mask_coords_to_update, max_shift=3):
         """

@@ -21,6 +21,7 @@ import shutil
 import random
 import nibabel as nib
 from pathlib import Path
+from collections import defaultdict
 
 import pietorch
 import skimage.exposure
@@ -50,6 +51,7 @@ class LatentDiffusion(pl.LightningModule):
         scheduler_='ddpm',  # ddpm, ddim
         learning_rate=1e-4,
         num_train_timesteps=1000,
+        denoising='repaint', # repaint, own
         num_inference_steps=100,
         **kwargs
     ):
@@ -58,6 +60,7 @@ class LatentDiffusion(pl.LightningModule):
         
         self.path_autoencoder = path_autoencoder
         self.dir_output_model = dir_output_model
+        self.denoising = denoising
         self.model_ = model_
         self.scheduler_ = scheduler_
         
@@ -130,7 +133,7 @@ class LatentDiffusion(pl.LightningModule):
         if self.scheduler_ == 'ddpm':
             self.scheduler = DDPMScheduler(
                 num_train_timesteps=num_train_timesteps,
-                schedule="cosine",
+                schedule="linear_beta",
                 prediction_type="epsilon",
                 clip_sample=False,
             )
@@ -145,6 +148,15 @@ class LatentDiffusion(pl.LightningModule):
         # Loss function
         self.loss_fn = nn.MSELoss()
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(1, 240, 240, 155))
+
+        # Repaint
+        self.betas = self._repaint_get_named_beta_schedule('linear', self.hparams.num_train_timesteps, use_scale=True)
+        self.betas = np.array(self.betas, dtype=np.float64)
+        self.alphas = 1.0 - self.betas
+        self.alphas_cumprod = np.cumprod(self.alphas, axis=0)
+        # self.alphas_cumprod_prev = np.append(1.0, self.alphas_cumprod[:-1])
+        # self.alphas_cumprod_prev_prev = np.append(
+        #     1.0, self.alphas_cumprod_prev[:-1])
 
     def setup(self, stage=None):
         self.autoencoder = MaisiAutoencoder(path_autoencoder=self.path_autoencoder, device=self.device)
@@ -235,22 +247,34 @@ class LatentDiffusion(pl.LightningModule):
     
     def test_step(self, batch, batch_idx):
         """Test step"""
+        mode = batch['mode'][0]
+
+        patients = batch['patient']  # (B,)
+        affines = batch['affine']  # (B,)
+
         original_t1_voided = batch['original_t1_voided']  # (B, 1, 240, 240, 155)
         original_t1_voided_autoencoder = batch['original_t1_voided_autoencoder']  # (B, 1, 240, 240, 160)
         latent_t1_voided = self._get_encoded_autoencoder(original_t1_voided_autoencoder)  # (B, 4, 60, 60, 40)
+        
         original_mask = batch['original_mask']  # (B, 1, 240, 240, 155)
         latent_mask = batch['latent_mask']  # (B, 1, 60, 60, 40)
-        if 'original_t1' in batch:
-            challenge = False  # inference
+
+        original_conditioning = batch['original_conditioning']  # (B, 1, 240, 240, 155)
+        latent_conditioning = batch['latent_conditioning']  # (B, 1, 60, 60, 40)
+
+        if mode in ['inference', 'inference_conditioning']:
+            masks = batch['mask']  # (B,)
             original_t1 = batch['original_t1']  # (B, 1, 240, 240, 155)
             original_mask_healthy = batch['original_mask_healthy']  # (B, 1, 240, 240, 155)
             original_conditioning = batch['original_conditioning']  # (B, 1, 240, 240, 155)
             latent_conditioning = batch['latent_conditioning']  # (B, 4, 60, 60, 40)
-        else:
-            challenge = True  # inference_challenge)
+        elif mode == 'inference_challenge':
+            exists_conditioning = all(batch['exists_conditioning'])  # (B,)
+            paths_original_t1_voided = batch['path_original_t1_voided']  # (B,)
+            paths_original_mask = batch['path_original_mask']  # (B,)
 
         with torch.no_grad():
-            if challenge:
+            if mode == 'inference_challenge':
                 '''
                 While generating your predictions, keep in mind the following:
                     - All individual files must be NIfTI format and use the .nii.gz file extension
@@ -263,33 +287,33 @@ class LatentDiffusion(pl.LightningModule):
                             └─ BraTS-GLI-12345-000-t1n-voided.nii.gz
                             A valid output filename could be: BraTS-GLI-12345-000-t1n-inference.nii.gz
                 '''
-                conditioning_exists = all(batch['exists_conditioning'])
-                if not conditioning_exists:
+                if not exists_conditioning:
                     original_conditioning = self._generate_conditioning(
-                        batch['path_original_t1_voided'],
-                        batch['path_original_mask']
+                        paths_original_t1_voided,
+                        paths_original_mask
                     ).float()  # B, 4, 240, 240, 155
                     latent_conditioning = torch.nn.functional.interpolate(
                         original_conditioning,
                         size=(latent_t1_voided.shape[2], latent_t1_voided.shape[3], latent_t1_voided.shape[4]),
                         mode='nearest'
                     ).float()  # B, 4, 60, 60, 40
-                else:
-                    original_conditioning = batch['original_conditioning']
-                    latent_conditioning = batch['latent_conditioning']
 
             # Generate inpainted latent
-            inpainted_t1 = self._generate_denoising(
+            denoisings = {
+                'repaint': self._repaint_generate_denoising,
+                'own': self._generate_denoising,
+            }
+            inpainted_t1 = denoisings[self.denoising](
                 latent_conditioning,
                 latent_voided=latent_t1_voided,
                 latent_mask=latent_mask,
             ).float()
 
             reconstructed_t1 = self._get_decoded_autoencoder(inpainted_t1)  # (B, 1, 240, 240, 155)
-            # path_temp = Path(self.dir_output_model) / 't_off_250_borders_correct' / f'{batch["patient"][0]}_{batch["mask"][0]}_reconstructed_t1.nii.gz'
-            # path_temp.parent.mkdir(parents=True, exist_ok=True)
-            # nib.save(nib.Nifti1Image(reconstructed_t1[0, 0].cpu().float().numpy(), np.eye(4)), path_temp)
-            # # passen hier die ränder?
+            # for i in range(reconstructed_t1.shape[0]):
+            #     path_temp = Path(self.dir_output_model) / 'temp_autoencoder' / f'{batch["patient"][i]}_{batch["mask"][i]}.nii.gz'
+            #     path_temp.parent.mkdir(parents=True, exist_ok=True)
+            #     nib.save(nib.Nifti1Image(reconstructed_t1[i, 0].cpu().float().numpy(), batch['affine'][i].cpu().float().numpy()), path_temp)
             
             reconstructed_t1_np = reconstructed_t1.cpu().numpy()  # (B, 1, 240, 240, 155)
             original_t1_voided_np = original_t1_voided.cpu().numpy()  # (B, 1, 240, 240, 155)
@@ -298,19 +322,22 @@ class LatentDiffusion(pl.LightningModule):
 
             reconstructed_t1_he = []
             for i in range(reconstructed_t1_np.shape[0]):
+                threshold = 0.01
                 # matching original reconstructed
-                reconstructed_t1_flat = reconstructed_t1_np[i, 0]#[reconstructed_t1_np[i, 0] > 0.01]
-                original_t1_voided_flat = original_t1_voided_np[i, 0]#[original_t1_voided_np[i, 0] > 0.01]
+                reconstructed_t1_flat = reconstructed_t1_np[i, 0][reconstructed_t1_np[i, 0] > threshold]
+                original_t1_voided_flat = original_t1_voided_np[i, 0][original_t1_voided_np[i, 0] > threshold]
+
                 reconstructed_t1_he_flat = skimage.exposure.match_histograms(
                     reconstructed_t1_flat,
                     original_t1_voided_flat
                 )
-                # matched = reconstructed_t1_np[i, 0].copy()
-                # mask = reconstructed_t1_np[i, 0] > 0.01
-                # matched[mask] = reconstructed_t1_he_flat
-                # matched[~mask] = 0
-                reconstructed_t1_he_reshaped = reconstructed_t1_he_flat.reshape(reconstructed_t1_np[i, 0].shape)
-                reconstructed_t1_he.append(reconstructed_t1_he_reshaped)
+
+                reconstructed_t1_he_matched = reconstructed_t1_np[i, 0].copy()
+                mask = reconstructed_t1_np[i, 0] > threshold
+                reconstructed_t1_he_matched[mask] = reconstructed_t1_he_flat
+                reconstructed_t1_he_matched[~mask] = 0
+
+                reconstructed_t1_he.append(reconstructed_t1_he_matched)
                 # matching original reconstructed
 
             reconstructed_t1_he = np.stack(reconstructed_t1_he, axis=0)
@@ -321,7 +348,8 @@ class LatentDiffusion(pl.LightningModule):
             reconstructed_t1_pb = reconstructed_t1_he.clone()  # (B, 1, 240, 240, 155)
             for i in range(reconstructed_t1_he.shape[0]):
                 reconstructed_t1_he_ = reconstructed_t1_he[i, 0].to('cpu')
-                original_t1_voided_ = original_t1_voided[i, 0].to('cpu')
+                # original_t1_voided_ = original_t1_voided[i, 0].to('cpu')
+                original_t1_voided_ = (reconstructed_t1_he * original_mask + original_t1_voided * (1 - original_mask))[i, 0].to('cpu')
                 original_mask_ = original_mask[i, 0].to('cpu')
                 corner_coord = torch.tensor([0, 0, 0]).to('cpu')
                 reconstructed_t1_pb_ = pietorch.blend(
@@ -335,43 +363,37 @@ class LatentDiffusion(pl.LightningModule):
 
             reconstructed_t1 = reconstructed_t1_pb  # (B, 1, 240, 240, 155)
 
-            # Combine matched inpainted region with original region
-            # reconstructed_t1 = matched_inpainted * original_mask + original_t1_voided * (1 - original_mask)
-            # ####################################################################################################
+            # reconstructed_t1 = reconstructed_t1_he * original_mask + original_t1_voided * (1 - original_mask)
 
-            # Evaluate metrics if not in challenge mode
-            if not challenge:
-                self._evaluate_metrics(
-                    batch['patient'],
-                    batch['mask'],
-                    reconstructed_t1,  # (B, 1, 240, 240, 155)
-                    original_t1,  # (B, 1, 240, 240, 155)
-                    original_mask_healthy,  # (B, 1, 240, 240, 155)
-                    original_t1_voided,  # (B, 1, 240, 240, 155)
-                )
+            ####################################################################################################
 
-            # Save images
-            if not challenge:
-                dir_output = Path(self.dir_output_model) / 'inference'
-                masks = batch['mask']
-            else:
-                dir_output = Path(self.dir_output_model) / 'inference_challenge'
+            dir_output = Path(self.dir_output_model)
             dir_output_original = dir_output / 'original'
             dir_output_reconstructed = dir_output / 'reconstructed'
             dir_output_original.mkdir(parents=True, exist_ok=True)
             dir_output_reconstructed.mkdir(parents=True, exist_ok=True)
-            
-            patients = batch['patient']
-            affines = batch['affine']
-            
+
+            # Evaluate metrics if not in challenge mode
+            if mode in ['inference', 'inference_conditioning']:
+                self._evaluate_metrics(
+                    patients,
+                    masks,
+                    reconstructed_t1,  # (B, 1, 240, 240, 155)
+                    original_t1,  # (B, 1, 240, 240, 155)
+                    original_mask_healthy if mode == 'inference' else original_mask,  # (B, 1, 240, 240, 155)
+                    original_t1_voided,  # (B, 1, 240, 240, 155)
+                    dir_output
+                )
+
+            # Save images
             for i, (patient, affine) in enumerate(zip(patients, affines)):
-                if not challenge:
+                if mode in ['inference', 'inference_conditioning']:
                     mask = masks[i]
                     original_t1_ = original_t1[i, 0].cpu().float().numpy()
                     file_name = f"{patient}_{mask}.nii.gz"
                     path_original_t1 = dir_output_original / file_name
                     path_reconstructed_t1 = dir_output_reconstructed / file_name
-                else:
+                elif mode == 'inference_challenge':
                     original_t1_ = original_t1_voided[i, 0].cpu().float().numpy()
                     file_name_original = f"{patient}.nii.gz"
                     file_name_reconstructed = f"{patient}-t1n-inference.nii.gz"
@@ -383,6 +405,287 @@ class LatentDiffusion(pl.LightningModule):
                 nib.save(nib.Nifti1Image(original_t1_, affine), path_original_t1)
                 nib.save(nib.Nifti1Image(reconstructed_t1_, affine), path_reconstructed_t1)
 
+
+    def _repaint_generate_denoising(self, latent_conditioning, latent_voided=None, latent_mask=None):
+        self.scheduler.set_timesteps(self.hparams.num_inference_steps)
+
+        final = None
+        for sample in self._repaint_p_sample_loop_progressive(latent_conditioning, latent_voided, latent_mask):
+            final = sample
+        return final["sample"]
+
+    def _repaint_p_sample_loop_progressive(self, latent_conditioning, latent_voided=None, latent_mask=None):
+        """
+        Generate samples from the model and yield intermediate samples from
+        each timestep of diffusion.
+
+        Arguments are the same as p_sample_loop().
+        Returns a generator over dicts, where each dict is the return value of
+        p_sample().
+        """
+        shape = latent_conditioning.shape
+
+        image_after_step = torch.randn(
+            shape,
+            device=self.device
+        )
+        
+        self.gt_noises = None  # reset for next image
+
+        pred_xstart = None
+
+        idx_wall = -1
+        
+        sample_idxs = defaultdict(lambda: 0)
+
+        # schedule_jump_params
+        t_T = 250
+        n_sample = 1
+        jump_length = 10
+        jump_n_sample = 10
+
+        times = self._repaint_get_schedule_jump(t_T=t_T, n_sample=n_sample, jump_length=jump_length, jump_n_sample=jump_n_sample)
+
+        time_pairs = list(zip(times[:-1], times[1:]))
+
+        for t_last, t_cur in time_pairs:
+            idx_wall += 1
+            t_last_t = torch.tensor([t_last] * shape[0],  # pylint: disable=not-callable
+                                    device=self.device)
+
+            if t_cur < t_last:  # reverse
+                with torch.no_grad():
+                    image_before_step = image_after_step.clone()
+                    out = self._repaint_p_sample(
+                        image_after_step,
+                        t_last_t,
+                        latent_conditioning=latent_conditioning,
+                        latent_voided=latent_voided,
+                        latent_mask=latent_mask,
+                    )
+                    image_after_step = out["sample"]
+                    pred_xstart = out["pred_xstart"]
+
+                    sample_idxs[t_cur] += 1
+
+                    yield out
+
+            else:
+                t_shift = 1
+
+                image_before_step = image_after_step.clone()
+                image_after_step = self._repaint_undo(
+                    image_before_step, image_after_step,
+                    est_x_0=out['pred_xstart'], t=t_last_t+t_shift, debug=False)
+                pred_xstart = out["pred_xstart"]
+        
+    def _repaint_p_sample(
+        self,
+        x,
+        t,
+        latent_conditioning,
+        latent_voided,
+        latent_mask,
+    ):
+        """
+        Sample x_{t-1} from the model at the given timestep.
+
+        :param model: the model to sample from.
+        :param x: the current tensor at x_{t-1}.
+        :param t: the value of t, starting at 0 for the first diffusion step.
+        :param clip_denoised: if True, clip the x_start prediction to [-1, 1].
+        :param denoised_fn: if not None, a function which applies to the
+            x_start prediction before it is used to sample.
+        :param cond_fn: if not None, this is a gradient function that acts
+                        similarly to the model.
+        :param model_kwargs: if not None, a dict of extra keyword arguments to
+            pass to the model. This can be used for conditioning.
+        :return: a dict containing the following keys:
+                 - 'sample': a random sample from the model.
+                 - 'pred_xstart': a prediction of x_0.
+        """
+
+        mask_np = latent_mask.cpu().numpy()
+        dilated_np = binary_dilation(mask_np, iterations=1)
+        gt_keep_mask = 1 - torch.from_numpy(dilated_np).to(latent_mask.device).float().clamp(0, 1)
+        gt = latent_voided  # model_kwargs['gt']
+
+        alpha_cumprod = self._repaint_extract_into_tensor(
+            self.alphas_cumprod, t, x.shape)
+
+        gt_weight = torch.sqrt(alpha_cumprod)
+        gt_part = gt_weight * gt
+
+        noise_weight = torch.sqrt((1 - alpha_cumprod))
+        noise_part = noise_weight * torch.randn_like(x)
+
+        weighed_gt = gt_part + noise_part
+
+        x = gt_keep_mask * weighed_gt + (1 - gt_keep_mask) * x
+
+        noise_pred = self._get_noise_prediction(
+            x,  # x is the current sample
+            t,  # t is the current timestep
+            latent_conditioning
+        )
+        step_result = self.scheduler.step(noise_pred, t[0], x)
+
+        sample = step_result[0]
+        pred_xstart = step_result[1]
+
+        result = {
+            "sample": sample,
+            "pred_xstart": pred_xstart,
+            "gt": latent_voided
+        }
+        
+        return result
+
+    def _repaint_get_schedule_jump(self, t_T, n_sample, jump_length, jump_n_sample,
+                      jump2_length=1, jump2_n_sample=1,
+                      jump3_length=1, jump3_n_sample=1,
+                      start_resampling=100000000):
+
+        jumps = {}
+        for j in range(0, t_T - jump_length, jump_length):
+            jumps[j] = jump_n_sample - 1
+
+        jumps2 = {}
+        for j in range(0, t_T - jump2_length, jump2_length):
+            jumps2[j] = jump2_n_sample - 1
+
+        jumps3 = {}
+        for j in range(0, t_T - jump3_length, jump3_length):
+            jumps3[j] = jump3_n_sample - 1
+
+        t = t_T
+        ts = []
+
+        while t >= 1:
+            t = t-1
+            ts.append(t)
+
+            if (
+                t + 1 < t_T - 1 and
+                t <= start_resampling
+            ):
+                for _ in range(n_sample - 1):
+                    t = t + 1
+                    ts.append(t)
+
+                    if t >= 0:
+                        t = t - 1
+                        ts.append(t)
+
+            if (
+                jumps3.get(t, 0) > 0 and
+                t <= start_resampling - jump3_length
+            ):
+                jumps3[t] = jumps3[t] - 1
+                for _ in range(jump3_length):
+                    t = t + 1
+                    ts.append(t)
+
+            if (
+                jumps2.get(t, 0) > 0 and
+                t <= start_resampling - jump2_length
+            ):
+                jumps2[t] = jumps2[t] - 1
+                for _ in range(jump2_length):
+                    t = t + 1
+                    ts.append(t)
+                jumps3 = {}
+                for j in range(0, t_T - jump3_length, jump3_length):
+                    jumps3[j] = jump3_n_sample - 1
+
+            if (
+                jumps.get(t, 0) > 0 and
+                t <= start_resampling - jump_length
+            ):
+                jumps[t] = jumps[t] - 1
+                for _ in range(jump_length):
+                    t = t + 1
+                    ts.append(t)
+                jumps2 = {}
+                for j in range(0, t_T - jump2_length, jump2_length):
+                    jumps2[j] = jump2_n_sample - 1
+
+                jumps3 = {}
+                for j in range(0, t_T - jump3_length, jump3_length):
+                    jumps3[j] = jump3_n_sample - 1
+
+        ts.append(-1)
+
+        self._repaint_check_times(ts, -1, t_T)
+
+        return ts
+
+    def _repaint_check_times(self, times, t_0, t_T):
+        # Check end
+        assert times[0] > times[1], (times[0], times[1])
+
+        # Check beginning
+        assert times[-1] == -1, times[-1]
+
+        # Steplength = 1
+        for t_last, t_cur in zip(times[:-1], times[1:]):
+            assert abs(t_last - t_cur) == 1, (t_last, t_cur)
+
+        # Value range
+        for t in times:
+            assert t >= t_0, (t, t_0)
+            assert t <= t_T, (t, t_T)
+
+    def _repaint_extract_into_tensor(self, arr, timesteps, broadcast_shape):
+        """
+        Extract values from a 1-D numpy array for a batch of indices.
+
+        :param arr: the 1-D numpy array.
+        :param timesteps: a tensor of indices into the array to extract.
+        :param broadcast_shape: a larger shape of K dimensions with the batch
+                                dimension equal to the length of timesteps.
+        :return: a tensor of shape [batch_size, 1, ...] where the shape has K dims.
+        """
+        res = torch.from_numpy(arr).to(device=timesteps.device)[timesteps].float()
+        while len(res.shape) < len(broadcast_shape):
+            res = res[..., None]
+        return res.expand(broadcast_shape)
+
+    def _repaint_get_named_beta_schedule(self, schedule_name, num_diffusion_timesteps, use_scale):
+        """
+        Get a pre-defined beta schedule for the given name.
+
+        The beta schedule library consists of beta schedules which remain similar
+        in the limit of num_diffusion_timesteps.
+        Beta schedules may be added, but should not be removed or changed once
+        they are committed to maintain backwards compatibility.
+        """
+        if schedule_name == "linear":
+            # Linear schedule from Ho et al, extended to work for any number of
+            # diffusion steps.
+
+            if use_scale:
+                scale = 1000 / num_diffusion_timesteps
+            else:
+                scale = 1
+
+            beta_start = scale * 0.0001
+            beta_end = scale * 0.02
+            return np.linspace(
+                beta_start, beta_end, num_diffusion_timesteps, dtype=np.float64
+            )
+
+    def _repaint_undo(self, image_before_step, img_after_model, est_x_0, t, debug=False):
+        return self._repaint__undo(img_after_model, t)
+
+    def _repaint__undo(self, img_out, t):
+        beta = self._repaint_extract_into_tensor(self.betas, t, img_out.shape)
+
+        img_in_est = torch.sqrt(1 - beta) * img_out + \
+            torch.sqrt(beta) * torch.randn_like(img_out)
+
+        return img_in_est
+
     def _generate_denoising(self, latent_conditioning, latent_voided=None, latent_mask=None):
         """Generate denoised latent from pure noise using ControlNet conditioning"""
         batch_size = latent_conditioning.shape[0]
@@ -393,17 +696,6 @@ class LatentDiffusion(pl.LightningModule):
             mask_np = latent_mask.cpu().numpy()
             dilated_np = binary_dilation(mask_np, iterations=1)
             mask_soft = torch.from_numpy(dilated_np).to(latent_mask.device).float().clamp(0, 1)
-            # blurred_np = np.zeros(dilated_np.shape)
-            # for i in range(dilated_np.shape[0]):
-            #     # blurred_np[i, 0] = gaussian_filter(dilated_np[i, 0].astype(np.float32), sigma=1.0)
-            #     filtered = gaussian_filter(dilated_np[i, 0].astype(np.float32), sigma=1.0)
-            #     blurred_np[i, 0] = (filtered > 0.5).astype(np.float32)  # Only 0 and 1
-            # mask_soft = torch.from_numpy(blurred_np).to(latent_mask.device).clamp(0, 1)
-            # mask_soft = mask_soft.repeat(1, 4, 1, 1, 1)
-
-            # print("mask_soft unique values:", np.unique(mask_soft.cpu().numpy()))
-            # nib.save(nib.Nifti1Image(mask[0, 0].float().cpu().numpy(), np.eye(4)), Path(self.dir_output_model) / 'mask.nii.gz')
-            # nib.save(nib.Nifti1Image(mask_soft[0, 0].float().cpu().numpy(), np.eye(4)), Path(self.dir_output_model) / 'mask_soft.nii.gz')
 
         # Initialize with pure noise
         sample = torch.randn(
@@ -425,8 +717,6 @@ class LatentDiffusion(pl.LightningModule):
                     latent_conditioning.shape,
                     device=self.device
                 )
-                # t_offset = 250
-                # t_new = torch.as_tensor(max(t - t_offset, 0))
                 noisy_gt = self.scheduler.add_noise(latent_voided, noise_gt, t)
                 # path_temp = Path(self.dir_output_model) / f'before_t_off_{t_offset}' / f'{i}_noisy_gt.nii.gz'
                 # path_temp.parent.mkdir(parents=True, exist_ok=True)
@@ -450,7 +740,7 @@ class LatentDiffusion(pl.LightningModule):
                 t_device.unsqueeze(0).repeat(batch_size),
                 latent_conditioning
             )
-            
+
             # Denoising step
             sample = self.scheduler.step(noise_pred, t, sample)[0]
 
@@ -537,8 +827,8 @@ class LatentDiffusion(pl.LightningModule):
 
         return torch.stack(original_conditionings, dim=0).to(self.device)
 
-    def _evaluate_metrics(self, patients, masks, reconstructed_t1, original_t1, original_mask_healthy, original_t1_voided):
-        dir_metrics = Path(self.dir_output_model) / "metrics"
+    def _evaluate_metrics(self, patients, masks, reconstructed_t1, original_t1, original_mask_or_mask_healthy, original_t1_voided, dir_output):
+        dir_metrics = dir_output / "metrics"
         dir_metrics.mkdir(parents=True, exist_ok=True)
 
         for i, (patient, mask) in enumerate(zip(patients, masks)):
@@ -546,7 +836,7 @@ class LatentDiffusion(pl.LightningModule):
             metrics_dict = generate_metrics(
                 prediction=torch.tensor(reconstructed_t1[i].cpu().numpy()).unsqueeze(0),
                 target=torch.tensor(original_t1[i].cpu().numpy()).unsqueeze(0),
-                mask=torch.tensor(original_mask_healthy[i].cpu().numpy()).unsqueeze(0).bool(),
+                mask=torch.tensor(original_mask_or_mask_healthy[i].cpu().numpy()).unsqueeze(0).bool(),
                 normalization_tensor=torch.tensor(original_t1_voided[i].cpu().numpy()).unsqueeze(0)
             )
                 

@@ -29,6 +29,7 @@ dependencies = [
     "opencv-python>=4.11.0.86",
     "seaborn>=0.13.2",
     "pie-torch",
+    "blobfile>=3.0.0",
 ]
 
 [tool.uv.sources]

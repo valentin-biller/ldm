@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#SBATCH --job-name=vb-master
+#SBATCH --output=/vol/miltank/users/bilv/ldm/slurm/%x-%A.out
+#SBATCH --error=/vol/miltank/users/bilv/ldm/slurm/%x-%A.err
+#SBATCH --mail-user=valentin.biller@tum.de
+#SBATCH --mail-type=ALL
+#SBATCH --partition=universe,asteroids
+#SBATCH --qos=master
+#SBATCH --time=2-00:00:00
+#SBATCH --gres=gpu:1,gpumem:80G
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+
+cd /vol/miltank/users/bilv/ldm
+uv run /vol/miltank/users/bilv/ldm/inference_diffusion.py \
+    --function inference \
+    --model big_old \
+    --scheduler ddim \
+    --version 2 \
+    --mode inference_challenge \
+    --denoising own
+### 'inference'
+### 'inference_challenge'
+### 'inference_conditioning'

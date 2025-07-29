@@ -67,14 +67,14 @@ def main():
     latent_shape = (60, 60, 40)
     path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
 
+    print('Model', args.model)
+    print('Scheduler', args.scheduler)
+    print('Learning Rate', args.learning_rate)
+    print('Mode', args.mode)
+    print('Oversampling', args.oversampling)
+    print('Batch Size', args.batch_size)
+    print('Num Workers', args.num_workers)
     if not args.debug:
-        print('Model', args.model)
-        print('Scheduler', args.scheduler)
-        print('Learning Rate', args.learning_rate)
-        print('Mode', args.mode)
-        print('Oversampling', args.oversampling)
-        print('Batch Size', args.batch_size)
-        print('Num Workers', args.num_workers)
         # Setup MLflow continuation
         mlflow_params = {
             "model": args.model,
@@ -172,10 +172,11 @@ def main():
             if hasattr(self, 'system_monitor') and self.system_monitor is not None:
                 self.system_monitor.finish()
 
-    callbacks = [checkpoint_callback, lr_monitor]
+    callbacks = [checkpoint_callback]
     if not args.debug and local_rank == 0 and mlf_logger is not None:
         system_monitor = MLFlowSystemMonitorCallback()
         callbacks.append(system_monitor)
+        callbacks.append(lr_monitor) 
 
     # Create trainer
     trainer = pl.Trainer(

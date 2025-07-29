@@ -1,5 +1,6 @@
 output*
 models
+slurm
 
 # Python-generated files
 __pycache__/
