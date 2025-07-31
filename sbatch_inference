@@ -15,10 +15,10 @@
 cd /vol/miltank/users/bilv/ldm
 uv run /vol/miltank/users/bilv/ldm/inference_diffusion.py \
     --function inference \
-    --model big_old \
-    --scheduler ddim \
+    --model big \
+    --scheduler ddpm \
     --version 2 \
-    --mode inference_challenge \
+    --mode inference_conditioning \
     --denoising own
 ### 'inference'
 ### 'inference_challenge'

@@ -42,7 +42,7 @@ def inference():
         model_=model_,
         scheduler_=scheduler_,
         denoising=denoising,
-        num_inference_steps=100,
+        num_inference_steps=500,  # 100
     )
 
     # Initialize trainer
@@ -56,11 +56,10 @@ def inference():
     # Run inference on test set
     trainer.test(model, datamodule=datamodule)
 
-def calculate_metrics():
+def calculate_metrics(expected_entries=721):
     files_csv = list(dir_metrics.glob("*.csv"))
-    if not files_csv:
-        print("No CSV files found in the metrics directory.")
-        return
+    files_csv = [f for f in files_csv if f.name in ['mae.csv', 'mse.csv', 'msle.csv', 'psnr.csv', 'psnr_01.csv', 'psnr_eps.csv', 'psnr_01_eps.csv', 'rmse.csv', 'ssim.csv']]
+    assert len(files_csv) == 9
     
     stats = {}
     metrics = {}
@@ -71,8 +70,8 @@ def calculate_metrics():
         
         df = pd.read_csv(file_csv)
         df = df.drop_duplicates(['patient', 'mask'], keep='first').sort_values(by=['patient', 'mask'])
-        if len(df) != 2163:
-            print(f"WARNING: Expected 2163 unique (patient, mask) entries, found {len(df)} in {file_csv}")
+        if len(df) != expected_entries:
+            print(f"WARNING: Expected {expected_entries} unique (patient, mask) entries, found {len(df)} in {file_csv}")
         df.to_csv(file_csv_filtered, index=False)
 
         df = pd.read_csv(file_csv_filtered)
@@ -302,6 +301,13 @@ def create_slices():
         fig.savefig(filename, bbox_inches='tight', pad_inches=0)
         plt.close(fig)
 
+    dir_output_model_inference = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference' / denoising
+    dir_output_model_inference_conditioning = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference_conditioning' / denoising
+
+    # mask_unhealthy!!
+
+    path_psnr = dir_metrics / "psnr.csv"
+
     with open(path_psnr, newline='') as f:
         reader = csv.DictReader(f)
         rows = sorted(reader, key=lambda x: float(x['value']), reverse=True)
@@ -324,8 +330,9 @@ def create_slices():
     patients_masks_reconstructed = []
     for row_volume in row_volumes[:patients]:
         patients_masks_reconstructed.append((row_volume[0]['patient'], row_volume[0]['mask']))
-        print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:5}")
+        print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:10}")
 
+    return
     for patient, mask in patients_masks_reconstructed:
         path_mask = path_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz'
         path_original = path_data / patient / 't1.nii.gz'
@@ -407,7 +414,7 @@ def create_failure():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Inference  Diffusion")
-    parser.add_argument('--function', type=str, default='inference', choices=['inference', 'calculate_metrics', 'generate_conditioning', 'create_slices', 'create_failure'], help='Function')
+    parser.add_argument('--function', type=str, default='inference', choices=['inference', 'calculate_metrics', 'generate_conditioning', 'create_slices', 'create_failure', 'call_complete'], help='Function')
     parser.add_argument('--debug', action='store_true', help='Debug Mode')
     parser.add_argument('--model', type=str, default='big', choices=['small', 'big', 'big_old'], help='Model')
     parser.add_argument('--scheduler', type=str, default='ddpm', choices=['ddpm', 'ddim'], help='Scheduler')
@@ -437,8 +444,6 @@ if __name__ == "__main__":
     path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
     path_diffusion = dir_current / 'models' / f'diffusion_{model_}_{scheduler_}_v{version_}.ckpt'
 
-    path_psnr = dir_metrics / "psnr.csv"
-
     if args.function == 'inference':
         inference()
     elif args.function == 'calculate_metrics':
@@ -449,3 +454,46 @@ if __name__ == "__main__":
         create_slices()
     elif args.function == 'create_failure':
         create_failure()
+    elif args.function == 'call_complete':
+        rows = []
+        reconstructed_files = {}
+        for model_scheduler_version in ['big_old_ddim_v2', 'big_ddpm_v1', 'big_ddpm_v2']:
+            for mode in ['inference', 'inference_challenge', 'inference_conditioning']:
+                for denoising in ['own', 'repaint']:
+                    if denoising == 'repaint' and model_scheduler_version == 'big_old_ddim_v2':
+                        continue
+
+                    dir_output_model = Path("/vol/miltank/users/bilv/ldm/output")
+                    dir_output_model = dir_output_model / model_scheduler_version / mode / denoising
+                    dir_metrics = dir_output_model / "metrics"
+                    
+                    count_original = len(list((dir_output_model / 'original').iterdir()))
+                    count_reconstructed = len(list((dir_output_model / 'reconstructed').iterdir()))
+                    assert count_original == count_reconstructed, f"Mismatch in counts for {model_scheduler_version}, {mode}, {denoising}: {count_original} != {count_reconstructed}"
+
+                    if mode == 'inference_challenge':
+                        complete = True if count_reconstructed == 219 else False
+                    else:
+                        if model_scheduler_version == 'big_ddpm_v2':
+                            complete = True if count_reconstructed == 721 else False
+                            expected_entries = 721
+                        else:
+                            complete = True if count_reconstructed == 2163 else False
+                            expected_entries = 2163
+
+                    rows.append({
+                        "complete": complete,
+                        "model_scheduler_version": model_scheduler_version,
+                        "mode": mode,
+                        "denoising": denoising,
+                        "count_reconstructed": count_reconstructed
+                    })
+
+                    if mode != 'inference_challenge':
+                        calculate_metrics(expected_entries=expected_entries)
+
+        df = pd.DataFrame(rows)
+        print(df.sort_values(
+            by=['complete', 'model_scheduler_version', 'denoising', 'mode'],
+            ascending=[False, False, True, True]
+        ))

@@ -80,10 +80,11 @@ class DataModule(pl.LightningDataModule):
             patients_challenge = sorted(list(os.listdir(self.path_data_challenge)))
             patients_challenge_identifier = set([folder.split('-')[2] for folder in patients_challenge])
 
+        '''
         patients = []
         for folder in sorted(os.listdir(self.path_data)):
             path_growth_model = os.path.join(self.path_data, folder, 'processed', 'growth_model.nii.gz')
-            path_tissue_segmentation = os.path.join(self.path_data, folder, 'processed_voided', 'tissue_segmentation.nii.gz')
+            path_tissue_segmentation = os.path.join(self.path_data, folder, 'processed', 'tissue_segmentation.nii.gz')
             if os.path.exists(path_growth_model) and os.path.exists(path_tissue_segmentation):
                 # For Challenge
                 if folder.startswith('BraTS2021') and folder.split('_')[1] in patients_challenge_identifier:
@@ -97,24 +98,44 @@ class DataModule(pl.LightningDataModule):
         patients_train = [patients[i] for i in patients_train.indices]
         patients_val = [patients[i] for i in patients_val.indices]
 
-        # For Inference filter patients that are not in the dir_output_model
+        with open(str(Path(__file__).resolve().parent / '.patients_train.txt'), "w") as f:
+            for patient in sorted(patients_train):
+                f.write(f"{patient}\n")
+
+        with open(str(Path(__file__).resolve().parent / '.patients_val.txt'), "w") as f:
+            for patient in sorted(patients_val):
+                f.write(f"{patient}\n")
+        '''
+
+        with open(str(Path(__file__).resolve().parent / '.patients_train.txt'), "r") as f:
+            patients_train = [line.strip() for line in f if line.strip()]
+
+        with open(str(Path(__file__).resolve().parent / '.patients_val.txt'), "r") as f:
+            patients_val = [line.strip() for line in f if line.strip()]
+
+        patients = patients_train + patients_val
+
+        # Only do inference for the patients that haven't been inferred
         if self.dir_output_model is not None:
-            files_completed = list((self.dir_output_model / 'reconstructed').iterdir())
-            if self.mode in ['inference', 'inference_conditioning']:
-                patient_masks = {}
-                for file in files_completed:
-                    name = file.name
-                    patient_mask = name[:-7]
-                    patient = patient_mask[:-5]
-                    mask = patient_mask[-4:]
-                    patient_masks.setdefault(patient, set()).add(mask)
-                patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
-                patients_val = [patient for patient in patients_val if patient not in patients_completed]
-                self._print_numbers('Completed', patients_completed)
-            elif self.mode == 'inference_challenge':
-                patients_completed = [file.name[:-21] for file in files_completed]
-                patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
-                self._print_numbers('Completed', patients_completed)
+            dir_output_model_reconstructed = self.dir_output_model / 'reconstructed'
+            if dir_output_model_reconstructed.exists():
+                files_completed = list(dir_output_model_reconstructed.iterdir())
+                if self.mode in ['inference', 'inference_conditioning']:
+                    patient_masks = {}
+                    for file in files_completed:
+                        name = file.name
+                        patient_mask = name[:-7]
+                        patient = patient_mask[:-5]
+                        mask = patient_mask[-4:]
+                        patient_masks.setdefault(patient, set()).add(mask)
+                    # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
+                    patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
+                    patients_val = [patient for patient in patients_val if patient not in patients_completed]
+                    self._print_numbers('Completed', patients_completed)
+                elif self.mode == 'inference_challenge':
+                    patients_completed = [file.name[:-21] for file in files_completed]
+                    patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
+                    self._print_numbers('Completed', patients_completed)
 
         print(self.print_length * '=')
         if self.mode in ['training', 'inference', 'inference_conditioning']:
@@ -221,7 +242,7 @@ class DataModule(pl.LightningDataModule):
         print(f"{'=' * (side + extra)} {identifier_str} {'=' * side}")
         for prefix in prefixes:
             count = len(groups[prefix])
-            print(f"{prefix:<10}{count:>5}{count / len(patients) * 100:9.2f}%")
+            print(f"{prefix:<10}{count:>5}{(count / len(patients) * 100) if len(patients) > 0 else 0:9.2f}%")
         return groups
 
     def _oversample_prefixes(self, groups):
@@ -236,14 +257,6 @@ class DataModule(pl.LightningDataModule):
 class DataSet(Dataset):
     """
     Dataset for brain MRI inpainting with conditioning
-    
-    Returns:
-        - voided_latent: Encoded voided input image (6, 32, 32, 20)
-        - conditioning: 4-channel conditioning (4, 32, 32, 20)
-        - mask_latent: Inpainting mask in latent space (1, 32, 32, 20)
-        - target_image: Ground truth image (1, 240, 240, 155)
-        - patient_id: Patient identifier
-        - mask_id: Mask identifier (0000, 0001, 0002)
     """
     
     def __init__(
@@ -268,7 +281,7 @@ class DataSet(Dataset):
             self.samples = []
             for patient_id in self.patients:
                 # Check for mask files 0000, 0001, 0002
-                for mask_id in ["0000", "0001", "0002"]:
+                for mask_id in ["0000"]:  # "0001", "0002"
                     self.samples.append((patient_id, mask_id))
 
         self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)

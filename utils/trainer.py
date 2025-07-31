@@ -691,11 +691,9 @@ class LatentDiffusion(pl.LightningModule):
         batch_size = latent_conditioning.shape[0]
         
         if latent_mask is not None:
-            mask = latent_mask.repeat(1, 4, 1, 1, 1)
-            
             mask_np = latent_mask.cpu().numpy()
             dilated_np = binary_dilation(mask_np, iterations=1)
-            mask_soft = torch.from_numpy(dilated_np).to(latent_mask.device).float().clamp(0, 1)
+            soft_mask = torch.from_numpy(dilated_np).to(latent_mask.device).float().clamp(0, 1)
 
         # Initialize with pure noise
         sample = torch.randn(
@@ -718,22 +716,7 @@ class LatentDiffusion(pl.LightningModule):
                     device=self.device
                 )
                 noisy_gt = self.scheduler.add_noise(latent_voided, noise_gt, t)
-                # path_temp = Path(self.dir_output_model) / f'before_t_off_{t_offset}' / f'{i}_noisy_gt.nii.gz'
-                # path_temp.parent.mkdir(parents=True, exist_ok=True)
-                # nib.save(nib.Nifti1Image(noisy_gt[0, 0].cpu().float().numpy(), np.eye(4)), path_temp)
-                
-                # alpha = i / (self.hparams.num_inference_steps - 1)
-                # # if i >= self.hparams.num_inference_steps - 5:
-                # #     mask_temp = mask
-                # # else:
-                #     # Interpolate between soft and hard mask
-                # mask_temp = (1 - alpha) * mask_soft + alpha * mask
-                mask_temp = mask_soft
-
-                # noisy_gt_temp = sample * mask_temp + noisy_gt * (1 - mask_temp)
-                sample = (sample * mask_temp + noisy_gt * (1 - mask_temp)).float()
-                # sample = sample * repeated_mask + noisy_gt * (1 - repeated_mask)
-                # nib.save(nib.Nifti1Image(sample[0, 0].cpu().float().numpy(), np.eye(4)), path_temp.parent / f'{i}_sample.nii.gz')
+                sample = (sample * soft_mask + noisy_gt * (1 - soft_mask)).float()
                
             noise_pred = self._get_noise_prediction(
                 sample,
@@ -745,39 +728,7 @@ class LatentDiffusion(pl.LightningModule):
             sample = self.scheduler.step(noise_pred, t, sample)[0]
 
         if latent_voided is not None and latent_mask is not None:
-            # # latent_voided_refining = sample * mask + latent_voided * (1 - latent_mask)
-            # self.scheduler.set_timesteps(self.hparams.num_inference_steps)
-
-            # noise = torch.randn_like(
-            #     latent_conditioning,
-            #     device=self.device
-            # )
-            # sample = self.scheduler.add_noise(sample, noise, self.scheduler.timesteps[0])
-
-            # for i, t in enumerate(self.scheduler.timesteps):
-            #     t_device = t.type_as(sample)
-
-            #     noise_gt = torch.randn(
-            #         latent_conditioning.shape,
-            #         device=self.device
-            #     )
-            #     noisy_gt = self.scheduler.add_noise(latent_voided, noise_gt, t)
-
-            #     # Harder blending
-            #     sample = sample * mask + noisy_gt * (1 - mask)
-
-            #     noise_pred = self._get_noise_prediction(
-            #         sample,
-            #         t_device.unsqueeze(0).repeat(batch_size),
-            #         latent_conditioning
-            #     )
-            #     sample = self.scheduler.step(noise_pred, t, sample)[0]
-
-            # option 1
-            # sample = sample * mask + latent_voided * (1 - mask)
-            sample = sample * mask_soft + latent_voided * (1 - mask_soft)
-            # option 2
-            # sample = sample * repeated_mask + latent_voided * (1 - repeated_mask)
+            sample = sample * soft_mask + latent_voided * (1 - soft_mask)
 
         return sample
 
