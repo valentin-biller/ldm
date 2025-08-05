@@ -366,22 +366,22 @@ class LatentDiffusion(pl.LightningModule):
                 
                 original_min, original_max = original_t1_voided.min(), original_t1_voided.max()
                 reconstructed_t1 = reconstructed_t1 * (original_max - original_min) + original_min
-                self._save_reconstruction(reconstructed_t1, patients, masks, affines, identifier='inpainted')
+                self._save_reconstruction(reconstructed_t1, patients, masks, affines, identifier='inpainted', mode=mode)
                 
                 ########## Histogram Equalization
 
                 reconstructed_t1_he = self._histogram_equalization(reconstructed_t1, original_t1_voided)  # (B, 1, 240, 240, 155)
-                self._save_reconstruction(reconstructed_t1_he, patients, masks, affines, identifier='histogram_equalization')
+                self._save_reconstruction(reconstructed_t1_he, patients, masks, affines, identifier='histogram_equalization', mode=mode)
 
                 ########## Poisson Blending
 
                 reconstructed_t1_pb = self._poisson_blending(reconstructed_t1_he, original_t1_voided, original_mask)  # (B, 1, 240, 240, 155)
-                self._save_reconstruction(reconstructed_t1_pb, patients, masks, affines, identifier='poisson_blending')
+                self._save_reconstruction(reconstructed_t1_pb, patients, masks, affines, identifier='poisson_blending', mode=mode)
 
                 ########## Pixel Injection
                 
                 reconstructed_t1_pi = self._pixel_injection(reconstructed_t1_pb, original_t1_voided, original_mask)  # (B, 1, 240, 240, 155)
-                self._save_reconstruction(reconstructed_t1_pi, patients, masks, affines, identifier='pixel_injection')
+                self._save_reconstruction(reconstructed_t1_pi, patients, masks, affines, identifier='pixel_injection', mode=mode)
 
     def _repaint_generate_denoising(self, latent_conditioning, latent_voided=None, latent_mask=None):
         self.scheduler.set_timesteps(self.hparams.num_inference_steps)
@@ -773,22 +773,28 @@ class LatentDiffusion(pl.LightningModule):
 
         return reconstructed_t1_pi  # (B, 1, 240, 240, 155)
 
-    def _save_reconstruction(self, reconstructed_t1, patients, masks, affines, identifier):
+    def _save_reconstruction(self, reconstructed_t1, patients, masks, affines, identifier, mode):
         # for i in range(reconstructed_t1.shape[0]):
         #     path_temp = Path(self.dir_output_model) / 'temp_autoencoder' / f'{batch["patient"][i]}_{batch["mask"][i]}.nii.gz'
         #     path_temp.parent.mkdir(parents=True, exist_ok=True)
         #     nib.save(nib.Nifti1Image(reconstructed_t1[i, 0].cpu().float().numpy(), batch['affine'][i].cpu().float().numpy()), path_temp)
-            
-        dir_output = self.dir_output_model / identifier
+        
+        if mode == 'inference_challenge' and identifier != 'pixel_injection':
+            return
+
+        if mode in ['inference', 'inference_conditioning']:
+            dir_output = self.dir_output_model / identifier
+        elif mode == 'inference_challenge':
+            dir_output = self.dir_output_model
         dir_output.mkdir(parents=True, exist_ok=True)
 
         # Save images
         for i, patient in enumerate(patients):
-            if masks is None:
-                file_name = f"{patient}-t1n-inference.nii.gz"
-            else:
+            if mode in ['inference', 'inference_conditioning']:
                 mask = masks[i]
                 file_name = f"{patient}_{mask}.nii.gz"
+            elif mode == 'inference_challenge':
+                file_name = f"{patient}-t1n-inference.nii.gz"
             path_reconstructed_t1 = dir_output / file_name
 
             reconstructed_t1_ = reconstructed_t1[i, 0].cpu().float().numpy()
