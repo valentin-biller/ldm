@@ -9,6 +9,8 @@ RUN apt-get update -y && \
 # Install uv
 RUN curl -Ls https://astral.sh/uv/install.sh | sh
 
+ENV PATH="/root/.local/bin:$PATH"
+
 # Copy Python version and dependency files
 COPY .python-version .
 COPY pyproject.toml .

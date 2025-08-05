@@ -21,6 +21,12 @@ from utils.challenge_metrics import generate_metrics
 
 
 def inference():
+
+    if mode in ['inference', 'inference_conditioning']:
+        batch_size, num_workers = 4, 4
+    elif mode == 'inference_challenge':
+        batch_size, num_workers = 1, 0
+
     # Initialize data module
     datamodule = DataModule(
         debug=debug,
@@ -30,8 +36,8 @@ def inference():
         dir_data_challenge=dir_data_challenge,
         dir_output_model=dir_output_model,
         latent_shape=(60, 60, 40),
-        batch_size=4,
-        num_workers=4,
+        batch_size=batch_size,
+        num_workers=num_workers,
     )
     datamodule.setup()
 
