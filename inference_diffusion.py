@@ -43,7 +43,7 @@ def inference():
         model_=model_,
         scheduler_=scheduler_,
         denoising=denoising,
-        num_inference_steps=100
+        num_inference_steps=5 # 100
     )
 
     # Initialize trainer
@@ -236,7 +236,7 @@ def generate_conditioning():
     temp = Path(dir_output_model) / f"temp_{random.randint(10000, 99999)}"
     temp.mkdir(parents=True, exist_ok=True)
 
-    for dir_patient in tqdm(sorted(list(path_data_challenge.iterdir()))):
+    for dir_patient in tqdm(sorted(list(dir_data_challenge.iterdir()))):
         path_conditioning = dir_patient / 'conditioning.pt'
         path_conditioning_old = dir_patient / 'conditioning_old.pt'
 
@@ -325,8 +325,8 @@ def create_slices():
 
     row_volumes = []
     for row in rows[start:end]:
-        # path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
-        path_mask = path_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
+        # path_mask = dir_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        path_mask = dir_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
         volume = np.sum(mask_data == 1)
         row_volumes.append((row, volume))
@@ -372,8 +372,8 @@ def create_slices():
 
     row_volumes_inference = []
     for row in rows_inference[start:end]:
-        # path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
-        path_mask = path_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
+        # path_mask = dir_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        path_mask = dir_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
         volume = np.sum(mask_data == 1)
         row_volumes_inference.append((row, volume))
@@ -382,8 +382,8 @@ def create_slices():
 
     row_volumes_inference_conditioning = []
     for row in rows_inference_conditioning[start:end]:
-        # path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
-        path_mask = path_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
+        # path_mask = dir_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        path_mask = dir_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
         volume = np.sum(mask_data == 1)
         row_volumes_inference_conditioning.append((row, volume))
@@ -402,10 +402,10 @@ def create_slices():
 
     for dir_output_model, patients_masks_reconstructed in zip([dir_output_model_inference, dir_output_model_inference_conditioning], [patients_masks_reconstructed_inference, patients_masks_reconstructed_inference_conditioning]):
         for patient, mask in patients_masks_reconstructed:
-            # path_mask = path_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz'
-            path_mask = path_data / patient / 'masks' / 'mask-unhealthy.nii.gz'
-            path_original = path_data / patient / 't1.nii.gz'
-            path_voided = path_data / patient / 'voided' / f't1-voided-000{mask}.nii.gz'
+            # path_mask = dir_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz'
+            path_mask = dir_data / patient / 'masks' / 'mask-unhealthy.nii.gz'
+            path_original = dir_data / patient / 't1.nii.gz'
+            path_voided = dir_data / patient / 'voided' / f't1-voided-000{mask}.nii.gz'
             path_reconstructed = dir_output_model / 'reconstructed' / f"{patient}_000{mask}.nii.gz"
 
             # Load mask and reconstructed image
