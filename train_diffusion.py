@@ -16,8 +16,8 @@ import sys
 import argparse
 from pathlib import Path
 dir_current = Path(__file__).resolve().parent
-path_models = dir_current.parent / 'master-thesis' / 'models'
-sys.path.append(str(path_models))
+dir_models = dir_current.parent / 'master-thesis' / 'models'
+sys.path.append(str(dir_models))
 
 import torch
 import pytorch_lightning as pl
@@ -61,8 +61,8 @@ def main():
     torch.set_float32_matmul_precision('medium')
     local_rank = int(os.environ.get("LOCAL_RANK", 0))
 
-    path_data = "/vol/miltank/users/bilv/data"
-    path_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
+    dir_data = "/vol/miltank/users/bilv/data"
+    dir_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
     
     latent_shape = (60, 60, 40)
     path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
@@ -126,8 +126,8 @@ def main():
         debug=args.debug,
         mode=args.mode,
         oversampling=args.oversampling,
-        path_data=path_data,
-        path_data_challenge=path_data_challenge,
+        dir_data=dir_data,
+        dir_data_challenge=dir_data_challenge,
         latent_shape=latent_shape,
         batch_size=args.batch_size,
         num_workers=args.num_workers,

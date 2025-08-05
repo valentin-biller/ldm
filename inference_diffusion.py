@@ -17,6 +17,7 @@ import torch
 import pytorch_lightning as pl
 from utils.data import DataModule, create_conditioning
 from utils.trainer import LatentDiffusion
+from utils.challenge_metrics import generate_metrics
 
 
 def inference():
@@ -25,8 +26,8 @@ def inference():
         debug=debug,
         mode=mode,
         oversampling=True,
-        path_data=path_data,
-        path_data_challenge=path_data_challenge,
+        dir_data=dir_data,
+        dir_data_challenge=dir_data_challenge,
         dir_output_model=dir_output_model,
         latent_shape=(60, 60, 40),
         batch_size=4,
@@ -42,7 +43,7 @@ def inference():
         model_=model_,
         scheduler_=scheduler_,
         denoising=denoising,
-        num_inference_steps=500,  # 100
+        num_inference_steps=100
     )
 
     # Initialize trainer
@@ -57,38 +58,7 @@ def inference():
     trainer.test(model, datamodule=datamodule)
 
 def calculate_metrics(expected_entries=721):
-    files_csv = list(dir_metrics.glob("*.csv"))
-    files_csv = [f for f in files_csv if f.name in ['mae.csv', 'mse.csv', 'msle.csv', 'psnr.csv', 'psnr_01.csv', 'psnr_eps.csv', 'psnr_01_eps.csv', 'rmse.csv', 'ssim.csv']]
-    assert len(files_csv) == 9
     
-    stats = {}
-    metrics = {}
-    
-    for file_csv in files_csv:
-        metric_name = file_csv.stem
-        file_csv_filtered = file_csv.with_name(f"filtered_{file_csv.name}")
-        
-        df = pd.read_csv(file_csv)
-        df = df.drop_duplicates(['patient', 'mask'], keep='first').sort_values(by=['patient', 'mask'])
-        if len(df) != expected_entries:
-            print(f"WARNING: Expected {expected_entries} unique (patient, mask) entries, found {len(df)} in {file_csv}")
-        df.to_csv(file_csv_filtered, index=False)
-
-        df = pd.read_csv(file_csv_filtered)
-        values = df['value'].values
-
-        stats[metric_name] = {
-            "mean": float(np.mean(values)),
-            "median": float(np.median(values)), 
-            "std": float(np.std(values))
-        }
-        metrics[metric_name] = values
-        
-    # Save to JSON
-    json_output = dir_metrics / "stats.json"
-    with open(json_output, 'w') as f:
-        json.dump(stats, f, indent=4)
-
     def plot_custom_violin(ax, data, metric_name, ylims, yticks):
         # Violin
         # parts = sns.violinplot(x=[1.18]*len(data), y=data, ax=ax, color='#cccccc', inner=None, linewidth=2)
@@ -166,50 +136,97 @@ def calculate_metrics(expected_entries=721):
         # Style
         ax.set_ylim(*ylims)
         ax.set_yticks(yticks)
-        ax.yaxis.set_tick_params(labelsize=36)
+        ax.yaxis.set_tick_params(labelsize=20)
         ax.yaxis.grid(True, linestyle='--', linewidth=1.0, color='gray', alpha=0.6)
         ax.set_axisbelow(True)
         ax.set_xticks([])
-        ax.set_xlabel(metric_name, fontsize=40)
+        ax.set_xlabel(metric_name, fontsize=30)
         ax.set_title('')
         ax.spines['left'].set_visible(True)
         ax.spines['bottom'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
 
-    dict_metrics = {
-        'ssim': 'SSIM',
-        'psnr': 'PSNR',
-        'psnr_01': 'PSNR (0-1)',
-        'psnr_eps': 'PSNR (eps)',
-        'psnr_01_eps': 'PSNR (0-1 / eps)',
-        'mse': 'MSE',
-        'rmse': 'RMSE',
-        'mae': 'MAE',
-        'msle': 'MSLE'
-    }
+    for folder in ['inpainted', 'histogram_equalization', 'poisson_blending', 'pixel_injection']:
+        dir_output = dir_output_model / folder
+        dir_metrics = dir_output_model / 'metrics' / folder
+        dir_metrics.mkdir(parents=True, exist_ok=True)
 
-    # All metrics in a 3x3 grid
-    all_metrics = ['psnr', 'psnr_01', 'psnr_eps', 'psnr_01_eps', 'mse', 'rmse', 'mae', 'msle', 'ssim']
-    fig, axes = plt.subplots(3, 4, figsize=(24, 18), sharey=False)
-    axes_flat = axes.flatten()
-    for i, metric in enumerate(all_metrics):
-        plot_custom_violin(
-            axes_flat[i], metrics[metric], dict_metrics[metric],
-            ylims=(-2, 42) if metric.startswith('psnr') else (0.0, 1.1) if metric == 'ssim' else (-0.05, 0.55),
-            yticks=[0, 10, 20, 30, 40] if metric.startswith('psnr') else [0, 0.25, 0.5, 0.75, 1.0] if metric == 'ssim' else [0, 0.1, 0.2, 0.3, 0.4, 0.5]
-        )
-        if i % 4 != 0:  # 4 columns per row
-            axes_flat[i].set_yticklabels([])
-            # axes_flat[i].set_yticks([])
-            axes_flat[i].spines['left'].set_visible(False)
-            # axes_flat[i].yaxis.set_visible(False)
-    # Hide unused axes (last 3 if only 9 metrics)
-    for j in range(len(all_metrics), 12):
-        fig.delaxes(axes_flat[j])
-    plt.tight_layout()
-    plt.savefig(dir_metrics / 'all_metrics.svg', format='svg', dpi=300)
-    plt.close(fig)
+        paths_reconstructed = sorted(list(dir_output.iterdir()))
+        if len(paths_reconstructed) != expected_entries:
+            print(f"WARNING: Expected {expected_entries} files (patient, mask), found {len(paths_reconstructed)} for '{folder}'")
+
+        metrics_rows = []
+        for path_reconstructed in tqdm(paths_reconstructed):
+            patient = path_reconstructed.name[:-12]
+            mask = path_reconstructed.name[-11:-7]
+
+            reconstructed = nib.load(path_reconstructed).get_fdata()
+            original = nib.load(dir_data / patient / 't1.nii.gz').get_fdata()
+            if mode == 'inference':
+                mask_ = nib.load(dir_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz').get_fdata()
+            elif mode == 'inference_conditioning':
+                mask_ = nib.load(dir_data / patient / 'masks' / f'mask-{mask}.nii.gz').get_fdata()
+            voided = nib.load(dir_data / patient / 'voided' / f't1-voided-{mask}.nii.gz').get_fdata()
+
+            metrics_dict = generate_metrics(
+                prediction=torch.tensor(reconstructed).unsqueeze(0),
+                target=torch.tensor(original).unsqueeze(0),
+                mask=torch.tensor(mask_).unsqueeze(0).bool(),
+                normalization_tensor=torch.tensor(voided).unsqueeze(0)
+            )
+                
+            for metric_name, metric_value in metrics_dict.items():
+                metrics_rows.append([patient, mask, metric_name, metric_value])
+
+        stats = {}
+        metrics = {}
+
+        metrics_df = pd.DataFrame(metrics_rows, columns=['patient', 'mask', 'metric', 'value'])
+        for metric_name in metrics_df['metric'].unique():
+            metric_df = metrics_df[metrics_df['metric'] == metric_name][['patient', 'mask', 'value']]
+            metric_df = metric_df.sort_values(by=['patient', 'mask'])
+            metric_df.to_csv(dir_metrics / f"{metric_name}.csv", index=False)
+
+            assert not metric_df.duplicated(['patient', 'mask']).any(), f"Duplicate (patient, mask) pairs found for {metric_name}"
+            assert len(metric_df) == len(paths_reconstructed), (
+                f"Number of (patient, mask) pairs ({len(metric_df)}) does not match number of files in {dir_output} ({len(list(dir_output.iterdir()))})"
+            )      
+            
+            values = metric_df['value'].values
+            stats[metric_name] = {
+                "mean": float(np.mean(values)),
+                "median": float(np.median(values)),
+                "std": float(np.std(values))
+            }
+            metrics[metric_name] = values
+            
+        # Save to JSON
+        path_stats = dir_metrics / "stats.json"
+        with open(path_stats, 'w') as f:
+            json.dump(stats, f, indent=4)
+
+        dict_metrics = {
+            'ssim': 'SSIM',
+            'psnr': 'PSNR',
+            'mse': 'MSE',
+            'rmse': 'RMSE',
+            'mae': 'MAE',
+            'msle': 'MSLE'
+        }
+
+        all_metrics = ['ssim', 'psnr', 'mae', 'mse', 'rmse', 'msle']
+        fig, axes = plt.subplots(2, 3, figsize=(18, 12), sharey=False)
+        axes_flat = axes.flatten()
+        for i, metric in enumerate(all_metrics):
+            plot_custom_violin(
+                axes_flat[i], metrics[metric], dict_metrics[metric],
+                ylims=(-2, 42) if metric.startswith('psnr') else (0.0, 1.1) if metric == 'ssim' else (-0.05, 0.55),
+                yticks=[0, 10, 20, 30, 40] if metric.startswith('psnr') else [0, 0.25, 0.5, 0.75, 1.0] if metric == 'ssim' else [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+            )
+        plt.tight_layout()
+        plt.savefig(dir_metrics / 'all_metrics.svg', format='svg', dpi=300)
+        plt.close(fig)
 
 def generate_conditioning():
     import sys
@@ -255,12 +272,6 @@ def generate_conditioning():
             registration_mask_file=path_inverted_mask
         )
 
-        ### temp
-        path_original_tissue_segmentation = temp_patient / 'processed' / 'tissue_segmentation' / 'tissue_seg.nii.gz'
-        path_temp_tissue_segmentation = dir_patient / 'tissue_segmentation.nii.gz'
-        shutil.copy(path_original_tissue_segmentation, path_temp_tissue_segmentation)
-        ### temp
-
         path_original_tissue_segmentation = temp_patient / 'processed' / 'tissue_segmentation' / 'tissue_seg.nii.gz'
         original_tissue_segmentation = nib.load(path_original_tissue_segmentation).get_fdata()  # 240, 240, 155
         original_tissue_segmentation = torch.as_tensor(original_tissue_segmentation).float()
@@ -301,11 +312,7 @@ def create_slices():
         fig.savefig(filename, bbox_inches='tight', pad_inches=0)
         plt.close(fig)
 
-    dir_output_model_inference = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference' / denoising
-    dir_output_model_inference_conditioning = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference_conditioning' / denoising
-
-    # mask_unhealthy!!
-
+    '''
     path_psnr = dir_metrics / "psnr.csv"
 
     with open(path_psnr, newline='') as f:
@@ -318,7 +325,8 @@ def create_slices():
 
     row_volumes = []
     for row in rows[start:end]:
-        path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        # path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        path_mask = path_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
         volume = np.sum(mask_data == 1)
         row_volumes.append((row, volume))
@@ -331,66 +339,127 @@ def create_slices():
     for row_volume in row_volumes[:patients]:
         patients_masks_reconstructed.append((row_volume[0]['patient'], row_volume[0]['mask']))
         print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:10}")
+    '''
 
-    return
-    for patient, mask in patients_masks_reconstructed:
-        path_mask = path_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz'
-        path_original = path_data / patient / 't1.nii.gz'
-        path_voided = path_data / patient / 'voided' / f't1-voided-{mask}.nii.gz'
-        path_reconstructed = dir_output_model / 'inference' / 'reconstructed' / f"{patient}_{mask}.nii.gz"
+    dir_output_model = Path("/vol/miltank/users/bilv/ldm/output")
+    dir_output_model_inference = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference' / denoising
+    dir_output_model_inference_conditioning = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference_conditioning' / denoising
 
-        # Load mask and reconstructed image
+    path_psnr_inference = dir_output_model_inference / 'metrics' / "filtered_psnr.csv"
+    path_psnr_inference_conditioning = dir_output_model_inference_conditioning / 'metrics' / "filtered_psnr.csv"
+
+    with open(path_psnr_inference, newline='') as f:
+        reader = csv.DictReader(f)
+        rows_inference = sorted(reader, key=lambda x: float(x['value']), reverse=True)
+
+    with open(path_psnr_inference_conditioning, newline='') as f:
+        reader = csv.DictReader(f)
+        rows_inference_conditioning = sorted(reader, key=lambda x: float(x['value']), reverse=True)
+
+    top = 15
+    top_patients_inference = [row['patient'] for row in rows_inference[:top]]
+    top_patients_inference_conditioning = [row['patient'] for row in rows_inference_conditioning[:top]]
+
+    common_patients = set(top_patients_inference) & set(top_patients_inference_conditioning)
+    print(f"Patients in both top patients (count={len(common_patients)}):", common_patients)
+
+    rows_inference = [row for row in rows_inference if row['patient'] in common_patients]
+    rows_inference_conditioning = [row for row in rows_inference_conditioning if row['patient'] in common_patients]    
+
+    start = 0
+    end = 50
+    patients = 20
+
+    row_volumes_inference = []
+    for row in rows_inference[start:end]:
+        # path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        path_mask = path_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
-        original_data = nib.load(str(path_original)).get_fdata()
-        voided_data = nib.load(str(path_voided)).get_fdata()
-        reconstructed_data = nib.load(str(path_reconstructed)).get_fdata()
+        volume = np.sum(mask_data == 1)
+        row_volumes_inference.append((row, volume))
+        print(f"{row['patient']:<25} {row['mask']:5} {row['value']:>25} {volume:>10}")
+    row_volumes_inference.sort(key=lambda x: x[1], reverse=True)
 
-        # Find center of mask (where mask == 1)
-        coords = np.argwhere(mask_data == 1)
-        center = coords.mean(axis=0).astype(int)  # (z, y, x) or (x, y, z) depending on orientation
-        x, y, z = center
+    row_volumes_inference_conditioning = []
+    for row in rows_inference_conditioning[start:end]:
+        # path_mask = path_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
+        path_mask = path_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
+        mask_data = nib.load(str(path_mask)).get_fdata()
+        volume = np.sum(mask_data == 1)
+        row_volumes_inference_conditioning.append((row, volume))
+        print(f"{row['patient']:<25} {row['mask']:5} {row['value']:>25} {volume:>10}")
+    row_volumes_inference_conditioning.sort(key=lambda x: x[1], reverse=True)
 
-        # Extract slices
-        axial_slice_mask = mask_data[:, :, z]
-        coronal_slice_mask = mask_data[:, y, :]
-        sagittal_slice_mask = mask_data[x, :, :]
+    print('-' * 63)
+    patients_masks_reconstructed_inference = []
+    for row_volume in row_volumes_inference[:patients]:
+        patients_masks_reconstructed_inference.append((row_volume[0]['patient'], row_volume[0]['mask']))
+        print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:10}")
+    patients_masks_reconstructed_inference_conditioning = []
+    for row_volume in row_volumes_inference_conditioning[:patients]:
+        patients_masks_reconstructed_inference_conditioning.append((row_volume[0]['patient'], row_volume[0]['mask']))
+        print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:10}")
 
-        axial_slice_original = original_data[:, :, z]
-        coronal_slice_original = original_data[:, y, :]
-        sagittal_slice_original = original_data[x, :, :]
+    for dir_output_model, patients_masks_reconstructed in zip([dir_output_model_inference, dir_output_model_inference_conditioning], [patients_masks_reconstructed_inference, patients_masks_reconstructed_inference_conditioning]):
+        for patient, mask in patients_masks_reconstructed:
+            # path_mask = path_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz'
+            path_mask = path_data / patient / 'masks' / 'mask-unhealthy.nii.gz'
+            path_original = path_data / patient / 't1.nii.gz'
+            path_voided = path_data / patient / 'voided' / f't1-voided-000{mask}.nii.gz'
+            path_reconstructed = dir_output_model / 'reconstructed' / f"{patient}_000{mask}.nii.gz"
 
-        axial_slice_voided = voided_data[:, :, z]
-        coronal_slice_voided = voided_data[:, y, :]
-        sagittal_slice_voided = voided_data[x, :, :]
+            # Load mask and reconstructed image
+            mask_data = nib.load(str(path_mask)).get_fdata()
+            original_data = nib.load(str(path_original)).get_fdata()
+            voided_data = nib.load(str(path_voided)).get_fdata()
+            reconstructed_data = nib.load(str(path_reconstructed)).get_fdata()
 
-        axial_slice_reconstructed = reconstructed_data[:, :, z]
-        coronal_slice_reconstructed = reconstructed_data[:, y, :]
-        sagittal_slice_reconstructed = reconstructed_data[x, :, :]
+            # Find center of mask (where mask == 1)
+            coords = np.argwhere(mask_data == 1)
+            center = coords.mean(axis=0).astype(int)  # (z, y, x) or (x, y, z) depending on orientation
+            x, y, z = center
 
-        # Prepare output directory
-        dir_out = dir_output_model / 'slices' / f'{patient}_{mask}'
-        dir_out.mkdir(parents=True, exist_ok=True)
+            # Extract slices
+            axial_slice_mask = mask_data[:, :, z]
+            coronal_slice_mask = mask_data[:, y, :]
+            sagittal_slice_mask = mask_data[x, :, :]
 
-        dir_out_original = dir_out / 'original'
-        dir_out_voided = dir_out / 'voided'
-        dir_out_reconstructed = dir_out / 'reconstructed'
-        dir_out_original.mkdir(parents=True, exist_ok=True)
-        dir_out_voided.mkdir(parents=True, exist_ok=True)
-        dir_out_reconstructed.mkdir(parents=True, exist_ok=True)
+            axial_slice_original = original_data[:, :, z]
+            coronal_slice_original = original_data[:, y, :]
+            sagittal_slice_original = original_data[x, :, :]
 
-        # Save original slices with bounding box if requested
-        save_slice_with_bbox(axial_slice_original, axial_slice_mask, dir_out_original / 'axial.png', True)
-        save_slice_with_bbox(coronal_slice_original, coronal_slice_mask, dir_out_original / 'coronal.png', True)
-        save_slice_with_bbox(sagittal_slice_original, sagittal_slice_mask, dir_out_original / 'sagittal.png', True)
+            axial_slice_voided = voided_data[:, :, z]
+            coronal_slice_voided = voided_data[:, y, :]
+            sagittal_slice_voided = voided_data[x, :, :]
 
-        save_slice_with_bbox(axial_slice_voided, axial_slice_mask, dir_out_voided / 'axial.png', False)
-        save_slice_with_bbox(coronal_slice_voided, coronal_slice_mask, dir_out_voided / 'coronal.png', False)
-        save_slice_with_bbox(sagittal_slice_voided, sagittal_slice_mask, dir_out_voided / 'sagittal.png', False)
+            axial_slice_reconstructed = reconstructed_data[:, :, z]
+            coronal_slice_reconstructed = reconstructed_data[:, y, :]
+            sagittal_slice_reconstructed = reconstructed_data[x, :, :]
 
-        # Save reconstructed slices without bounding box
-        save_slice_with_bbox(axial_slice_reconstructed, axial_slice_mask, dir_out_reconstructed / 'axial.png', True)
-        save_slice_with_bbox(coronal_slice_reconstructed, coronal_slice_mask, dir_out_reconstructed / 'coronal.png', True)
-        save_slice_with_bbox(sagittal_slice_reconstructed, sagittal_slice_mask, dir_out_reconstructed / 'sagittal.png', True)
+            # Prepare output directory
+            dir_out = dir_output_model / 'slices' / f'{patient}_{mask}'
+            dir_out.mkdir(parents=True, exist_ok=True)
+
+            dir_out_original = dir_out / 'original'
+            dir_out_voided = dir_out / 'voided'
+            dir_out_reconstructed = dir_out / 'reconstructed'
+            dir_out_original.mkdir(parents=True, exist_ok=True)
+            dir_out_voided.mkdir(parents=True, exist_ok=True)
+            dir_out_reconstructed.mkdir(parents=True, exist_ok=True)
+
+            # Save original slices with bounding box if requested
+            save_slice_with_bbox(axial_slice_original, axial_slice_mask, dir_out_original / 'axial.png', False)
+            save_slice_with_bbox(coronal_slice_original, coronal_slice_mask, dir_out_original / 'coronal.png', False)
+            save_slice_with_bbox(sagittal_slice_original, sagittal_slice_mask, dir_out_original / 'sagittal.png', False)
+
+            save_slice_with_bbox(axial_slice_voided, axial_slice_mask, dir_out_voided / 'axial.png', False)
+            save_slice_with_bbox(coronal_slice_voided, coronal_slice_mask, dir_out_voided / 'coronal.png', False)
+            save_slice_with_bbox(sagittal_slice_voided, sagittal_slice_mask, dir_out_voided / 'sagittal.png', False)
+
+            # Save reconstructed slices without bounding box
+            save_slice_with_bbox(axial_slice_reconstructed, axial_slice_mask, dir_out_reconstructed / 'axial.png', False)
+            save_slice_with_bbox(coronal_slice_reconstructed, coronal_slice_mask, dir_out_reconstructed / 'coronal.png', False)
+            save_slice_with_bbox(sagittal_slice_reconstructed, sagittal_slice_mask, dir_out_reconstructed / 'sagittal.png', False)
 
 def create_failure():
     paths_failures = [
@@ -418,9 +487,12 @@ if __name__ == "__main__":
     parser.add_argument('--debug', action='store_true', help='Debug Mode')
     parser.add_argument('--model', type=str, default='big', choices=['small', 'big', 'big_old'], help='Model')
     parser.add_argument('--scheduler', type=str, default='ddpm', choices=['ddpm', 'ddim'], help='Scheduler')
-    parser.add_argument('--version', type=int, default=1, help='Version')
+    parser.add_argument('--version', type=int, default=2, help='Version')
     parser.add_argument('--mode', type=str, default='inference', choices=['inference', 'inference_challenge', 'inference_conditioning'], help='Mode')
     parser.add_argument('--denoising', type=str, default='repaint', choices=['repaint', 'own'], help='Denoising')
+    parser.add_argument('--dir_data', type=str, default='/vol/miltank/users/bilv/data', help='Dir Data')
+    parser.add_argument('--dir_data_challenge', type=str, default='/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation', help='Dir Data Challenge')
+    parser.add_argument('--dir_output_model', type=str, default=None, help='Dir Output Model')
     args = parser.parse_args()
 
     debug = args.debug
@@ -430,15 +502,15 @@ if __name__ == "__main__":
     mode = args.mode
     denoising = args.denoising
 
+    dir_data = Path(args.dir_data)
+    dir_data_challenge = Path(args.dir_data_challenge)
+    if args.dir_output_model:
+        dir_output_model = Path(args.dir_output_model)
+    else:
+        dir_output_model = Path(f"/vol/miltank/users/bilv/ldm/output{'_debug' if debug else ''}")
+        dir_output_model = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / mode / denoising
+
     print(f"Debug: {debug}, Model: {model_}, Scheduler: {scheduler_}, Version: {version_}, Mode: {mode}, Denoising: {denoising}")
-
-    dir_output_model = Path(f"/vol/miltank/users/bilv/ldm/output{'_debug' if debug else ''}")
-    dir_output_model = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / mode / denoising
-    dir_metrics = dir_output_model / "metrics"
-
-    path_data = Path("/vol/miltank/users/bilv/data")
-    path_data_challenge = Path("/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation")
-    path_data_pseudo = Path("/vol/miltank/users/bilv/ldm/pseudo/reconstructed_challenge")
 
     dir_current = Path(__file__).resolve().parent
     path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
@@ -454,6 +526,8 @@ if __name__ == "__main__":
         create_slices()
     elif args.function == 'create_failure':
         create_failure()
+
+    '''
     elif args.function == 'call_complete':
         rows = []
         reconstructed_files = {}
@@ -497,3 +571,4 @@ if __name__ == "__main__":
             by=['complete', 'model_scheduler_version', 'denoising', 'mode'],
             ascending=[False, False, True, True]
         ))
+    '''

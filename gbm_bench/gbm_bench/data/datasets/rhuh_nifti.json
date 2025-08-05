@@ -1,0 +1,1326 @@
+{
+  "dataset_id": "RHUH-GBM",
+  "root_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM",
+  "patients": [
+    {
+      "patient_id": "RHUH-0001",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/0/RHUH-0001_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/0/RHUH-0001_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/0/RHUH-0001_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/0/RHUH-0001_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/0/RHUH-0001_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/0/RHUH-0001_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/1/RHUH-0001_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/1/RHUH-0001_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/1/RHUH-0001_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/1/RHUH-0001_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/1/RHUH-0001_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/1/RHUH-0001_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/2/RHUH-0001_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/2/RHUH-0001_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/2/RHUH-0001_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/2/RHUH-0001_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/2/RHUH-0001_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0001/2/RHUH-0001_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0002",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/0/RHUH-0002_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/0/RHUH-0002_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/0/RHUH-0002_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/0/RHUH-0002_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/0/RHUH-0002_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/0/RHUH-0002_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/1/RHUH-0002_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/1/RHUH-0002_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/1/RHUH-0002_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/1/RHUH-0002_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/1/RHUH-0002_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/1/RHUH-0002_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/2/RHUH-0002_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/2/RHUH-0002_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/2/RHUH-0002_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/2/RHUH-0002_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/2/RHUH-0002_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0002/2/RHUH-0002_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0003",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/0/RHUH-0003_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/0/RHUH-0003_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/0/RHUH-0003_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/0/RHUH-0003_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/0/RHUH-0003_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/0/RHUH-0003_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/1/RHUH-0003_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/1/RHUH-0003_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/1/RHUH-0003_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/1/RHUH-0003_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/1/RHUH-0003_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/1/RHUH-0003_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/2/RHUH-0003_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/2/RHUH-0003_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/2/RHUH-0003_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/2/RHUH-0003_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/2/RHUH-0003_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0003/2/RHUH-0003_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0004",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/0/RHUH-0004_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/0/RHUH-0004_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/0/RHUH-0004_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/0/RHUH-0004_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/0/RHUH-0004_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/0/RHUH-0004_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/1/RHUH-0004_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/1/RHUH-0004_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/1/RHUH-0004_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/1/RHUH-0004_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/1/RHUH-0004_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/1/RHUH-0004_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/2/RHUH-0004_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/2/RHUH-0004_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/2/RHUH-0004_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/2/RHUH-0004_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/2/RHUH-0004_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0004/2/RHUH-0004_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0005",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/0/RHUH-0005_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/0/RHUH-0005_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/0/RHUH-0005_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/0/RHUH-0005_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/0/RHUH-0005_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/0/RHUH-0005_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/1/RHUH-0005_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/1/RHUH-0005_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/1/RHUH-0005_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/1/RHUH-0005_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/1/RHUH-0005_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/1/RHUH-0005_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/2/RHUH-0005_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/2/RHUH-0005_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/2/RHUH-0005_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/2/RHUH-0005_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/2/RHUH-0005_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0005/2/RHUH-0005_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0006",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/0/RHUH-0006_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/0/RHUH-0006_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/0/RHUH-0006_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/0/RHUH-0006_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/0/RHUH-0006_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/0/RHUH-0006_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/1/RHUH-0006_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/1/RHUH-0006_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/1/RHUH-0006_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/1/RHUH-0006_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/1/RHUH-0006_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/1/RHUH-0006_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/2/RHUH-0006_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/2/RHUH-0006_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/2/RHUH-0006_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/2/RHUH-0006_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/2/RHUH-0006_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0006/2/RHUH-0006_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0007",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/0/RHUH-0007_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/0/RHUH-0007_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/0/RHUH-0007_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/0/RHUH-0007_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/0/RHUH-0007_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/0/RHUH-0007_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/1/RHUH-0007_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/1/RHUH-0007_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/1/RHUH-0007_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/1/RHUH-0007_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/1/RHUH-0007_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/1/RHUH-0007_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/2/RHUH-0007_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/2/RHUH-0007_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/2/RHUH-0007_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/2/RHUH-0007_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/2/RHUH-0007_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0007/2/RHUH-0007_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0008",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/0/RHUH-0008_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/0/RHUH-0008_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/0/RHUH-0008_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/0/RHUH-0008_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/0/RHUH-0008_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/0/RHUH-0008_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/1/RHUH-0008_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/1/RHUH-0008_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/1/RHUH-0008_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/1/RHUH-0008_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/1/RHUH-0008_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/1/RHUH-0008_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/2/RHUH-0008_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/2/RHUH-0008_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/2/RHUH-0008_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/2/RHUH-0008_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/2/RHUH-0008_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0008/2/RHUH-0008_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0009",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/0/RHUH-0009_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/0/RHUH-0009_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/0/RHUH-0009_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/0/RHUH-0009_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/0/RHUH-0009_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/0/RHUH-0009_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/1/RHUH-0009_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/1/RHUH-0009_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/1/RHUH-0009_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/1/RHUH-0009_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/1/RHUH-0009_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/1/RHUH-0009_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/2/RHUH-0009_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/2/RHUH-0009_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/2/RHUH-0009_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/2/RHUH-0009_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/2/RHUH-0009_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0009/2/RHUH-0009_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0010",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/0/RHUH-0010_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/0/RHUH-0010_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/0/RHUH-0010_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/0/RHUH-0010_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/0/RHUH-0010_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/0/RHUH-0010_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/1/RHUH-0010_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/1/RHUH-0010_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/1/RHUH-0010_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/1/RHUH-0010_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/1/RHUH-0010_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/1/RHUH-0010_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/2/RHUH-0010_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/2/RHUH-0010_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/2/RHUH-0010_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/2/RHUH-0010_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/2/RHUH-0010_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0010/2/RHUH-0010_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0011",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/0/RHUH-0011_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/0/RHUH-0011_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/0/RHUH-0011_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/0/RHUH-0011_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/0/RHUH-0011_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/0/RHUH-0011_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/1/RHUH-0011_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/1/RHUH-0011_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/1/RHUH-0011_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/1/RHUH-0011_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/1/RHUH-0011_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/1/RHUH-0011_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/2/RHUH-0011_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/2/RHUH-0011_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/2/RHUH-0011_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/2/RHUH-0011_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/2/RHUH-0011_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0011/2/RHUH-0011_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0012",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/0/RHUH-0012_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/0/RHUH-0012_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/0/RHUH-0012_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/0/RHUH-0012_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/0/RHUH-0012_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/0/RHUH-0012_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/1/RHUH-0012_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/1/RHUH-0012_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/1/RHUH-0012_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/1/RHUH-0012_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/1/RHUH-0012_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/1/RHUH-0012_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/2/RHUH-0012_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/2/RHUH-0012_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/2/RHUH-0012_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/2/RHUH-0012_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/2/RHUH-0012_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0012/2/RHUH-0012_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0013",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/0/RHUH-0013_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/0/RHUH-0013_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/0/RHUH-0013_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/0/RHUH-0013_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/0/RHUH-0013_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/0/RHUH-0013_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/1/RHUH-0013_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/1/RHUH-0013_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/1/RHUH-0013_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/1/RHUH-0013_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/1/RHUH-0013_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/1/RHUH-0013_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/2/RHUH-0013_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/2/RHUH-0013_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/2/RHUH-0013_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/2/RHUH-0013_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/2/RHUH-0013_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0013/2/RHUH-0013_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0014",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/0/RHUH-0014_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/0/RHUH-0014_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/0/RHUH-0014_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/0/RHUH-0014_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/0/RHUH-0014_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/0/RHUH-0014_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/1/RHUH-0014_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/1/RHUH-0014_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/1/RHUH-0014_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/1/RHUH-0014_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/1/RHUH-0014_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/1/RHUH-0014_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/2/RHUH-0014_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/2/RHUH-0014_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/2/RHUH-0014_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/2/RHUH-0014_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/2/RHUH-0014_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0014/2/RHUH-0014_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0015",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/0/RHUH-0015_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/0/RHUH-0015_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/0/RHUH-0015_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/0/RHUH-0015_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/0/RHUH-0015_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/0/RHUH-0015_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/1/RHUH-0015_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/1/RHUH-0015_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/1/RHUH-0015_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/1/RHUH-0015_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/1/RHUH-0015_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/1/RHUH-0015_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/2/RHUH-0015_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/2/RHUH-0015_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/2/RHUH-0015_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/2/RHUH-0015_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/2/RHUH-0015_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0015/2/RHUH-0015_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0016",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/0/RHUH-0016_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/0/RHUH-0016_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/0/RHUH-0016_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/0/RHUH-0016_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/0/RHUH-0016_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/0/RHUH-0016_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/1/RHUH-0016_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/1/RHUH-0016_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/1/RHUH-0016_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/1/RHUH-0016_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/1/RHUH-0016_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/1/RHUH-0016_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/2/RHUH-0016_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/2/RHUH-0016_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/2/RHUH-0016_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/2/RHUH-0016_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/2/RHUH-0016_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0016/2/RHUH-0016_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0017",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/0/RHUH-0017_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/0/RHUH-0017_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/0/RHUH-0017_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/0/RHUH-0017_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/0/RHUH-0017_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/0/RHUH-0017_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/1/RHUH-0017_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/1/RHUH-0017_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/1/RHUH-0017_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/1/RHUH-0017_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/1/RHUH-0017_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/1/RHUH-0017_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/2/RHUH-0017_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/2/RHUH-0017_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/2/RHUH-0017_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/2/RHUH-0017_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/2/RHUH-0017_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0017/2/RHUH-0017_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0018",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/0/RHUH-0018_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/0/RHUH-0018_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/0/RHUH-0018_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/0/RHUH-0018_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/0/RHUH-0018_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/0/RHUH-0018_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/1/RHUH-0018_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/1/RHUH-0018_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/1/RHUH-0018_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/1/RHUH-0018_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/1/RHUH-0018_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/1/RHUH-0018_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/2/RHUH-0018_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/2/RHUH-0018_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/2/RHUH-0018_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/2/RHUH-0018_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/2/RHUH-0018_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0018/2/RHUH-0018_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0019",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/0/RHUH-0019_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/0/RHUH-0019_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/0/RHUH-0019_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/0/RHUH-0019_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/0/RHUH-0019_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/0/RHUH-0019_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/1/RHUH-0019_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/1/RHUH-0019_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/1/RHUH-0019_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/1/RHUH-0019_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/1/RHUH-0019_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/1/RHUH-0019_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/2/RHUH-0019_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/2/RHUH-0019_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/2/RHUH-0019_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/2/RHUH-0019_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/2/RHUH-0019_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0019/2/RHUH-0019_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0020",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/0/RHUH-0020_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/0/RHUH-0020_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/0/RHUH-0020_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/0/RHUH-0020_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/0/RHUH-0020_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/0/RHUH-0020_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/1/RHUH-0020_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/1/RHUH-0020_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/1/RHUH-0020_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/1/RHUH-0020_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/1/RHUH-0020_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/1/RHUH-0020_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/2/RHUH-0020_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/2/RHUH-0020_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/2/RHUH-0020_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/2/RHUH-0020_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/2/RHUH-0020_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0020/2/RHUH-0020_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0021",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/0/RHUH-0021_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/0/RHUH-0021_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/0/RHUH-0021_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/0/RHUH-0021_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/0/RHUH-0021_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/0/RHUH-0021_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/1/RHUH-0021_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/1/RHUH-0021_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/1/RHUH-0021_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/1/RHUH-0021_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/1/RHUH-0021_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/1/RHUH-0021_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/2/RHUH-0021_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/2/RHUH-0021_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/2/RHUH-0021_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/2/RHUH-0021_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/2/RHUH-0021_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0021/2/RHUH-0021_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0022",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/0/RHUH-0022_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/0/RHUH-0022_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/0/RHUH-0022_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/0/RHUH-0022_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/0/RHUH-0022_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/0/RHUH-0022_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/1/RHUH-0022_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/1/RHUH-0022_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/1/RHUH-0022_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/1/RHUH-0022_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/1/RHUH-0022_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/1/RHUH-0022_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/2/RHUH-0022_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/2/RHUH-0022_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/2/RHUH-0022_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/2/RHUH-0022_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/2/RHUH-0022_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0022/2/RHUH-0022_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0023",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/0/RHUH-0023_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/0/RHUH-0023_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/0/RHUH-0023_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/0/RHUH-0023_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/0/RHUH-0023_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/0/RHUH-0023_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/1/RHUH-0023_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/1/RHUH-0023_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/1/RHUH-0023_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/1/RHUH-0023_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/1/RHUH-0023_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/1/RHUH-0023_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/2/RHUH-0023_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/2/RHUH-0023_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/2/RHUH-0023_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/2/RHUH-0023_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/2/RHUH-0023_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0023/2/RHUH-0023_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0024",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/0/RHUH-0024_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/0/RHUH-0024_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/0/RHUH-0024_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/0/RHUH-0024_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/0/RHUH-0024_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/0/RHUH-0024_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/1/RHUH-0024_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/1/RHUH-0024_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/1/RHUH-0024_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/1/RHUH-0024_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/1/RHUH-0024_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/1/RHUH-0024_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/2/RHUH-0024_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/2/RHUH-0024_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/2/RHUH-0024_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/2/RHUH-0024_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/2/RHUH-0024_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0024/2/RHUH-0024_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0025",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/0/RHUH-0025_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/0/RHUH-0025_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/0/RHUH-0025_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/0/RHUH-0025_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/0/RHUH-0025_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/0/RHUH-0025_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/1/RHUH-0025_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/1/RHUH-0025_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/1/RHUH-0025_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/1/RHUH-0025_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/1/RHUH-0025_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/1/RHUH-0025_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/2/RHUH-0025_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/2/RHUH-0025_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/2/RHUH-0025_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/2/RHUH-0025_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/2/RHUH-0025_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0025/2/RHUH-0025_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0026",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/0/RHUH-0026_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/0/RHUH-0026_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/0/RHUH-0026_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/0/RHUH-0026_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/0/RHUH-0026_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/0/RHUH-0026_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/1/RHUH-0026_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/1/RHUH-0026_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/1/RHUH-0026_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/1/RHUH-0026_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/1/RHUH-0026_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/1/RHUH-0026_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/2/RHUH-0026_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/2/RHUH-0026_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/2/RHUH-0026_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/2/RHUH-0026_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/2/RHUH-0026_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0026/2/RHUH-0026_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0027",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/0/RHUH-0027_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/0/RHUH-0027_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/0/RHUH-0027_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/0/RHUH-0027_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/0/RHUH-0027_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/0/RHUH-0027_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/1/RHUH-0027_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/1/RHUH-0027_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/1/RHUH-0027_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/1/RHUH-0027_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/1/RHUH-0027_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/1/RHUH-0027_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/2/RHUH-0027_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/2/RHUH-0027_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/2/RHUH-0027_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/2/RHUH-0027_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/2/RHUH-0027_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0027/2/RHUH-0027_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0028",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/0/RHUH-0028_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/0/RHUH-0028_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/0/RHUH-0028_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/0/RHUH-0028_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/0/RHUH-0028_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/0/RHUH-0028_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/1/RHUH-0028_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/1/RHUH-0028_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/1/RHUH-0028_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/1/RHUH-0028_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/1/RHUH-0028_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/1/RHUH-0028_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/2/RHUH-0028_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/2/RHUH-0028_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/2/RHUH-0028_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/2/RHUH-0028_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/2/RHUH-0028_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0028/2/RHUH-0028_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0029",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/0/RHUH-0029_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/0/RHUH-0029_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/0/RHUH-0029_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/0/RHUH-0029_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/0/RHUH-0029_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/0/RHUH-0029_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/1/RHUH-0029_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/1/RHUH-0029_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/1/RHUH-0029_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/1/RHUH-0029_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/1/RHUH-0029_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/1/RHUH-0029_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/2/RHUH-0029_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/2/RHUH-0029_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/2/RHUH-0029_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/2/RHUH-0029_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/2/RHUH-0029_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0029/2/RHUH-0029_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0030",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/0/RHUH-0030_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/0/RHUH-0030_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/0/RHUH-0030_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/0/RHUH-0030_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/0/RHUH-0030_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/0/RHUH-0030_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/1/RHUH-0030_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/1/RHUH-0030_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/1/RHUH-0030_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/1/RHUH-0030_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/1/RHUH-0030_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/1/RHUH-0030_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/2/RHUH-0030_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/2/RHUH-0030_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/2/RHUH-0030_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/2/RHUH-0030_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/2/RHUH-0030_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0030/2/RHUH-0030_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0031",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/0/RHUH-0031_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/0/RHUH-0031_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/0/RHUH-0031_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/0/RHUH-0031_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/0/RHUH-0031_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/0/RHUH-0031_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/1/RHUH-0031_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/1/RHUH-0031_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/1/RHUH-0031_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/1/RHUH-0031_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/1/RHUH-0031_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/1/RHUH-0031_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/2/RHUH-0031_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/2/RHUH-0031_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/2/RHUH-0031_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/2/RHUH-0031_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/2/RHUH-0031_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0031/2/RHUH-0031_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0032",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/0/RHUH-0032_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/0/RHUH-0032_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/0/RHUH-0032_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/0/RHUH-0032_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/0/RHUH-0032_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/0/RHUH-0032_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/1/RHUH-0032_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/1/RHUH-0032_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/1/RHUH-0032_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/1/RHUH-0032_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/1/RHUH-0032_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/1/RHUH-0032_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/2/RHUH-0032_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/2/RHUH-0032_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/2/RHUH-0032_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/2/RHUH-0032_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/2/RHUH-0032_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0032/2/RHUH-0032_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0033",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/0/RHUH-0033_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/0/RHUH-0033_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/0/RHUH-0033_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/0/RHUH-0033_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/0/RHUH-0033_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/0/RHUH-0033_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/1/RHUH-0033_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/1/RHUH-0033_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/1/RHUH-0033_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/1/RHUH-0033_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/1/RHUH-0033_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/1/RHUH-0033_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/2/RHUH-0033_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/2/RHUH-0033_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/2/RHUH-0033_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/2/RHUH-0033_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/2/RHUH-0033_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0033/2/RHUH-0033_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0034",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/0/RHUH-0034_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/0/RHUH-0034_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/0/RHUH-0034_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/0/RHUH-0034_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/0/RHUH-0034_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/0/RHUH-0034_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/1/RHUH-0034_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/1/RHUH-0034_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/1/RHUH-0034_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/1/RHUH-0034_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/1/RHUH-0034_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/1/RHUH-0034_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/2/RHUH-0034_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/2/RHUH-0034_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/2/RHUH-0034_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/2/RHUH-0034_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/2/RHUH-0034_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0034/2/RHUH-0034_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0035",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/0/RHUH-0035_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/0/RHUH-0035_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/0/RHUH-0035_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/0/RHUH-0035_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/0/RHUH-0035_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/0/RHUH-0035_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/1/RHUH-0035_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/1/RHUH-0035_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/1/RHUH-0035_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/1/RHUH-0035_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/1/RHUH-0035_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/1/RHUH-0035_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/2/RHUH-0035_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/2/RHUH-0035_2_flair.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/2/RHUH-0035_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/2/RHUH-0035_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/2/RHUH-0035_2_t2.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0035/2/segmentation.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0036",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/0/RHUH-0036_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/0/RHUH-0036_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/0/RHUH-0036_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/0/RHUH-0036_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/0/RHUH-0036_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/0/RHUH-0036_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/1/RHUH-0036_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/1/RHUH-0036_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/1/RHUH-0036_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/1/RHUH-0036_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/1/RHUH-0036_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/1/RHUH-0036_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/2/RHUH-0036_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/2/RHUH-0036_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/2/RHUH-0036_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/2/RHUH-0036_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/2/RHUH-0036_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0036/2/RHUH-0036_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0037",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/0/RHUH-0037_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/0/RHUH-0037_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/0/RHUH-0037_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/0/RHUH-0037_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/0/RHUH-0037_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/0/RHUH-0037_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/1/RHUH-0037_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/1/RHUH-0037_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/1/RHUH-0037_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/1/RHUH-0037_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/1/RHUH-0037_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/1/RHUH-0037_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/2/RHUH-0037_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/2/RHUH-0037_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/2/RHUH-0037_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/2/RHUH-0037_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/2/RHUH-0037_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0037/2/RHUH-0037_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0038",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/0/RHUH-0038_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/0/RHUH-0038_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/0/RHUH-0038_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/0/RHUH-0038_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/0/RHUH-0038_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/0/RHUH-0038_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/1/RHUH-0038_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/1/RHUH-0038_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/1/RHUH-0038_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/1/RHUH-0038_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/1/RHUH-0038_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/1/RHUH-0038_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/2/RHUH-0038_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/2/RHUH-0038_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/2/RHUH-0038_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/2/RHUH-0038_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/2/RHUH-0038_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0038/2/RHUH-0038_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0039",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/0/RHUH-0039_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/0/RHUH-0039_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/0/RHUH-0039_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/0/RHUH-0039_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/0/RHUH-0039_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/0/RHUH-0039_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/1/RHUH-0039_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/1/RHUH-0039_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/1/RHUH-0039_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/1/RHUH-0039_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/1/RHUH-0039_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/1/RHUH-0039_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/2/RHUH-0039_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/2/RHUH-0039_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/2/RHUH-0039_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/2/RHUH-0039_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/2/RHUH-0039_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0039/2/RHUH-0039_2_t2.nii.gz"
+        }
+      ]
+    },
+    {
+      "patient_id": "RHUH-0040",
+      "patient_dir": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040",
+      "exams": [
+        {
+          "timepoint": "preop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/0/RHUH-0040_0_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/0/RHUH-0040_0_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/0/RHUH-0040_0_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/0/RHUH-0040_0_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/0/RHUH-0040_0_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/0/RHUH-0040_0_t2.nii.gz"
+        },
+        {
+          "timepoint": "postop",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/1/RHUH-0040_1_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/1/RHUH-0040_1_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/1/RHUH-0040_1_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/1/RHUH-0040_1_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/1/RHUH-0040_1_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/1/RHUH-0040_1_t2.nii.gz"
+        },
+        {
+          "timepoint": "followup",
+          "adc": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/2/RHUH-0040_2_adc.nii.gz",
+          "flair": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/2/RHUH-0040_2_flair.nii.gz",
+          "tumorseg": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/2/RHUH-0040_2_segmentations.nii.gz",
+          "t1": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/2/RHUH-0040_2_t1.nii.gz",
+          "t1c": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/2/RHUH-0040_2_t1ce.nii.gz",
+          "t2": "/mnt/Drive2/lucas/datasets/RHUH-GBM/Images/NIfTI/RHUH-GBM/RHUH-0040/2/RHUH-0040_2_t2.nii.gz"
+        }
+      ]
+    }
+  ]
+}

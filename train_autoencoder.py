@@ -56,8 +56,8 @@ rank, world_size, local_rank = setup_distributed()
 is_main_process = rank == 0
 
 # Configuration
-path_data = "/vol/miltank/users/bilv/data"
-path_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
+dir_data = "/vol/miltank/users/bilv/data"
+dir_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
 path_autoencoder = "/vol/miltank/users/bilv/ldm/maisi/maisi_vae.pt"
 latent_shape = (60, 60, 40)
 
@@ -126,8 +126,8 @@ if world_size > 1:
 # Create data module
 datamodule = DataModule(
     mode='training',
-    path_data=path_data,
-    path_data_challenge=path_data_challenge,
+    dir_data=dir_data,
+    dir_data_challenge=dir_data_challenge,
     latent_shape=latent_shape,
     batch_size=batch_size,
     num_workers=num_workers,
@@ -274,7 +274,7 @@ for epoch in range(start_epoch, max_epochs):
 
     progress_bar = tqdm(dataloader_train, desc=f"Epoch {epoch} Training", ncols=100) if is_main_process else dataloader_train
     for batch in progress_bar:
-        images = batch["original_t1_autoencoder"].to(device, non_blocking=True).contiguous()
+        images = batch["autoencoder_t1"].to(device, non_blocking=True).contiguous()
         optimizer_g.zero_grad(set_to_none=True)
         optimizer_d.zero_grad(set_to_none=True)
         
@@ -369,7 +369,7 @@ for epoch in range(start_epoch, max_epochs):
         for batch in progress_bar:
             with torch.no_grad():
                 with autocast("cuda", enabled=amp):
-                    images = batch["original_t1_autoencoder"]
+                    images = batch["autoencoder_t1"]
                     reconstruction, z_mu, z_sigma = dynamic_infer(val_inferer, autoencoder, images)
                     reconstruction = reconstruction.to(device)
 

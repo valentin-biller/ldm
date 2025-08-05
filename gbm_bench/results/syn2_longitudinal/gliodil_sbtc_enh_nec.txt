@@ -1,0 +1,1200 @@
+nohup: ignoring input
+2025-06-08 13:49:07.768 | INFO     | gbm_bench.utils.parsing:set_root_dir:237 - New root_dir set successfully.
+2025-06-08 13:49:07.769 | INFO     | gbm_bench.utils.parsing:load:214 - Successfully loaded 192 patients from /home/home/lucas/projects/gbm_bench/gbm_bench/data/datasets/gliodil.json.
+Processing 0/192...
+2025-06-08 13:49:11.130 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_001/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_001/d289/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_001/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_001/d289/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_001/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_001: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9299386846773943, 'recurrence_coverage_model': 0.9734776725304466, 'recurrence_coverage_model_all': 0.9823212673908307}
+Processing 1/192...
+2025-06-08 13:49:14.235 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_002/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_002/d318/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_002/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_002/d318/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_002/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_002: {'recurrence_coverage_standard': 0.9729913916786227, 'recurrence_coverage_standard_all': 0.8497869145024917, 'recurrence_coverage_model': 0.9308106169296987, 'recurrence_coverage_model_all': 0.8449888337347987}
+Processing 2/192...
+2025-06-08 13:49:17.551 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_003/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_003/d285/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_003/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_003/d285/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_003/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_003: {'recurrence_coverage_standard': 0.6681780708985985, 'recurrence_coverage_standard_all': 0.27135699549492653, 'recurrence_coverage_model': 0.5519373454245672, 'recurrence_coverage_model_all': 0.3997024686679859}
+Processing 3/192...
+2025-06-08 13:49:20.877 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_004/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_004/d285/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_004/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_004/d285/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_004/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_004: {'recurrence_coverage_standard': 0.9577300326950023, 'recurrence_coverage_standard_all': 0.6384117838895532, 'recurrence_coverage_model': 0.9981317141522653, 'recurrence_coverage_model_all': 0.7049135775627786}
+Processing 4/192...
+2025-06-08 13:49:23.820 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_005/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_005/d203/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_005/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_005/d203/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_005/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_005: {'recurrence_coverage_standard': 0.9636323561824994, 'recurrence_coverage_standard_all': 0.6860723832695724, 'recurrence_coverage_model': 0.9819263830725149, 'recurrence_coverage_model_all': 0.7624093608438846}
+Processing 5/192...
+2025-06-08 13:49:26.863 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_006/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_006/d534/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_006/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_006/d534/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_006/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_006: {'recurrence_coverage_standard': 0.004476275738585497, 'recurrence_coverage_standard_all': 0.2904761904761905, 'recurrence_coverage_model': 0.08683974932855863, 'recurrence_coverage_model_all': 0.4919517102615694}
+Processing 6/192...
+2025-06-08 13:49:29.936 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_007/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_007/d200/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_007/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_007/d200/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_007/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_007: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9256171552961883, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9401602519568338}
+Processing 7/192...
+2025-06-08 13:49:33.099 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_008/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_008/d158/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_008/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_008/d158/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_008/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_008: {'recurrence_coverage_standard': 0.9999004281589167, 'recurrence_coverage_standard_all': 0.8209747495864314, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8993255649075605}
+Processing 8/192...
+2025-06-08 13:49:36.050 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_009/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_009/d145/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_009/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_009/d145/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_009/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_009: {'recurrence_coverage_standard': 0.9053926206244087, 'recurrence_coverage_standard_all': 0.2088499878434233, 'recurrence_coverage_model': 0.9985808893093662, 'recurrence_coverage_model_all': 0.2595834346381392}
+Processing 9/192...
+2025-06-08 13:49:39.319 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_010/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_010/d289/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_010/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_010/d289/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_010/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_010: {'recurrence_coverage_standard': 0.7861362056984017, 'recurrence_coverage_standard_all': 0.48969820739732245, 'recurrence_coverage_model': 0.9192147324530924, 'recurrence_coverage_model_all': 0.6790333560245064}
+Processing 10/192...
+2025-06-08 13:49:42.671 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_011/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_011/d761/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_011/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_011/d761/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_011/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_011: {'recurrence_coverage_standard': 0.5294117647058824, 'recurrence_coverage_standard_all': 0.2002116402116402, 'recurrence_coverage_model': 0.6862745098039216, 'recurrence_coverage_model_all': 0.5944973544973545}
+Processing 11/192...
+2025-06-08 13:49:45.802 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_012/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_012/d320/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_012/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_012/d320/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_012/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_012: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7507660878447395, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8025195778004767}
+Processing 12/192...
+2025-06-08 13:49:48.799 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_013/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_013/d111/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_013/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_013/d111/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_013/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_013: {'recurrence_coverage_standard': 0.8024908793558938, 'recurrence_coverage_standard_all': 0.46539466806063773, 'recurrence_coverage_model': 0.9865391873191597, 'recurrence_coverage_model_all': 0.5599843178254051}
+Processing 13/192...
+2025-06-08 13:49:51.940 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_014/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_014/d246/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_014/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_014/d246/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_014/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_014: {'recurrence_coverage_standard': 0.890330953926022, 'recurrence_coverage_standard_all': 0.5599354166865703, 'recurrence_coverage_model': 0.8649010382868267, 'recurrence_coverage_model_all': 0.7588443790543704}
+Processing 14/192...
+2025-06-08 13:49:55.175 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_015/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_015/d684/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_015/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_015/d684/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_015/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_015: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7427100458596522, 'recurrence_coverage_model': 0.9850187265917603, 'recurrence_coverage_model_all': 0.8297568573159124}
+Processing 15/192...
+2025-06-08 13:49:58.886 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_016/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_016/d644/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_016/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_016/d644/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_016/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_016: {'recurrence_coverage_standard': 0.9960639036814077, 'recurrence_coverage_standard_all': 0.6688385177520533, 'recurrence_coverage_model': 0.9960639036814077, 'recurrence_coverage_model_all': 0.7666849899760719}
+Processing 16/192...
+2025-06-08 13:50:02.771 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_017/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_017/d200/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_017/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_017/d200/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_017/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_017: {'recurrence_coverage_standard': 0.9566055930568949, 'recurrence_coverage_standard_all': 0.533442373042843, 'recurrence_coverage_model': 0.9342884694861551, 'recurrence_coverage_model_all': 0.7239495664877569}
+Processing 17/192...
+2025-06-08 13:50:06.364 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_018/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_018/d490/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_018/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_018/d490/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_018/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_018: {'recurrence_coverage_standard': 0.24385447394296952, 'recurrence_coverage_standard_all': 0.27277460286710575, 'recurrence_coverage_model': 0.31874139626352016, 'recurrence_coverage_model_all': 0.33115798140255714}
+Processing 18/192...
+2025-06-08 13:50:10.335 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_019/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_019/d346/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_019/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_019/d346/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_019/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_019: {'recurrence_coverage_standard': 0.9281620281069165, 'recurrence_coverage_standard_all': 0.8390662085089802, 'recurrence_coverage_model': 0.9196748415541471, 'recurrence_coverage_model_all': 0.8370912890998619}
+Processing 19/192...
+2025-06-08 13:50:13.289 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_020/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_020/d1439/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_020/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_020/d1439/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_020/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_020: {'recurrence_coverage_standard': 0.10860655737704918, 'recurrence_coverage_standard_all': 0.6393676559120605, 'recurrence_coverage_model': 0.6467213114754098, 'recurrence_coverage_model_all': 0.7417779660639033}
+Processing 20/192...
+2025-06-08 13:50:16.641 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_021/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_021/d143/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_021/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_021/d143/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_021/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_021: {'recurrence_coverage_standard': 0.9582710611185401, 'recurrence_coverage_standard_all': 0.754040092886593, 'recurrence_coverage_model': 0.9876111067411312, 'recurrence_coverage_model_all': 0.7465404483199848}
+Processing 21/192...
+2025-06-08 13:50:20.004 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_022/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_022/d329/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_022/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_022/d329/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_022/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_022: {'recurrence_coverage_standard': 0.9022209402942025, 'recurrence_coverage_standard_all': 0.5750499341294463, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6747375802133356}
+Processing 22/192...
+2025-06-08 13:50:23.687 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_023/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_023/d98/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_023/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_023/d98/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_023/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_023: {'recurrence_coverage_standard': 0.9759379187137115, 'recurrence_coverage_standard_all': 0.8870912220309811, 'recurrence_coverage_model': 0.9501451540866458, 'recurrence_coverage_model_all': 0.8856693856170021}
+Processing 23/192...
+2025-06-08 13:50:27.208 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_024/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_024/d425/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_024/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_024/d425/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_024/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_024: {'recurrence_coverage_standard': 0.4856303487035381, 'recurrence_coverage_standard_all': 0.39434110775094244, 'recurrence_coverage_model': 0.4232979946353302, 'recurrence_coverage_model_all': 0.5143750776751316}
+Processing 24/192...
+2025-06-08 13:50:30.486 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_025/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_025/d65/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_025/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_025/d65/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_025/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_025: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7706654335667416, 'recurrence_coverage_model': 0.9927805731787355, 'recurrence_coverage_model_all': 0.8296560531994539}
+Processing 25/192...
+2025-06-08 13:50:33.783 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_026/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_026/d529/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_026/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_026/d529/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_026/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_026: {'recurrence_coverage_standard': 0.011294876966518758, 'recurrence_coverage_standard_all': 0.06137241945495685, 'recurrence_coverage_model': 0.1799112545381202, 'recurrence_coverage_model_all': 0.23954266033920027}
+Processing 26/192...
+2025-06-08 13:50:36.882 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_027/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_027/d897/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_027/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_027/d897/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_027/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_027: {'recurrence_coverage_standard': 0.8047295240028418, 'recurrence_coverage_standard_all': 0.6219815614001755, 'recurrence_coverage_model': 0.8604232213539024, 'recurrence_coverage_model_all': 0.7039238570872802}
+Processing 27/192...
+2025-06-08 13:50:39.989 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_028/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_028/d140/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_028/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_028/d140/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_028/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_028: {'recurrence_coverage_standard': 0.7324576564120291, 'recurrence_coverage_standard_all': 0.35888387966630153, 'recurrence_coverage_model': 0.4047701348081576, 'recurrence_coverage_model_all': 0.6306564422347687}
+Processing 28/192...
+2025-06-08 13:50:43.141 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_029/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_029/d352/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_029/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_029/d352/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_029/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_029: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.8584474885844748, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.850513698630137}
+Processing 29/192...
+2025-06-08 13:50:46.383 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_030/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_030/d561/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_030/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_030/d561/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_030/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_030: {'recurrence_coverage_standard': 0.8864841310189556, 'recurrence_coverage_standard_all': 0.4659149771722501, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6586076879524894}
+Processing 30/192...
+2025-06-08 13:50:49.654 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_031/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_031/d219/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_031/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_031/d219/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_031/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_031: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.8571980925376982, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9030802938523006}
+Processing 31/192...
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+divide by zero encountered in scalar divide
+
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+invalid value encountered in scalar divide
+
+2025-06-08 13:50:52.795 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_033/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_033/d221/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_033/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_033/d221/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_033/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_033: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.0, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.0}
+Processing 32/192...
+2025-06-08 13:50:56.743 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_035/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_035/d730/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_035/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_035/d730/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_035/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_035: {'recurrence_coverage_standard': 0.800711743772242, 'recurrence_coverage_standard_all': 0.34007901668129936, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.4150790166812994}
+Processing 33/192...
+2025-06-08 13:51:00.653 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_036/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_036/d738/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_036/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_036/d738/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_036/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_036: {'recurrence_coverage_standard': 0.2857142857142857, 'recurrence_coverage_standard_all': 0.516213389121339, 'recurrence_coverage_model': 0.2857142857142857, 'recurrence_coverage_model_all': 0.6231493401995494}
+Processing 34/192...
+2025-06-08 13:51:04.336 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_037/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_037/d435/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_037/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_037/d435/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_037/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_037: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.15450075642965205, 'recurrence_coverage_model': 0.07086614173228346, 'recurrence_coverage_model_all': 0.20937342410489157}
+Processing 35/192...
+2025-06-08 13:51:08.282 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_038/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_038/d41/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_038/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_038/d41/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_038/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_038: {'recurrence_coverage_standard': 0.8592568234133509, 'recurrence_coverage_standard_all': 0.9165527964943693, 'recurrence_coverage_model': 0.4820782637290365, 'recurrence_coverage_model_all': 0.6926447721811243}
+Processing 36/192...
+2025-06-08 13:51:11.242 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_039/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_039/d150/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_039/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_039/d150/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_039/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_039: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7201872588093883, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.7918011007781363}
+Processing 37/192...
+2025-06-08 13:51:14.325 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_040/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_040/d109/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_040/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_040/d109/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_040/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_040: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9477673084801311, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 1.0}
+Processing 38/192...
+2025-06-08 13:51:17.431 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_041/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_041/d115/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_041/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_041/d115/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_041/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_041: {'recurrence_coverage_standard': 0.9979751229389644, 'recurrence_coverage_standard_all': 0.750492248814443, 'recurrence_coverage_model': 0.9973965866358114, 'recurrence_coverage_model_all': 0.7808036828531019}
+Processing 39/192...
+2025-06-08 13:51:21.361 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_044/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_044/d58/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_044/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_044/d58/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_044/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_044: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9866534208707671, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8463199723565998}
+Processing 40/192...
+2025-06-08 13:51:25.283 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_045/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_045/d187/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_045/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_045/d187/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_045/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_045: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.16039992406505094, 'recurrence_coverage_model': 0.9078947368421053, 'recurrence_coverage_model_all': 0.5676137442257799}
+Processing 41/192...
+2025-06-08 13:51:28.905 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_046/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_046/d103/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_046/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_046/d103/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_046/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_046: {'recurrence_coverage_standard': 0.9834762601966116, 'recurrence_coverage_standard_all': 0.7047767393561786, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8372170301142263}
+Processing 42/192...
+2025-06-08 13:51:32.776 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_047/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_047/d93/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_047/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_047/d93/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_047/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_047: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.8181021385999766, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8845389739394648}
+Processing 43/192...
+2025-06-08 13:51:35.802 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_048/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_048/d224/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_048/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_048/d224/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_048/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_048: {'recurrence_coverage_standard': 0.0037359900373599006, 'recurrence_coverage_standard_all': 0.24729331650024866, 'recurrence_coverage_model': 0.0018679950186799503, 'recurrence_coverage_model_all': 0.263705574046444}
+Processing 44/192...
+2025-06-08 13:51:38.907 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_049/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_049/d108/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_049/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_049/d108/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_049/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_049: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.6558299908521568, 'recurrence_coverage_model': 0.8711379050489827, 'recurrence_coverage_model_all': 0.6613656088006943}
+Processing 45/192...
+2025-06-08 13:51:41.982 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_051/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_051/d273/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_051/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_051/d273/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_051/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_051: {'recurrence_coverage_standard': 0.9389286932787445, 'recurrence_coverage_standard_all': 0.4088322840660643, 'recurrence_coverage_model': 0.8942340498123508, 'recurrence_coverage_model_all': 0.4737112451597608}
+Processing 46/192...
+2025-06-08 13:51:45.392 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_052/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_052/d64/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_052/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_052/d64/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_052/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_052: {'recurrence_coverage_standard': 0.5130678828275741, 'recurrence_coverage_standard_all': 0.4058520315342632, 'recurrence_coverage_model': 0.3596737414488686, 'recurrence_coverage_model_all': 0.27855265817667274}
+Processing 47/192...
+2025-06-08 13:51:49.201 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_053/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_053/d132/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_053/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_053/d132/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_053/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_053: {'recurrence_coverage_standard': 0.3844042991081637, 'recurrence_coverage_standard_all': 0.16585574208884266, 'recurrence_coverage_model': 0.367253601646467, 'recurrence_coverage_model_all': 0.43008096865250334}
+Processing 48/192...
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+divide by zero encountered in scalar divide
+
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+invalid value encountered in scalar divide
+
+2025-06-08 13:51:52.383 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_054/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_054/d147/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_054/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_054/d147/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_054/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_054: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.0, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.0}
+Processing 49/192...
+2025-06-08 13:51:55.836 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_055/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_055/d294/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_055/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_055/d294/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_055/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_055: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9180363321799307, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9509083044982699}
+Processing 50/192...
+2025-06-08 13:51:59.581 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_056/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_056/d193/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_056/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_056/d193/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_056/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_056: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9985095338438609, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9983553476897774}
+Processing 51/192...
+2025-06-08 13:52:02.737 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_057/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_057/d295/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_057/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_057/d295/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_057/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_057: {'recurrence_coverage_standard': 0.784586228679722, 'recurrence_coverage_standard_all': 0.3761186302788255, 'recurrence_coverage_model': 0.9804169298799748, 'recurrence_coverage_model_all': 0.5686339767768657}
+Processing 52/192...
+2025-06-08 13:52:05.870 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_058/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_058/d245/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_058/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_058/d245/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_058/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_058: {'recurrence_coverage_standard': 0.9981310740094692, 'recurrence_coverage_standard_all': 0.7801970734175792, 'recurrence_coverage_model': 0.826376775479691, 'recurrence_coverage_model_all': 0.8923265065152303}
+Processing 53/192...
+2025-06-08 13:52:09.035 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_059/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_059/d196/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_059/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_059/d196/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_059/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_059: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7936679858362841, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8686523640908144}
+Processing 54/192...
+2025-06-08 13:52:11.984 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_060/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_060/d559/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_060/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_060/d559/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_060/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_060: {'recurrence_coverage_standard': 0.9553914327917282, 'recurrence_coverage_standard_all': 0.49617563270956067, 'recurrence_coverage_model': 0.9999507631708517, 'recurrence_coverage_model_all': 0.5064227638435482}
+Processing 55/192...
+2025-06-08 13:52:15.008 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_061/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_061/d295/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_061/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_061/d295/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_061/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_061: {'recurrence_coverage_standard': 0.8048257372654155, 'recurrence_coverage_standard_all': 0.28174697053334385, 'recurrence_coverage_model': 0.8884231050450889, 'recurrence_coverage_model_all': 0.303833819625161}
+Processing 56/192...
+2025-06-08 13:52:17.880 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_062/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_062/d17/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_062/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_062/d17/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_062/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_062: {'recurrence_coverage_standard': 0.8991759573436743, 'recurrence_coverage_standard_all': 0.7758033330264248, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9106589325722002}
+Processing 57/192...
+2025-06-08 13:52:20.724 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_063/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_063/d206/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_063/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_063/d206/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_063/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_063: {'recurrence_coverage_standard': 0.9801090045185634, 'recurrence_coverage_standard_all': 0.5726882860309352, 'recurrence_coverage_model': 0.9192714398844738, 'recurrence_coverage_model_all': 0.784310702067171}
+Processing 58/192...
+2025-06-08 13:52:23.580 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_064/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_064/d271/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_064/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_064/d271/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_064/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_064: {'recurrence_coverage_standard': 0.8577445786304255, 'recurrence_coverage_standard_all': 0.29663776758188476, 'recurrence_coverage_model': 0.9311263944190332, 'recurrence_coverage_model_all': 0.3628113647218885}
+Processing 59/192...
+2025-06-08 13:52:26.735 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_065/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_065/d198/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_065/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_065/d198/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_065/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_065: {'recurrence_coverage_standard': 0.9830508474576272, 'recurrence_coverage_standard_all': 0.7319867574303464, 'recurrence_coverage_model': 0.9656308851224106, 'recurrence_coverage_model_all': 0.7841386749990701}
+Processing 60/192...
+2025-06-08 13:52:30.031 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_066/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_066/d172/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_066/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_066/d172/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_066/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_066: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.8194813734739972, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8332904480086915}
+Processing 61/192...
+2025-06-08 13:52:33.386 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_067/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_067/d239/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_067/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_067/d239/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_067/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_067: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9345378322729043, 'recurrence_coverage_model': 0.9979762937265105, 'recurrence_coverage_model_all': 0.823535958745293}
+Processing 62/192...
+2025-06-08 13:52:36.580 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_068/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_068/d135/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_068/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_068/d135/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_068/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_068: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9311712831297947, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8834930573811629}
+Processing 63/192...
+2025-06-08 13:52:39.905 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_069/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_069/d109/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_069/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_069/d109/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_069/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_069: {'recurrence_coverage_standard': 0.9151103565365025, 'recurrence_coverage_standard_all': 0.7253403622469954, 'recurrence_coverage_model': 0.8279569892473119, 'recurrence_coverage_model_all': 0.8522719028849176}
+Processing 64/192...
+2025-06-08 13:52:42.905 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_070/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_070/d501/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_070/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_070/d501/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_070/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_070: {'recurrence_coverage_standard': 0.9965397923875432, 'recurrence_coverage_standard_all': 0.8182208852599914, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9555221314997852}
+Processing 65/192...
+2025-06-08 13:52:46.039 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_071/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_071/d94/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_071/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_071/d94/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_071/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_071: {'recurrence_coverage_standard': 0.3665435864504736, 'recurrence_coverage_standard_all': 0.12622141281126326, 'recurrence_coverage_model': 0.11314817787766897, 'recurrence_coverage_model_all': 0.08442195215914265}
+Processing 66/192...
+2025-06-08 13:52:48.911 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_072/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_072/d255/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_072/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_072/d255/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_072/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_072: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5890557939914163, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.5473680888664478}
+Processing 67/192...
+2025-06-08 13:52:51.898 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_075/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_075/d457/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_075/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_075/d457/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_075/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_075: {'recurrence_coverage_standard': 0.8999462901864498, 'recurrence_coverage_standard_all': 0.3842437755481234, 'recurrence_coverage_model': 0.8229878001994936, 'recurrence_coverage_model_all': 0.3915697828741307}
+Processing 68/192...
+2025-06-08 13:52:54.939 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_077/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_077/d159/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_077/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_077/d159/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_077/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_077: {'recurrence_coverage_standard': 0.9968578161822467, 'recurrence_coverage_standard_all': 0.7698433011972813, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9716463327929926}
+Processing 69/192...
+2025-06-08 13:52:57.791 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_078/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_078/d496/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_078/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_078/d496/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_078/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_078: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.11429727698444817, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.2398103717407643}
+Processing 70/192...
+2025-06-08 13:53:00.820 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_079/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_079/d118/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_079/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_079/d118/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_079/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_079: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.2520830888393381, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.7459805187184603}
+Processing 71/192...
+2025-06-08 13:53:03.612 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_080/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_080/d229/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_080/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_080/d229/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_080/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_080: {'recurrence_coverage_standard': 0.9721311475409836, 'recurrence_coverage_standard_all': 0.8597662771285476, 'recurrence_coverage_model': 0.9360655737704918, 'recurrence_coverage_model_all': 0.9579123099903347}
+Processing 72/192...
+2025-06-08 13:53:06.545 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_081/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_081/d262/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_081/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_081/d262/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_081/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_081: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7967659574468086, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8836312056737589}
+Processing 73/192...
+2025-06-08 13:53:09.361 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_082/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_082/d321/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_082/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_082/d321/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_082/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_082: {'recurrence_coverage_standard': 0.01206729498810887, 'recurrence_coverage_standard_all': 0.7404109256350889, 'recurrence_coverage_model': 0.01206729498810887, 'recurrence_coverage_model_all': 0.7831225814808218}
+Processing 74/192...
+2025-06-08 13:53:12.057 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_084/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_084/d191/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_084/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_084/d191/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_084/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_084: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.4154110627970472, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6422287390029325}
+Processing 75/192...
+2025-06-08 13:53:14.902 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_085/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_085/d163/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_085/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_085/d163/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_085/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_085: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.34715347559057724, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.4767328289767742}
+Processing 76/192...
+2025-06-08 13:53:17.571 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_086/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_086/d40/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_086/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_086/d40/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_086/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_086: {'recurrence_coverage_standard': 0.24648318042813455, 'recurrence_coverage_standard_all': 0.23777208411236525, 'recurrence_coverage_model': 0.30268433571185865, 'recurrence_coverage_model_all': 0.3854072894305565}
+Processing 77/192...
+2025-06-08 13:53:20.376 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_087/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_087/d19/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_087/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_087/d19/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_087/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_087: {'recurrence_coverage_standard': 0.8984485190409027, 'recurrence_coverage_standard_all': 0.8665827767560417, 'recurrence_coverage_model': 0.8166738210584411, 'recurrence_coverage_model_all': 0.8254121898493209}
+Processing 78/192...
+2025-06-08 13:53:23.051 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_088/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_088/d263/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_088/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_088/d263/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_088/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_088: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5851010025882843, 'recurrence_coverage_model': 0.9981012658227848, 'recurrence_coverage_model_all': 0.6277928182548419}
+Processing 79/192...
+2025-06-08 13:53:25.796 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_089/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_089/d719/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_089/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_089/d719/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_089/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_089: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.7183792913818838, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8028713960248252}
+Processing 80/192...
+2025-06-08 13:53:28.492 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_090/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_090/d378/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_090/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_090/d378/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_090/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_090: {'recurrence_coverage_standard': 0.6409629867008492, 'recurrence_coverage_standard_all': 0.23551774208848059, 'recurrence_coverage_model': 0.5686588687710303, 'recurrence_coverage_model_all': 0.2562916371755675}
+Processing 81/192...
+2025-06-08 13:53:31.300 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_091/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_091/d46/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_091/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_091/d46/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_091/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_091: {'recurrence_coverage_standard': 0.7674461766889383, 'recurrence_coverage_standard_all': 0.5087177358306268, 'recurrence_coverage_model': 0.6659242761692651, 'recurrence_coverage_model_all': 0.8065248711875168}
+Processing 82/192...
+2025-06-08 13:53:34.058 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_092/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_092/d101/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_092/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_092/d101/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_092/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_092: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9938579654510556, 'recurrence_coverage_model': 0.9966044142614601, 'recurrence_coverage_model_all': 0.973320537428023}
+Processing 83/192...
+2025-06-08 13:53:36.743 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_093/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_093/d79/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_093/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_093/d79/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_093/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_093: {'recurrence_coverage_standard': 0.41471169131461055, 'recurrence_coverage_standard_all': 0.3196171516079632, 'recurrence_coverage_model': 0.6117346693000626, 'recurrence_coverage_model_all': 0.6881470137825421}
+Processing 84/192...
+2025-06-08 13:53:39.401 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_095/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_095/d192/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_095/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_095/d192/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_095/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_095: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9283928902055175, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9283928902055175}
+Processing 85/192...
+2025-06-08 13:53:42.152 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_096/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_096/d91/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_096/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_096/d91/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_096/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_096: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.43966836734693876, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9902104591836735}
+Processing 86/192...
+2025-06-08 13:53:44.910 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_097/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_097/d205/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_097/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_097/d205/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_097/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_097: {'recurrence_coverage_standard': 0.008203799654576857, 'recurrence_coverage_standard_all': 0.09636298163485776, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6254951386388189}
+Processing 87/192...
+2025-06-08 13:53:47.686 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_098/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_098/d129/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_098/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_098/d129/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_098/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_098: {'recurrence_coverage_standard': 0.9988970588235294, 'recurrence_coverage_standard_all': 0.7613705014240096, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.7651247087252956}
+Processing 88/192...
+2025-06-08 13:53:50.548 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_099/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_099/d97/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_099/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_099/d97/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_099/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_099: {'recurrence_coverage_standard': 0.9998242530755712, 'recurrence_coverage_standard_all': 0.9998801174848648, 'recurrence_coverage_model': 0.9968365553602812, 'recurrence_coverage_model_all': 0.9989210573637834}
+Processing 89/192...
+2025-06-08 13:53:53.351 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_100/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_100/d29/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_100/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_100/d29/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_100/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_100: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 1.0, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 1.0}
+Processing 90/192...
+2025-06-08 13:53:56.191 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_103/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_103/d67/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_103/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_103/d67/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_103/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_103: {'recurrence_coverage_standard': 0.9977101917538808, 'recurrence_coverage_standard_all': 0.5125818801679876, 'recurrence_coverage_model': 0.988031186345438, 'recurrence_coverage_model_all': 0.4894629760734636}
+Processing 91/192...
+2025-06-08 13:53:58.887 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_104/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_104/d208/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_104/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_104/d208/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_104/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_104: {'recurrence_coverage_standard': 0.765315082063174, 'recurrence_coverage_standard_all': 0.31985613226514037, 'recurrence_coverage_model': 0.7375329265821645, 'recurrence_coverage_model_all': 0.29453230507280737}
+Processing 92/192...
+2025-06-08 13:54:01.719 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_105/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_105/d171/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_105/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_105/d171/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_105/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_105: {'recurrence_coverage_standard': 0.7873239436619718, 'recurrence_coverage_standard_all': 0.4032639084545198, 'recurrence_coverage_model': 0.7225352112676057, 'recurrence_coverage_model_all': 0.46453262824819574}
+Processing 93/192...
+2025-06-08 13:54:04.494 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_106/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_106/d331/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_106/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_106/d331/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_106/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_106: {'recurrence_coverage_standard': 0.9946287519747236, 'recurrence_coverage_standard_all': 0.3129723462727585, 'recurrence_coverage_model': 0.9946287519747236, 'recurrence_coverage_model_all': 0.31398144967365166}
+Processing 94/192...
+2025-06-08 13:54:07.279 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_107/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_107/d309/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_107/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_107/d309/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_107/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_107: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.8157686823139476, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.8188904304929279}
+Processing 95/192...
+2025-06-08 13:54:09.946 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_109/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_109/d480/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_109/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_109/d480/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_109/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_109: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5839165937591134, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.7451151939340915}
+Processing 96/192...
+2025-06-08 13:54:12.666 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_111/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_111/d86/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_111/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_111/d86/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_111/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_111: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5777802961619825, 'recurrence_coverage_model': 0.9951232371161197, 'recurrence_coverage_model_all': 0.6146305530371714}
+Processing 97/192...
+2025-06-08 13:54:15.393 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_113/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_113/d66/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_113/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_113/d66/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_113/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_113: {'recurrence_coverage_standard': 0.646589337022454, 'recurrence_coverage_standard_all': 0.7274521088547233, 'recurrence_coverage_model': 0.6186371537015359, 'recurrence_coverage_model_all': 0.7191247460095606}
+Processing 98/192...
+2025-06-08 13:54:18.265 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_115/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_115/d300/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_115/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_115/d300/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_115/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_115: {'recurrence_coverage_standard': 0.8881307469863859, 'recurrence_coverage_standard_all': 0.5574985034297546, 'recurrence_coverage_model': 0.9134418559313773, 'recurrence_coverage_model_all': 0.5981173420912441}
+Processing 99/192...
+2025-06-08 13:54:20.993 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_116/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_116/d765/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_116/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_116/d765/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_116/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_116: {'recurrence_coverage_standard': 0.0023569023569023568, 'recurrence_coverage_standard_all': 0.05803990243292263, 'recurrence_coverage_model': 0.26855218855218854, 'recurrence_coverage_model_all': 0.1172785456668126}
+Processing 100/192...
+2025-06-08 13:54:23.575 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_117/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_117/d226/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_117/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_117/d226/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_117/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_117: {'recurrence_coverage_standard': 0.9906542056074766, 'recurrence_coverage_standard_all': 0.27100795185901566, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.35289060820975715}
+Processing 101/192...
+2025-06-08 13:54:26.379 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_118/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_118/d162/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_118/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_118/d162/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_118/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_118: {'recurrence_coverage_standard': 0.4071550255536627, 'recurrence_coverage_standard_all': 0.6802274286834624, 'recurrence_coverage_model': 0.4040885860306644, 'recurrence_coverage_model_all': 0.780021566513087}
+Processing 102/192...
+2025-06-08 13:54:29.105 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_119/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_119/d104/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_119/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_119/d104/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_119/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_119: {'recurrence_coverage_standard': 0.924363807728558, 'recurrence_coverage_standard_all': 0.6444526947589877, 'recurrence_coverage_model': 0.9945805843543827, 'recurrence_coverage_model_all': 0.8782872347008229}
+Processing 103/192...
+2025-06-08 13:54:31.882 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_120/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_120/d343/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_120/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_120/d343/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_120/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_120: {'recurrence_coverage_standard': 0.05506493506493507, 'recurrence_coverage_standard_all': 0.6879236843944371, 'recurrence_coverage_model': 0.05506493506493507, 'recurrence_coverage_model_all': 0.7610245300160738}
+Processing 104/192...
+2025-06-08 13:54:34.620 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_121/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_121/d79/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_121/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_121/d79/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_121/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_121: {'recurrence_coverage_standard': 0.9587203302373581, 'recurrence_coverage_standard_all': 0.821521261728888, 'recurrence_coverage_model': 0.9587203302373581, 'recurrence_coverage_model_all': 0.8151327610301458}
+Processing 105/192...
+2025-06-08 13:54:37.292 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_122/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_122/d431/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_122/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_122/d431/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_122/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_122: {'recurrence_coverage_standard': 0.9143360752056404, 'recurrence_coverage_standard_all': 0.2130060910068076, 'recurrence_coverage_model': 0.8652173913043478, 'recurrence_coverage_model_all': 0.269103069389705}
+Processing 106/192...
+2025-06-08 13:54:39.824 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_123/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_123/d225/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_123/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_123/d225/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_123/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_123: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.4267814788078787, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.5840466123543364}
+Processing 107/192...
+2025-06-08 13:54:42.513 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_124/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_124/d159/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_124/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_124/d159/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_124/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_124: {'recurrence_coverage_standard': 0.8783738191632928, 'recurrence_coverage_standard_all': 0.33908919439397617, 'recurrence_coverage_model': 0.8694331983805668, 'recurrence_coverage_model_all': 0.3599409892226122}
+Processing 108/192...
+2025-06-08 13:54:45.261 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_125/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_125/d63/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_125/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_125/d63/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_125/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_125: {'recurrence_coverage_standard': 0.8182403212520593, 'recurrence_coverage_standard_all': 0.547982977638227, 'recurrence_coverage_model': 0.7115939044481054, 'recurrence_coverage_model_all': 0.5156675857891968}
+Processing 109/192...
+2025-06-08 13:54:47.981 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_127/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_127/d144/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_127/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_127/d144/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_127/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_127: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.6088681561502578, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6632654063343972}
+Processing 110/192...
+2025-06-08 13:54:50.757 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_128/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_128/d457/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_128/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_128/d457/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_128/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_128: {'recurrence_coverage_standard': 0.9997477507777685, 'recurrence_coverage_standard_all': 0.443143447860282, 'recurrence_coverage_model': 0.9515681493315395, 'recurrence_coverage_model_all': 0.6811669489148164}
+Processing 111/192...
+2025-06-08 13:54:53.593 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_129/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_129/d58/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_129/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_129/d58/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_129/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_129: {'recurrence_coverage_standard': 0.899125893972074, 'recurrence_coverage_standard_all': 0.5156187584884557, 'recurrence_coverage_model': 0.9082529231467817, 'recurrence_coverage_model_all': 0.6304425980666294}
+Processing 112/192...
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+divide by zero encountered in scalar divide
+
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+invalid value encountered in scalar divide
+
+2025-06-08 13:54:55.959 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_130/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_130/d399/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_130/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_130/d399/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_130/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_130: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.0, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.0}
+Processing 113/192...
+2025-06-08 13:54:58.573 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_132/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_132/d324/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_132/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_132/d324/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_132/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_132: {'recurrence_coverage_standard': 0.785759796113412, 'recurrence_coverage_standard_all': 0.4114990321886874, 'recurrence_coverage_model': 0.7323988531379421, 'recurrence_coverage_model_all': 0.46311563552942864}
+Processing 114/192...
+2025-06-08 13:55:01.323 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_133/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_133/d164/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_133/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_133/d164/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_133/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_133: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.6510292717753451, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.46543312708234175}
+Processing 115/192...
+2025-06-08 13:55:03.976 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_134/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_134/d107/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_134/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_134/d107/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_134/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_134: {'recurrence_coverage_standard': 0.7399103139013453, 'recurrence_coverage_standard_all': 0.9324720068906115, 'recurrence_coverage_model': 0.7399103139013453, 'recurrence_coverage_model_all': 0.9174849267872524}
+Processing 116/192...
+2025-06-08 13:55:06.659 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_135/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_135/d53/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_135/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_135/d53/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_135/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_135: {'recurrence_coverage_standard': 0.6057494866529775, 'recurrence_coverage_standard_all': 0.07580695220360024, 'recurrence_coverage_model': 0.553388090349076, 'recurrence_coverage_model_all': 0.0659528243327126}
+Processing 117/192...
+2025-06-08 13:55:09.376 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_136/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_136/d82/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_136/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_136/d82/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_136/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_136: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.99853515625, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.99853515625}
+Processing 118/192...
+2025-06-08 13:55:12.105 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_137/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_137/d261/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_137/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_137/d261/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_137/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_137: {'recurrence_coverage_standard': 0.9657503379900856, 'recurrence_coverage_standard_all': 0.5043172030464391, 'recurrence_coverage_model': 0.9310500225326723, 'recurrence_coverage_model_all': 0.6526932133992405}
+Processing 119/192...
+2025-06-08 13:55:14.835 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_138/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_138/d251/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_138/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_138/d251/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_138/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_138: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.1473412977278051, 'recurrence_coverage_model': 0.015283842794759825, 'recurrence_coverage_model_all': 0.1933317716873585}
+Processing 120/192...
+2025-06-08 13:55:17.615 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_139/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_139/d190/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_139/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_139/d190/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_139/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_139: {'recurrence_coverage_standard': 0.973536562558444, 'recurrence_coverage_standard_all': 0.31685202681935637, 'recurrence_coverage_model': 0.9739106040770525, 'recurrence_coverage_model_all': 0.3777192163648161}
+Processing 121/192...
+2025-06-08 13:55:20.322 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_140/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_140/d100/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_140/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_140/d100/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_140/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_140: {'recurrence_coverage_standard': 0.9014111734003479, 'recurrence_coverage_standard_all': 0.4920081430270292, 'recurrence_coverage_model': 0.7797216315484246, 'recurrence_coverage_model_all': 0.6892749884102957}
+Processing 122/192...
+2025-06-08 13:55:23.014 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_142/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_142/d162/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_142/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_142/d162/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_142/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_142: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.21845082680591818, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.2515230635335074}
+Processing 123/192...
+2025-06-08 13:55:25.718 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_143/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_143/d165/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_143/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_143/d165/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_143/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_143: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5092866348267758, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.7023659382085582}
+Processing 124/192...
+2025-06-08 13:55:28.353 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_144/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_144/d101/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_144/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_144/d101/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_144/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_144: {'recurrence_coverage_standard': 0.948931286759432, 'recurrence_coverage_standard_all': 0.7781091457562046, 'recurrence_coverage_model': 0.9634198823698178, 'recurrence_coverage_model_all': 0.9152269299328123}
+Processing 125/192...
+2025-06-08 13:55:31.272 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_145/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_145/d141/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_145/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_145/d141/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_145/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_145: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5792067142584937, 'recurrence_coverage_model': 0.9944571242256276, 'recurrence_coverage_model_all': 0.6650270972087438}
+Processing 126/192...
+2025-06-08 13:55:33.996 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_146/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_146/d147/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_146/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_146/d147/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_146/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_146: {'recurrence_coverage_standard': 0.8052016058648979, 'recurrence_coverage_standard_all': 0.29704966374291003, 'recurrence_coverage_model': 0.9209286088322569, 'recurrence_coverage_model_all': 0.5212135345359351}
+Processing 127/192...
+2025-06-08 13:55:36.804 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_147/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_147/d130/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_147/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_147/d130/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_147/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_147: {'recurrence_coverage_standard': 0.9486783384826639, 'recurrence_coverage_standard_all': 0.919549590025834, 'recurrence_coverage_model': 0.9560590456573979, 'recurrence_coverage_model_all': 0.9170504324385039}
+Processing 128/192...
+2025-06-08 13:55:39.567 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_148/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_148/d223/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_148/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_148/d223/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_148/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_148: {'recurrence_coverage_standard': 0.9629242819843342, 'recurrence_coverage_standard_all': 0.6607128697169138, 'recurrence_coverage_model': 0.810443864229765, 'recurrence_coverage_model_all': 0.8250535247006582}
+Processing 129/192...
+2025-06-08 13:55:42.332 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_149/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_149/d34/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_149/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_149/d34/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_149/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_149: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.8314979434788378, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.879063287780284}
+Processing 130/192...
+2025-06-08 13:55:45.053 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_151/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_151/d100/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_151/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_151/d100/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_151/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_151: {'recurrence_coverage_standard': 0.9857974052256876, 'recurrence_coverage_standard_all': 0.8373597448080483, 'recurrence_coverage_model': 0.9048462289039066, 'recurrence_coverage_model_all': 0.7856521448169712}
+Processing 131/192...
+2025-06-08 13:55:47.978 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_156/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_156/d298/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_156/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_156/d298/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_156/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_156: {'recurrence_coverage_standard': 0.9998726601298866, 'recurrence_coverage_standard_all': 0.9733610428868317, 'recurrence_coverage_model': 0.8563606265121609, 'recurrence_coverage_model_all': 0.9627337993576421}
+Processing 132/192...
+2025-06-08 13:55:50.717 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_157/d0/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_157/d199/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_157/d0/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_157/d199/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/respond_tum_157/d0/preop/processed/tumor_segmentation/standard_plan.nii.gz
+respond_tum_157: {'recurrence_coverage_standard': 0.9672873678912934, 'recurrence_coverage_standard_all': 0.6881524365227697, 'recurrence_coverage_model': 0.9954705586311021, 'recurrence_coverage_model_all': 0.899439303459908}
+Processing 133/192...
+2025-06-08 13:55:53.658 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm001/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm001/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm001/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm001/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm001/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm001: {'recurrence_coverage_standard': 0.9991912656692277, 'recurrence_coverage_standard_all': 0.9991912656692277, 'recurrence_coverage_model': 0.7881116053376466, 'recurrence_coverage_model_all': 0.7881116053376466}
+Processing 134/192...
+2025-06-08 13:55:56.562 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm002/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm002/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm002/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm002/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm002/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm002: {'recurrence_coverage_standard': 0.47380784590086916, 'recurrence_coverage_standard_all': 0.2797188339880091, 'recurrence_coverage_model': 0.6422363166549213, 'recurrence_coverage_model_all': 0.31084464658994326}
+Processing 135/192...
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+divide by zero encountered in scalar divide
+
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+invalid value encountered in scalar divide
+
+2025-06-08 13:55:59.276 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm003/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm003/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm003/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm003/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm003/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm003: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.0, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.0}
+Processing 136/192...
+2025-06-08 13:56:02.047 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm004/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm004/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm004/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm004/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm004/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm004: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9188128944226506, 'recurrence_coverage_model': 0.9930313588850174, 'recurrence_coverage_model_all': 0.7724714310080164}
+Processing 137/192...
+2025-06-08 13:56:04.982 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm005/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm005/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm005/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm005/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm005/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm005: {'recurrence_coverage_standard': 0.9890462491701704, 'recurrence_coverage_standard_all': 0.5754436585382144, 'recurrence_coverage_model': 0.974717857933171, 'recurrence_coverage_model_all': 0.6625657055456482}
+Processing 138/192...
+2025-06-08 13:56:07.817 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm006/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm006/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm006/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm006/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm006/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm006: {'recurrence_coverage_standard': 0.9980995819080197, 'recurrence_coverage_standard_all': 0.34905251986426666, 'recurrence_coverage_model': 0.9980995819080197, 'recurrence_coverage_model_all': 0.3368197623270168}
+Processing 139/192...
+2025-06-08 13:56:10.729 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm008/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm008/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm008/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm008/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm008/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm008: {'recurrence_coverage_standard': 0.9684041611332448, 'recurrence_coverage_standard_all': 0.410879848628193, 'recurrence_coverage_model': 0.9959606020362992, 'recurrence_coverage_model_all': 0.4706115076976004}
+Processing 140/192...
+2025-06-08 13:56:13.488 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm009/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm009/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm009/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm009/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm009/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm009: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 1.0, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 1.0}
+Processing 141/192...
+2025-06-08 13:56:16.214 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm010/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm010/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm010/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm010/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm010/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm010: {'recurrence_coverage_standard': 0.9943615730497466, 'recurrence_coverage_standard_all': 0.7150812922297297, 'recurrence_coverage_model': 0.9909356933837699, 'recurrence_coverage_model_all': 0.7534839527027027}
+Processing 142/192...
+2025-06-08 13:56:18.977 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm011/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm011/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm011/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm011/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm011/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm011: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 1.0, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 1.0}
+Processing 143/192...
+2025-06-08 13:56:21.692 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm013/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm013/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm013/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm013/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm013/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm013: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.024475524475524476, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.11888111888111888}
+Processing 144/192...
+2025-06-08 13:56:24.644 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm014/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm014/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm014/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm014/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm014/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm014: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9988960949358355, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9771859620072674}
+Processing 145/192...
+2025-06-08 13:56:27.588 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm015/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm015/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm015/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm015/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm015/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm015: {'recurrence_coverage_standard': 0.9758896410210659, 'recurrence_coverage_standard_all': 0.8620583948360826, 'recurrence_coverage_model': 0.9546676182935397, 'recurrence_coverage_model_all': 0.923414617217685}
+Processing 146/192...
+2025-06-08 13:56:30.433 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm016/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm016/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm016/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm016/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm016/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm016: {'recurrence_coverage_standard': 0.7092240117130307, 'recurrence_coverage_standard_all': 0.6517776830942574, 'recurrence_coverage_model': 0.8969253294289897, 'recurrence_coverage_model_all': 0.8686739572977323}
+Processing 147/192...
+2025-06-08 13:56:33.397 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm017/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm017/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm017/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm017/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm017/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm017: {'recurrence_coverage_standard': 0.9682064557883666, 'recurrence_coverage_standard_all': 0.7921548375991135, 'recurrence_coverage_model': 0.8262546180190383, 'recurrence_coverage_model_all': 0.7345748743934846}
+Processing 148/192...
+2025-06-08 13:56:36.203 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm018/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm018/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm018/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm018/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm018/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm018: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5463687150837989, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6867175920647589}
+Processing 149/192...
+2025-06-08 13:56:39.109 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm019/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm019/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm019/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm019/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm019/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm019: {'recurrence_coverage_standard': 0.9697167381974249, 'recurrence_coverage_standard_all': 0.9754994437188603, 'recurrence_coverage_model': 0.959175965665236, 'recurrence_coverage_model_all': 0.967155226624099}
+Processing 150/192...
+2025-06-08 13:56:41.982 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm021/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm021/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm021/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm021/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm021/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm021: {'recurrence_coverage_standard': 0.9997986036519871, 'recurrence_coverage_standard_all': 0.8932503590234562, 'recurrence_coverage_model': 0.9949650912996778, 'recurrence_coverage_model_all': 0.8981570129248444}
+Processing 151/192...
+2025-06-08 13:56:44.742 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm022/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm022/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm022/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm022/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm022/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm022: {'recurrence_coverage_standard': 0.9633699633699634, 'recurrence_coverage_standard_all': 0.24626517567857187, 'recurrence_coverage_model': 0.9632682132682132, 'recurrence_coverage_model_all': 0.3238990935565613}
+Processing 152/192...
+2025-06-08 13:56:47.460 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm023/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm023/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm023/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm023/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm023/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm023: {'recurrence_coverage_standard': 0.8096525096525097, 'recurrence_coverage_standard_all': 0.7214000295989345, 'recurrence_coverage_model': 0.8706563706563707, 'recurrence_coverage_model_all': 0.8231833653988456}
+Processing 153/192...
+2025-06-08 13:56:50.236 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm024/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm024/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm024/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm024/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm024/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm024: {'recurrence_coverage_standard': 0.9998299319727891, 'recurrence_coverage_standard_all': 0.641405512342071, 'recurrence_coverage_model': 0.9998299319727891, 'recurrence_coverage_model_all': 0.7497189874556001}
+Processing 154/192...
+2025-06-08 13:56:53.156 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm025/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm025/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm025/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm025/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm025/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm025: {'recurrence_coverage_standard': 0.9973666886109283, 'recurrence_coverage_standard_all': 0.8927516187841831, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9925190167850632}
+Processing 155/192...
+2025-06-08 13:56:55.917 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm026/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm026/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm026/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm026/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm026/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm026: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9992173232454996, 'recurrence_coverage_model': 0.9973118279569892, 'recurrence_coverage_model_all': 0.9989564309939994}
+Processing 156/192...
+2025-06-08 13:56:58.732 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm027/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm027/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm027/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm027/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm027/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm027: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.5121132374852455, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.7381044524855357}
+Processing 157/192...
+2025-06-08 13:57:01.584 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm028/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm028/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm028/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm028/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm028/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm028: {'recurrence_coverage_standard': 0.5937425591694843, 'recurrence_coverage_standard_all': 0.5514012485057777, 'recurrence_coverage_model': 0.7406066955569313, 'recurrence_coverage_model_all': 0.6517023066365608}
+Processing 158/192...
+2025-06-08 13:57:04.499 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm029/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm029/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm029/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm029/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm029/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm029: {'recurrence_coverage_standard': 0.6089898633040737, 'recurrence_coverage_standard_all': 0.41586165589052876, 'recurrence_coverage_model': 0.6359485827648993, 'recurrence_coverage_model_all': 0.5086695437163086}
+Processing 159/192...
+2025-06-08 13:57:07.523 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm031/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm031/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm031/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm031/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm031/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm031: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.6710250933177984, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.4997734481196194}
+Processing 160/192...
+2025-06-08 13:57:10.278 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm033/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm033/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm033/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm033/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm033/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm033: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.6775439607956183, 'recurrence_coverage_model': 0.9869281045751634, 'recurrence_coverage_model_all': 0.9532430095128279}
+Processing 161/192...
+2025-06-08 13:57:13.101 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm034/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm034/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm034/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm034/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm034/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm034: {'recurrence_coverage_standard': 0.9945877109200891, 'recurrence_coverage_standard_all': 0.9972862059835849, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 1.0}
+Processing 162/192...
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+divide by zero encountered in scalar divide
+
+/home/home/lucas/projects/gbm_bench/gbm_bench/evaluation/evaluate.py:79: RuntimeWarning:
+
+invalid value encountered in scalar divide
+
+2025-06-08 13:57:15.588 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm035/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm035/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm035/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm035/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm035/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm035: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.0, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.0}
+Processing 163/192...
+2025-06-08 13:57:18.374 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm036/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm036/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm036/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm036/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm036/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm036: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9999540662823546, 'recurrence_coverage_model': 0.999892380542402, 'recurrence_coverage_model_all': 0.9957051974001516}
+Processing 164/192...
+2025-06-08 13:57:21.272 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm037/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm037/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm037/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm037/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm037/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm037: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.48685570562293273, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.6220886163175303}
+Processing 165/192...
+2025-06-08 13:57:23.924 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm038/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm038/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm038/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm038/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm038/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm038: {'recurrence_coverage_standard': 0.3646987403247837, 'recurrence_coverage_standard_all': 0.17530255490811295, 'recurrence_coverage_model': 0.5079678251631508, 'recurrence_coverage_model_all': 0.23724787090990587}
+Processing 166/192...
+2025-06-08 13:57:26.874 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm039/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm039/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm039/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm039/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm039/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm039: {'recurrence_coverage_standard': 0.6264409747555815, 'recurrence_coverage_standard_all': 0.41490225808198405, 'recurrence_coverage_model': 0.7261053553188385, 'recurrence_coverage_model_all': 0.6111983538203282}
+Processing 167/192...
+2025-06-08 13:57:29.627 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm041/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm041/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm041/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm041/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm041/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm041: {'recurrence_coverage_standard': 0.9976052001368457, 'recurrence_coverage_standard_all': 0.8653475892015895, 'recurrence_coverage_model': 0.9945261717413616, 'recurrence_coverage_model_all': 0.9217156200073737}
+Processing 168/192...
+2025-06-08 13:57:32.530 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm042/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm042/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm042/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm042/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm042/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm042: {'recurrence_coverage_standard': 0.9792661014093997, 'recurrence_coverage_standard_all': 0.8454446893600522, 'recurrence_coverage_model': 0.9996630916952103, 'recurrence_coverage_model_all': 0.9149895531925587}
+Processing 169/192...
+2025-06-08 13:57:35.484 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm044/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm044/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm044/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm044/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm044/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm044: {'recurrence_coverage_standard': 0.9249129083890406, 'recurrence_coverage_standard_all': 0.7159147059941465, 'recurrence_coverage_model': 0.9275491949910555, 'recurrence_coverage_model_all': 0.7527272036185336}
+Processing 170/192...
+2025-06-08 13:57:38.323 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm045/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm045/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm045/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm045/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm045/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm045: {'recurrence_coverage_standard': 0.982283935839119, 'recurrence_coverage_standard_all': 0.8886552412995479, 'recurrence_coverage_model': 0.9791716542973425, 'recurrence_coverage_model_all': 0.9206532786597974}
+Processing 171/192...
+2025-06-08 13:57:41.129 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm046/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm046/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm046/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm046/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm046/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm046: {'recurrence_coverage_standard': 0.9269798982804553, 'recurrence_coverage_standard_all': 0.8121186708996158, 'recurrence_coverage_model': 0.9425526761927827, 'recurrence_coverage_model_all': 0.8764258392449149}
+Processing 172/192...
+2025-06-08 13:57:43.917 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm047/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm047/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm047/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm047/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm047/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm047: {'recurrence_coverage_standard': 0.9917540466252672, 'recurrence_coverage_standard_all': 0.6963904770031573, 'recurrence_coverage_model': 0.9908887305303878, 'recurrence_coverage_model_all': 0.8138813038655175}
+Processing 173/192...
+2025-06-08 13:57:46.571 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm048/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm048/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm048/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm048/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm048/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm048: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.2893956369867528, 'recurrence_coverage_model': 0.9964850615114236, 'recurrence_coverage_model_all': 0.4745930270875898}
+Processing 174/192...
+2025-06-08 13:57:49.451 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm049/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm049/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm049/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm049/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm049/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm049: {'recurrence_coverage_standard': 0.9689146469968388, 'recurrence_coverage_standard_all': 0.67736117036501, 'recurrence_coverage_model': 0.9550004789730817, 'recurrence_coverage_model_all': 0.7090882580073768}
+Processing 175/192...
+2025-06-08 13:57:52.266 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm051/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm051/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm051/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm051/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm051/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm051: {'recurrence_coverage_standard': 0.8070502749410841, 'recurrence_coverage_standard_all': 0.659848253774592, 'recurrence_coverage_model': 0.7853495679497251, 'recurrence_coverage_model_all': 0.690655025163947}
+Processing 176/192...
+2025-06-08 13:57:55.091 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm052/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm052/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm052/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm052/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm052/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm052: {'recurrence_coverage_standard': 0.419647355163728, 'recurrence_coverage_standard_all': 0.7239214818211285, 'recurrence_coverage_model': 0.46364399664147776, 'recurrence_coverage_model_all': 0.7990165463701548}
+Processing 177/192...
+2025-06-08 13:57:58.095 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm053/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm053/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm053/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm053/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm053/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm053: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9725970806940237, 'recurrence_coverage_model': 0.9974747474747475, 'recurrence_coverage_model_all': 0.9724593775819333}
+Processing 178/192...
+2025-06-08 13:58:00.993 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm054/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm054/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm054/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm054/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm054/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm054: {'recurrence_coverage_standard': 0.9433682035386801, 'recurrence_coverage_standard_all': 0.4587053358059151, 'recurrence_coverage_model': 0.9120818804081106, 'recurrence_coverage_model_all': 0.6484552736727398}
+Processing 179/192...
+2025-06-08 13:58:03.795 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm055/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm055/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm055/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm055/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm055/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm055: {'recurrence_coverage_standard': 0.22377622377622378, 'recurrence_coverage_standard_all': 0.5075788611224907, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.5094906459101461}
+Processing 180/192...
+2025-06-08 13:58:06.576 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm056/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm056/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm056/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm056/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm056/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm056: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.6233140027366912, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.7586064594600465}
+Processing 181/192...
+2025-06-08 13:58:09.353 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm057/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm057/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm057/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm057/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm057/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm057: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.9371980676328503, 'recurrence_coverage_model': 0.03076923076923077, 'recurrence_coverage_model_all': 0.6835748792270532}
+Processing 182/192...
+2025-06-08 13:58:12.132 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm058/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm058/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm058/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm058/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm058/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm058: {'recurrence_coverage_standard': 0.999340151765094, 'recurrence_coverage_standard_all': 0.3682280731092489, 'recurrence_coverage_model': 0.9944325305179809, 'recurrence_coverage_model_all': 0.431086914782264}
+Processing 183/192...
+2025-06-08 13:58:14.992 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm060/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm060/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm060/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm060/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm060/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm060: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.6951467268623025, 'recurrence_coverage_model': 1.0, 'recurrence_coverage_model_all': 0.9598194130925508}
+Processing 184/192...
+2025-06-08 13:58:17.940 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm061/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm061/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm061/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm061/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm061/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm061: {'recurrence_coverage_standard': 0.9936831875607386, 'recurrence_coverage_standard_all': 0.2715711451813806, 'recurrence_coverage_model': 0.9970845481049563, 'recurrence_coverage_model_all': 0.38853434621476574}
+Processing 185/192...
+2025-06-08 13:58:20.706 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm063/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm063/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm063/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm063/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm063/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm063: {'recurrence_coverage_standard': 0.0, 'recurrence_coverage_standard_all': 0.21188431285158463, 'recurrence_coverage_model': 0.0, 'recurrence_coverage_model_all': 0.5214112772082826}
+Processing 186/192...
+2025-06-08 13:58:23.405 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm064/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm064/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm064/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm064/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm064/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm064: {'recurrence_coverage_standard': 0.9997712194005949, 'recurrence_coverage_standard_all': 0.7235391126388364, 'recurrence_coverage_model': 0.9981697552047586, 'recurrence_coverage_model_all': 0.7453952989330207}
+Processing 187/192...
+2025-06-08 13:58:26.193 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm065/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm065/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm065/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm065/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm065/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm065: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9732044475608534, 'recurrence_coverage_model': 0.9993371630578878, 'recurrence_coverage_model_all': 0.9937393569067414}
+Processing 188/192...
+2025-06-08 13:58:29.014 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm066/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm066/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm066/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm066/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm066/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm066: {'recurrence_coverage_standard': 0.9994134897360704, 'recurrence_coverage_standard_all': 0.891899163281229, 'recurrence_coverage_model': 0.9393939393939394, 'recurrence_coverage_model_all': 0.9467567058570314}
+Processing 189/192...
+2025-06-08 13:58:31.921 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm067/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm067/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm067/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm067/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm067/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm067: {'recurrence_coverage_standard': 0.9697695300808141, 'recurrence_coverage_standard_all': 0.5461648129080438, 'recurrence_coverage_model': 0.9925172104160431, 'recurrence_coverage_model_all': 0.6201020604442232}
+Processing 190/192...
+2025-06-08 13:58:34.767 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm068/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm068/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm068/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm068/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm068/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm068: {'recurrence_coverage_standard': 0.9985622268230964, 'recurrence_coverage_standard_all': 0.9852957470045427, 'recurrence_coverage_model': 0.8619450195537152, 'recurrence_coverage_model_all': 0.8459773025847196}
+Processing 191/192...
+2025-06-08 13:58:37.595 | INFO     | gbm_bench.evaluation.evaluate:evaluate_tumor_model:233 - Finished evaluation of /mnt/Drive2/lucas/datasets/GLIODIL/tgm071/preop/preop. Saved results to /mnt/Drive2/lucas/datasets/GLIODIL/tgm071/preop/followup/processed/longitudinal/sbtc_metrics.json.
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm071/preop/preop/processed/tumor_segmentation/tumor_seg.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm071/preop/followup/processed/longitudinal/recurrence_preop.nii.gz
+/mnt/Drive2/lucas/datasets/GLIODIL/tgm071/preop/preop/processed/tumor_segmentation/standard_plan.nii.gz
+tgm071: {'recurrence_coverage_standard': 1.0, 'recurrence_coverage_standard_all': 0.9898843930635838, 'recurrence_coverage_model': 0.8055555555555556, 'recurrence_coverage_model_all': 0.7575867052023122}
+Finished evaluation.
+Standard plan coverge: 80.36 ± 2.32
+Standard plan coverge (all): 59.50 ± 2.01
+Model plan coverge: 81.30 ± 2.19
+Model plan coverge (all): 66.79 ± 1.85
