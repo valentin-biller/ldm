@@ -43,7 +43,7 @@ def inference():
         model_=model_,
         scheduler_=scheduler_,
         denoising=denoising,
-        num_inference_steps=5 # 100
+        num_inference_steps=100
     )
 
     # Initialize trainer
