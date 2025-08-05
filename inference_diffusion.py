@@ -48,8 +48,8 @@ def inference():
 
     # Initialize trainer
     trainer = pl.Trainer(
-        accelerator='gpu',
-        devices=torch.cuda.device_count(),
+        accelerator='auto',
+        devices='auto',
         logger=False,
         enable_progress_bar=True
     )
