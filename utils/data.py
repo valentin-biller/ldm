@@ -115,21 +115,24 @@ class DataModule(pl.LightningDataModule):
 
         # Only do inference for the patients that haven't been inferred
         if self.dir_output_model is not None:
-            dir_output_model_reconstructed = self.dir_output_model / 'reconstructed'
-            if dir_output_model_reconstructed.exists():
-                files_completed = list(dir_output_model_reconstructed.iterdir())
+            if self.mode in ['inference', 'inference_conditioning']:
+                dir_output = self.dir_output_model / 'pixel_injection'
+            elif self.mode == 'inference_challenge':
+                dir_output = self.dir_output_model
+            if dir_output.exists():
+                files_completed = list(dir_output.iterdir())
                 if self.mode in ['inference', 'inference_conditioning']:
-                    patient_masks = {}
-                    for file in files_completed:
-                        name = file.name
-                        patient_mask = name[:-7]
-                        patient = patient_mask[:-5]
-                        mask = patient_mask[-4:]
-                        patient_masks.setdefault(patient, set()).add(mask)
-                    # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
-                    patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
-                    patients_val = [patient for patient in patients_val if patient not in patients_completed]
-                    self._print_numbers('Completed', patients_completed)
+                        patient_masks = {}
+                        for file in files_completed:
+                            name = file.name
+                            patient_mask = name[:-7]
+                            patient = patient_mask[:-5]
+                            mask = patient_mask[-4:]
+                            patient_masks.setdefault(patient, set()).add(mask)
+                        # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
+                        patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
+                        patients_val = [patient for patient in patients_val if patient not in patients_completed]
+                        self._print_numbers('Completed', patients_completed)
                 elif self.mode == 'inference_challenge':
                     patients_completed = [file.name[:-21] for file in files_completed]
                     patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
