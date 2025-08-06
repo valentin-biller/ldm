@@ -1,6 +1,7 @@
 #Dockerfile
 
-FROM --platform=linux/amd64 pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+# FROM --platform=linux/amd64 pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
 LABEL authors="JonasWeidner"
 
 RUN apt-get update -y && \
