@@ -1,6 +1,7 @@
-output*
 models
+output*
 slurm
+temp*
 
 # Python-generated files
 __pycache__/

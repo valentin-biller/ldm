@@ -1,10 +1,10 @@
 import sys
 from pathlib import Path
 dir_current = Path(__file__).resolve().parent
-path_maisi = dir_current.parent / 'maisi'
-path_gbm_bench = dir_current.parent / 'gbm_bench'
-sys.path.append(str(path_maisi))
-sys.path.append(str(path_gbm_bench))
+dir_maisi = dir_current.parent / 'maisi'
+dir_gbm_bench = dir_current.parent / 'gbm_bench'
+sys.path.append(str(dir_maisi))
+sys.path.append(str(dir_gbm_bench))
 
 import numpy as np
 if not hasattr(np, 'bool'):

@@ -1,6 +1,10 @@
 import sys
-sys.path.append('/vol/miltank/users/bilv/ldm/maisi')
-sys.path.append('/vol/miltank/users/bilv/master-thesis/models')
+from pathlib import Path
+dir_current = Path(__file__).resolve().parent
+dir_maisi = dir_current.parent / 'maisi'
+dir_models = dir_current.parent / 'master-thesis' / 'models'
+sys.path.append(str(dir_maisi))
+sys.path.append(str(dir_models))
 
 import os
 import math
@@ -58,8 +62,9 @@ is_main_process = rank == 0
 # Configuration
 dir_data = "/vol/miltank/users/bilv/data"
 dir_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
-path_autoencoder = "/vol/miltank/users/bilv/ldm/maisi/maisi_vae.pt"
+
 latent_shape = (60, 60, 40)
+path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
 
 pl.seed_everything(42)
 device = f"cuda:{local_rank}" if torch.cuda.is_available() else "cpu"
