@@ -55,7 +55,7 @@ def inference():
     # Initialize trainer
     trainer = pl.Trainer(
         accelerator='auto',
-        devices='auto',
+        devices='auto' if mode != 'inference_challenge' else 1,
         logger=False,
         enable_progress_bar=True
     )
