@@ -340,6 +340,28 @@ class DataSet(Dataset):
             normalized_t1 = self._process_normalized_modality(data_t1)  # 1, 240, 240, 155
             autoencoder_t1 = self._process_autoencoder_modality(normalized_t1)  # 1, 240, 240, 160
 
+            data_t1c, affine = self._get_data(self._get_file_modality(patient, 't1c'), affine=True)
+            original_t1c = self._process_original_modality(data_t1c)  # 1, 240, 240, 155
+            normalized_t1c = self._process_normalized_modality(data_t1c)  # 1, 240, 240, 155
+            autoencoder_t1c = self._process_autoencoder_modality(normalized_t1c)  # 1, 240, 240, 160
+
+            data_t2, affine = self._get_data(self._get_file_modality(patient, 't2'), affine=True)
+            original_t2 = self._process_original_modality(data_t2)  # 1, 240, 240, 155
+            normalized_t2 = self._process_normalized_modality(data_t2)  # 1, 240, 240, 155
+            autoencoder_t2 = self._process_autoencoder_modality(normalized_t2)  # 1, 240, 240, 160
+
+            data_flair, affine = self._get_data(self._get_file_modality(patient, 'flair'), affine=True)
+            original_flair = self._process_original_modality(data_flair)  # 1, 240, 240, 155
+            normalized_flair = self._process_normalized_modality(data_flair)  # 1, 240, 240, 155
+            autoencoder_flair = self._process_autoencoder_modality(normalized_flair)  # 1, 240, 240, 160
+
+            autoencoder_modalities = torch.stack([
+                autoencoder_t1.squeeze(0),
+                autoencoder_t1c.squeeze(0),
+                autoencoder_t2.squeeze(0),
+                autoencoder_flair.squeeze(0)
+            ], dim=0)  # 4, 240, 240, 160
+
             original_growth_model = self._get_data(self._get_file_growth_model(patient))
             original_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))
             original_conditioning = create_conditioning(original_growth_model, original_tissue_segmentation)  # 4, 240, 240, 155
@@ -351,6 +373,7 @@ class DataSet(Dataset):
                 'original_t1': original_t1.float(),
                 'normalized_t1': normalized_t1.float(),
                 'autoencoder_t1': autoencoder_t1.float(),
+                'autoencoder_modalities': autoencoder_modalities.float(),
                 'latent_conditioning': latent_conditioning.float(),
             }
 
