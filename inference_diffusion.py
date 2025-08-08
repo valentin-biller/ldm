@@ -52,16 +52,28 @@ def inference():
         num_inference_steps=100
     )
 
-    # Initialize trainer
-    trainer = pl.Trainer(
-        accelerator='auto',
-        devices='auto' if mode != 'inference_challenge' else 1,
-        logger=False,
-        enable_progress_bar=True
-    )
+    try:
+        # Try GPU/auto device first
+        trainer = pl.Trainer(
+            accelerator='auto',
+            devices='auto' if mode != 'inference_challenge' else 1,
+            logger=False,
+            enable_progress_bar=True
+        )
+        trainer.test(model, datamodule=datamodule)
 
-    # Run inference on test set
-    trainer.test(model, datamodule=datamodule)
+    except RuntimeError as e:
+        print(f"[Warning] GPU inference failed: {e}")
+        print("[Info] Falling back to CPU...")
+
+        # Retry with CPU
+        trainer = pl.Trainer(
+            accelerator='cpu',
+            devices=1,
+            logger=False,
+            enable_progress_bar=True
+        )
+        trainer.test(model, datamodule=datamodule)
 
 def calculate_metrics(expected_entries=721):
     
