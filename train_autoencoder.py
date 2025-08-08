@@ -282,8 +282,6 @@ for epoch in range(start_epoch, max_epochs):
     for batch in progress_bar:
         # images = batch["autoencoder_t1"].to(device, non_blocking=True).contiguous()
         modalities = batch["autoencoder_modalities"].to(device, non_blocking=True).contiguous()
-        optimizer_g.zero_grad(set_to_none=True)
-        optimizer_d.zero_grad(set_to_none=True)
 
         train_batch_loss_g = 0
         train_batch_loss_d = 0
@@ -295,6 +293,9 @@ for epoch in range(start_epoch, max_epochs):
         # Accumulate gradients from all modalities
         for i in range(4):  # For each modality (t1, t1c, t2, flair)
             modality = modalities[:, i:i+1, ...]  # Shape: [B, 1, H, W, D]
+        
+            optimizer_g.zero_grad(set_to_none=True)
+            optimizer_d.zero_grad(set_to_none=True)
             
             with autocast("cuda", enabled=amp):
                 # Train Generator
@@ -306,43 +307,40 @@ for epoch in range(start_epoch, max_epochs):
                 }
                 logits_fake = discriminator(reconstruction.contiguous().float())[-1]
                 generator_loss = adv_loss(logits_fake, target_is_real=True, for_discriminator=False)
-                loss_g = (loss_weighted_sum(losses) + adv_weight * generator_loss) / 4  # Divide by 4 to average
+                loss_g = loss_weighted_sum(losses) + adv_weight * generator_loss
+
+                if amp:
+                    scaler_g.scale(loss_g).backward()
+                    scaler_g.unscale_(optimizer_g)
+                    scaler_g.step(optimizer_g)
+                    scaler_g.update()
+                else:
+                    loss_g.backward()
+                    optimizer_g.step()
                 
                 # Train Discriminator
                 logits_fake = discriminator(reconstruction.contiguous().detach())[-1]
                 loss_d_fake = adv_loss(logits_fake, target_is_real=False, for_discriminator=True)
                 logits_real = discriminator(modality.contiguous().detach())[-1]
                 loss_d_real = adv_loss(logits_real, target_is_real=True, for_discriminator=True)
-                loss_d = (loss_d_fake + loss_d_real) * 0.5 / 4  # Divide by 4 to average
+                loss_d = (loss_d_fake + loss_d_real) * 0.5
+
+                if amp:
+                    scaler_d.scale(loss_d).backward()
+                    scaler_d.step(optimizer_d)
+                    scaler_d.update()
+                else:
+                    loss_d.backward()
+                    optimizer_d.step()
                 
                 # Accumulate losses for logging
-                train_batch_loss_g += loss_g.item() * 4  # Convert back to original scale
-                train_batch_loss_d += loss_d.item() * 4  # Convert back to original scale
+                train_batch_loss_g += loss_g.item() / 4  # Convert back to original scale
+                train_batch_loss_d += loss_d.item() / 4  # Convert back to original scale
                 for key in losses:
                     train_batch_losses[key] += losses[key].item() / 4
                 train_batch_generator_loss += generator_loss.item() / 4
                 train_batch_loss_d_fake += loss_d_fake.item() / 4
                 train_batch_loss_d_real += loss_d_real.item() / 4
-
-            # Backward pass - accumulate gradients (don't step yet)
-            if amp:
-                scaler_g.scale(loss_g).backward()
-                scaler_d.scale(loss_d).backward()
-            else:
-                loss_g.backward()
-                loss_d.backward()
-
-        # Single optimizer step after accumulating gradients from all modalities
-        if amp:
-            scaler_g.unscale_(optimizer_g)
-            scaler_g.step(optimizer_g)
-            scaler_g.update()
-            
-            scaler_d.step(optimizer_d)
-            scaler_d.update()
-        else:
-            optimizer_g.step()
-            optimizer_d.step()
         
         # Update progress bar
         if is_main_process and hasattr(progress_bar, 'set_postfix'):
