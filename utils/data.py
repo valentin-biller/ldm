@@ -72,7 +72,16 @@ class DataModule(pl.LightningDataModule):
             with open(path_patients_challenge_identifier, 'r') as f:
                 patients_challenge_identifier = set([line.strip() for line in f.readlines()])
         else:
-            patients_challenge = sorted([folder.name for folder in self.dir_data_challenge.iterdir() if folder.is_dir()])
+            # patients_challenge = sorted([folder.name for folder in self.dir_data_challenge.iterdir() if folder.is_dir()])
+            patients_challenge = []
+            if self.dir_data_challenge.exists():
+                for folder in sorted(self.dir_data_challenge.iterdir()):
+                    if folder.is_dir():
+                        patient = folder.name
+                        path_mask = folder / f"{patient}-mask.nii.gz"
+                        path_t1_voided = folder / f"{patient}-t1n-voided.nii.gz"
+                        if path_mask.exists() and path_t1_voided.exists():
+                            patients_challenge.append(patient)
             # patients_challenge_identifier = set([folder.split('-')[2] for folder in patients_challenge])
             # if self.mode == 'training':
             #     with open(str(Path(__file__).resolve().parent / '.patients_challenge_identifier.txt'), "w") as f:
