@@ -774,11 +774,6 @@ class LatentDiffusion(pl.LightningModule):
         return reconstructed_t1_pi  # (B, 1, 240, 240, 155)
 
     def _save_reconstruction(self, reconstructed_t1, patients, masks, affines, identifier, mode):
-        # for i in range(reconstructed_t1.shape[0]):
-        #     path_temp = Path(self.dir_output_model) / 'temp_autoencoder' / f'{batch["patient"][i]}_{batch["mask"][i]}.nii.gz'
-        #     path_temp.parent.mkdir(parents=True, exist_ok=True)
-        #     nib.save(nib.Nifti1Image(reconstructed_t1[i, 0].cpu().float().numpy(), batch['affine'][i].cpu().float().numpy()), path_temp)
-        
         if mode == 'inference_challenge' and identifier != 'pixel_injection':
             return
 

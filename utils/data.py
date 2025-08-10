@@ -73,10 +73,11 @@ class DataModule(pl.LightningDataModule):
                 patients_challenge_identifier = set([line.strip() for line in f.readlines()])
         else:
             patients_challenge = sorted([folder.name for folder in self.dir_data_challenge.iterdir() if folder.is_dir()])
-            patients_challenge_identifier = set([folder.split('-')[2] for folder in patients_challenge])
-            with open(str(Path(__file__).resolve().parent / '.patients_challenge_identifier.txt'), "w") as f:
-                for patient in sorted(patients_challenge_identifier):
-                    f.write(f"{patient}\n")
+            # patients_challenge_identifier = set([folder.split('-')[2] for folder in patients_challenge])
+            # if self.mode == 'training':
+            #     with open(str(Path(__file__).resolve().parent / '.patients_challenge_identifier.txt'), "w") as f:
+            #         for patient in sorted(patients_challenge_identifier):
+            #             f.write(f"{patient}\n")
 
         '''
         patients = []
@@ -105,82 +106,82 @@ class DataModule(pl.LightningDataModule):
                 f.write(f"{patient}\n")
         '''
 
-        with open(str(Path(__file__).resolve().parent / '.patients_train.txt'), "r") as f:
-            patients_train = [line.strip() for line in f if line.strip()]
+        # with open(str(Path(__file__).resolve().parent / '.patients_train.txt'), "r") as f:
+        #     patients_train = [line.strip() for line in f if line.strip()]
 
-        with open(str(Path(__file__).resolve().parent / '.patients_val.txt'), "r") as f:
-            patients_val = [line.strip() for line in f if line.strip()]
+        # with open(str(Path(__file__).resolve().parent / '.patients_val.txt'), "r") as f:
+        #     patients_val = [line.strip() for line in f if line.strip()]
 
-        patients = patients_train + patients_val
+        # patients = patients_train + patients_val
 
         # Only do inference for the patients that haven't been inferred
-        if self.dir_output_model is not None:
-            if self.mode in ['inference', 'inference_conditioning']:
-                dir_output = self.dir_output_model / 'pixel_injection'
-            elif self.mode == 'inference_challenge':
-                dir_output = self.dir_output_model
-            if dir_output.exists():
-                files_completed = list(dir_output.iterdir())
-                if self.mode in ['inference', 'inference_conditioning']:
-                        patient_masks = {}
-                        for file in files_completed:
-                            name = file.name
-                            patient_mask = name[:-7]
-                            patient = patient_mask[:-5]
-                            mask = patient_mask[-4:]
-                            patient_masks.setdefault(patient, set()).add(mask)
-                        # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
-                        patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
-                        patients_val = [patient for patient in patients_val if patient not in patients_completed]
-                        self._print_numbers('Completed', patients_completed)
-                elif self.mode == 'inference_challenge':
-                    patients_completed = [file.name[:-21] for file in files_completed]
-                    patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
-                    self._print_numbers('Completed', patients_completed)
+        # if self.dir_output_model is not None:
+        #     if self.mode in ['inference', 'inference_conditioning']:
+        #         dir_output = self.dir_output_model / 'pixel_injection'
+        #     elif self.mode == 'inference_challenge':
+        #         dir_output = self.dir_output_model
+        #     if dir_output.exists():
+        #         files_completed = list(dir_output.iterdir())
+        #         if self.mode in ['inference', 'inference_conditioning']:
+        #                 patient_masks = {}
+        #                 for file in files_completed:
+        #                     name = file.name
+        #                     patient_mask = name[:-7]
+        #                     patient = patient_mask[:-5]
+        #                     mask = patient_mask[-4:]
+        #                     patient_masks.setdefault(patient, set()).add(mask)
+        #                 # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
+        #                 patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
+        #                 patients_val = [patient for patient in patients_val if patient not in patients_completed]
+        #                 self._print_numbers('Completed', patients_completed)
+        #         elif self.mode == 'inference_challenge':
+        #             patients_completed = ['-'.join(file.name.split('-')[:-2]) for file in files_completed]
+        #             patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
+        #             self._print_numbers('Completed', patients_completed)
 
-        print(self.print_length * '=')
-        if self.mode in ['training', 'inference', 'inference_conditioning']:
-            self._print_numbers('Total', patients)
-            self._print_numbers('Train', patients_train)
-            self._print_numbers('Val', patients_val)
-        elif self.mode == 'inference_challenge':
-            self._print_numbers('Challenge', patients_challenge)
+        # print(self.print_length * '=')
+        # if self.mode in ['training', 'inference', 'inference_conditioning']:
+        #     self._print_numbers('Total', patients)
+        #     self._print_numbers('Train', patients_train)
+        #     self._print_numbers('Val', patients_val)
+        # elif self.mode == 'inference_challenge':
+        #     self._print_numbers('Challenge', patients_challenge)
 
         ### Counting Prefixes, Oversampling and Debugging
-        if self.mode in ['training', 'inference', 'inference_conditioning']:
-            prefixes = ["900", "BraTS", "egd", "glioma", "hf", "Patient", "tcga", "ucsf", "upenn"]
-            groups_train = self._count_prefixes('Train', patients_train, prefixes)
-            groups_val = self._count_prefixes('Val', patients_val, prefixes)
+        # if self.mode in ['training', 'inference', 'inference_conditioning']:
+        #     prefixes = ["900", "BraTS", "egd", "glioma", "hf", "Patient", "tcga", "ucsf", "upenn"]
+        #     groups_train = self._count_prefixes('Train', patients_train, prefixes)
+        #     groups_val = self._count_prefixes('Val', patients_val, prefixes)
 
-            if self.mode == 'training' and self.oversampling:
-                patients_train = self._oversample_prefixes(groups_train)
-                groups_train = self._count_prefixes('Train Oversampling', patients_train, prefixes)
-                self._print_numbers('Train', patients_train)
+        #     if self.mode == 'training' and self.oversampling:
+        #         patients_train = self._oversample_prefixes(groups_train)
+        #         groups_train = self._count_prefixes('Train Oversampling', patients_train, prefixes)
+        #         self._print_numbers('Train', patients_train)
 
-            if self.mode in ['inference', 'inference_conditioning'] and self.debug:
-                sampled = []
-                for prefix in prefixes:
-                    group = [p for p in patients_val if p.startswith(prefix)]
-                    sampled += random.sample(group, min(3, len(group)))
-                patients_val = sampled
-                groups_val = self._count_prefixes('Val Debug', patients_val, prefixes)
-                self._print_numbers('Val', patients_val)
+        #     if self.mode in ['inference', 'inference_conditioning'] and self.debug:
+        #         sampled = []
+        #         for prefix in prefixes:
+        #             group = [p for p in patients_val if p.startswith(prefix)]
+        #             sampled += random.sample(group, min(3, len(group)))
+        #         patients_val = sampled
+        #         groups_val = self._count_prefixes('Val Debug', patients_val, prefixes)
+        #         self._print_numbers('Val', patients_val)
 
-        self.dataset_train = DataSet(
-            mode=self.mode,
-            dir_data=self.dir_data,
-            dir_data_challenge=self.dir_data_challenge,
-            latent_shape=self.latent_shape,
-            patients=patients_train,
-        )
+        # self.dataset_train = DataSet(
+        #     mode=self.mode,
+        #     dir_data=self.dir_data,
+        #     dir_data_challenge=self.dir_data_challenge,
+        #     latent_shape=self.latent_shape,
+        #     patients=patients_train,
+        # )
         
-        self.dataset_val = DataSet(
-            mode=self.mode,
-            dir_data=self.dir_data,
-            dir_data_challenge=self.dir_data_challenge,
-            latent_shape=self.latent_shape,
-            patients=patients_val,
-        )
+        # self.dataset_val = DataSet(
+        #     mode=self.mode,
+        #     dir_data=self.dir_data,
+        #     dir_data_challenge=self.dir_data_challenge,
+        #     latent_shape=self.latent_shape,
+        #     patients=patients_val,
+        # )
 
         self.dataset_challenge = DataSet(
             mode=self.mode,
@@ -190,21 +191,21 @@ class DataModule(pl.LightningDataModule):
             patients=patients_challenge,
         )
         
-        self.dataloader_train = DataLoader(
-            self.dataset_train,
-            batch_size=self.batch_size,
-            shuffle=True,
-            num_workers=self.num_workers,
-            pin_memory=True
-        )
+        # self.dataloader_train = DataLoader(
+        #     self.dataset_train,
+        #     batch_size=self.batch_size,
+        #     shuffle=True,
+        #     num_workers=self.num_workers,
+        #     pin_memory=True
+        # )
         
-        self.dataloader_val = DataLoader(
-            self.dataset_val,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=True
-        )
+        # self.dataloader_val = DataLoader(
+        #     self.dataset_val,
+        #     batch_size=self.batch_size,
+        #     shuffle=False,
+        #     num_workers=self.num_workers,
+        #     pin_memory=True
+        # )
 
         self.dataloader_challenge = DataLoader(
             self.dataset_challenge,
@@ -277,7 +278,6 @@ class DataSet(Dataset):
     
         if self.mode in ['training', 'inference_challenge']:
             self.samples = self.patients
-
         elif self.mode in ['inference', 'inference_conditioning']:
             self.samples = []
             for patient_id in self.patients:
