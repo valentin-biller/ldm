@@ -3,6 +3,7 @@ from pathlib import Path
 dir_current = Path(__file__).resolve().parent
 dir_maisi = dir_current.parent / 'maisi'
 dir_gbm_bench = dir_current.parent / 'gbm_bench'
+sys.path.append(str(dir_current))
 sys.path.append(str(dir_maisi))
 sys.path.append(str(dir_gbm_bench))
 
@@ -30,7 +31,7 @@ from scipy.ndimage import binary_dilation, gaussian_filter
 from monai import transforms
 from generative.networks.schedulers import DDIMScheduler, DDPMScheduler
 
-from .data import create_conditioning
+from data import create_conditioning
 
 from maisi_autoencoder import MaisiAutoencoder
 from controlnet_maisi import ControlNetMaisi
@@ -56,9 +57,11 @@ class LatentDiffusion(pl.LightningModule):
     ):
         super().__init__()
         self.save_hyperparameters()
+
+        self.modalities = 4
         
         self.path_autoencoder = Path(path_autoencoder)
-        self.dir_output_model = Path(dir_output_model)
+        self.dir_output_model = Path(dir_output_model) if dir_output_model else None
         self.denoising = denoising
         self.model_ = model_
         self.scheduler_ = scheduler_
@@ -66,8 +69,8 @@ class LatentDiffusion(pl.LightningModule):
         if self.model_ == 'small':
             config_unet = {
                 "spatial_dims": 3,
-                "in_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
-                "out_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
+                "in_channels": 4 if self.modalities == 1 else 16,  # latent shape: (B, 4, 60, 60, 40)
+                "out_channels": 4 if self.modalities == 1 else 16,  # latent shape: (B, 4, 60, 60, 40)
                 "num_res_blocks": [2, 2, 2],
                 "num_channels": (32, 64, 128),
                 "attention_levels": (False, True, True),
@@ -81,7 +84,7 @@ class LatentDiffusion(pl.LightningModule):
             }
             config_controlnet = {
                 "spatial_dims": 3,
-                "in_channels": 4,
+                "in_channels": 4 if self.modalities == 1 else 16,
                 "num_res_blocks": [2, 2, 2],
                 "num_channels": (32, 64, 128),
                 "attention_levels": (False, True, True),
@@ -97,8 +100,8 @@ class LatentDiffusion(pl.LightningModule):
         elif self.model_ in ['big', 'big_old']:
             config_unet = {
                 "spatial_dims": 3,
-                "in_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
-                "out_channels": 4,  # latent shape: (B, 4, 60, 60, 40)
+                "in_channels": 4 if self.modalities == 1 else 16,  # latent shape: (B, 4, 60, 60, 40)
+                "out_channels": 4 if self.modalities == 1 else 16,  # latent shape: (B, 4, 60, 60, 40)
                 "num_res_blocks": [2, 2, 2],
                 "num_channels": (64, 128, 256) if self.model_ == 'big' else (128, 256, 512),
                 "attention_levels": (False, True, True),
@@ -108,7 +111,7 @@ class LatentDiffusion(pl.LightningModule):
             }
             config_controlnet = {
                 "spatial_dims": 3,
-                "in_channels": 4,
+                "in_channels": 4 if self.modalities == 1 else 16,
                 "num_res_blocks": [2, 2, 2],
                 "num_channels": (64, 128, 256) if self.model_ == 'big' else (128, 256, 512),
                 "attention_levels": (False, True, True),
@@ -157,7 +160,7 @@ class LatentDiffusion(pl.LightningModule):
     def setup(self, stage=None):
         self.autoencoder = MaisiAutoencoder(path_autoencoder=str(self.path_autoencoder), device=self.device)
 
-    def _get_noise_prediction(self, sample, timesteps, conditioning):
+    def _predict_noise(self, sample, timesteps, conditioning):
         """
         Modular function to get noise prediction from ControlNet + UNet
         """
@@ -181,15 +184,17 @@ class LatentDiffusion(pl.LightningModule):
     def _generate_denoising(self, latent_conditioning, latent_voided=None, latent_mask=None):
         """Generate denoised latent from pure noise using ControlNet conditioning"""
         batch_size = latent_conditioning.shape[0]
-        
+
         if latent_mask is not None:
             latent_mask_np = latent_mask.cpu().numpy()
             dilated_mask_np = binary_dilation(latent_mask_np, iterations=1)
             dilated_mask = torch.from_numpy(dilated_mask_np).to(latent_mask.device).float().clamp(0, 1)
 
         # Initialize with pure noise
+        sample_shape = list(latent_conditioning.shape)  # Convert to list
+        sample_shape[1] = 4 if self.modalities == 1 else 16
         sample = torch.randn(
-            latent_conditioning.shape,
+            sample_shape,
             device=self.device
         )
         
@@ -210,7 +215,7 @@ class LatentDiffusion(pl.LightningModule):
                 noisy_gt = self.scheduler.add_noise(latent_voided, noise_gt, t)
                 sample = (sample * dilated_mask + noisy_gt * (1 - dilated_mask)).float()
                
-            noise_pred = self._get_noise_prediction(
+            noise_pred = self._predict_noise(
                 sample,
                 t_device.unsqueeze(0).repeat(batch_size),
                 latent_conditioning
@@ -224,32 +229,76 @@ class LatentDiffusion(pl.LightningModule):
 
         return sample
 
-    def _get_encoded_autoencoder(self, original_autoencoder):
-        latent = self.autoencoder.encode(original_autoencoder)  # (B, 4, 60, 60, 40)
-        return latent
+    def _get_encoded(self, autoencoder_modality):
+        latent_modality = self.autoencoder.encode(autoencoder_modality)  # (B, 4, 60, 60, 40)
+        return latent_modality
 
-    def _get_decoded_autoencoder(self, latent):
-        reconstructed_autoencoder = self.autoencoder.decode(latent).squeeze(0)
-        reconstructed_autoencoder = torch.clamp(reconstructed_autoencoder, 0.0, 1.0)  # B, 1, 240, 240, 160
-        if latent.shape[0] == 1:
-            reconstructed_autoencoder = reconstructed_autoencoder.unsqueeze(0)
-        reconstructed = self.autoencoder_crop(reconstructed_autoencoder)  # B, 1, 240, 240, 155
-        return reconstructed
+    def _get_decoded(self, latent_modality):
+        reconstructed_modality = self.autoencoder.decode(latent_modality).squeeze(0)
+        reconstructed_modality = torch.clamp(reconstructed_modality, 0.0, 1.0)  # B, 1, 240, 240, 160
+        if latent_modality.shape[0] == 1:
+            reconstructed_modality = reconstructed_modality.unsqueeze(0)
+        reconstructed_modality = self.autoencoder_crop(reconstructed_modality)  # B, 1, 240, 240, 155
+        return reconstructed_modality
+
+    def _collect_encoded(self, autoencoder_modalities):
+        autoencoder_t1 = autoencoder_modalities['autoencoder_t1']  # (B, 1, 240, 240, 160)
+        latent_t1 = self._get_encoded(autoencoder_t1)  # (B, 4, 60, 60, 40)
+        if self.modalities == 1:
+            latent = latent_t1
+        elif self.modalities == 4:
+            autoencoder_t1c = autoencoder_modalities['autoencoder_t1c']  # (B, 1, 240, 240, 160)
+            latent_t1c = self._get_encoded(autoencoder_t1c)  # (B, 4, 60, 60, 40)
+            autoencoder_t2 = autoencoder_modalities['autoencoder_t2']  # (B, 1, 240, 240, 160)
+            latent_t2 = self._get_encoded(autoencoder_t2)  # (B, 4, 60, 60, 40)
+            autoencoder_flair = autoencoder_modalities['autoencoder_flair']  # (B, 1, 240, 240, 160)
+            latent_flair = self._get_encoded(autoencoder_flair)  # (B, 4, 60, 60, 40)
+            latent_modalities = torch.cat([latent_t1, latent_t1c, latent_t2, latent_flair], dim=1)  # (B, 16, 60, 60, 40)
+            latent = latent_modalities
+        return latent  # (B, 4, 60, 60, 40) or (B, 16, 60, 60, 40)
+
+    def _collect_decoded(self, latent_modalities):
+        if self.modalities == 1:
+            latent_t1 = latent_modalities
+        elif self.modalities == 4:
+            latent_t1, latent_t1c, latent_t2, latent_flair = torch.chunk(latent_modalities, 4, dim=1)
+    
+        reconstructed_t1 = self._get_decoded(latent_t1)  # (B, 1, 240, 240, 155)
+        if self.modalities == 1:
+            reconstructed = reconstructed_t1
+        elif self.modalities == 4:
+            reconstructed_t1c = self._get_decoded(latent_t1c)  # (B, 1, 240, 240, 155)
+            reconstructed_t2 = self._get_decoded(latent_t2)  # (B, 1, 240, 240, 155)
+            reconstructed_flair = self._get_decoded(latent_flair)  # (B, 1, 240, 240, 155)
+            reconstructed_modalities = torch.cat([reconstructed_t1, reconstructed_t1c, reconstructed_t2, reconstructed_flair], dim=1)  # (B, 4, 240, 240, 155)
+            reconstructed = reconstructed_modalities
+        return reconstructed  # (B, 1, 240, 240, 155) or (B, 4, 240, 240, 155)
+
+    def _collect_normalized(self, normalized_modalities):
+        normalized_t1 = normalized_modalities['normalized_t1']  # (B, 1, 240, 240, 155)
+        if self.modalities == 1:
+            normalized = normalized_t1
+        elif self.modalities == 4:
+            normalized_t1c = normalized_modalities['normalized_t1c']  # (B, 1, 240, 240, 155)
+            normalized_t2 = normalized_modalities['normalized_t2']  # (B, 1, 240, 240, 155)
+            normalized_flair = normalized_modalities['normalized_flair']  # (B, 1, 240, 240, 155)
+            normalized_modalities = torch.cat([normalized_t1, normalized_t1c, normalized_t2, normalized_flair], dim=1)  # (B, 4, 240, 240, 155)
+            normalized = normalized_modalities
+        return normalized
 
     def training_step(self, batch, batch_idx):
         """Training step"""
-        autoencoder_t1 = batch['autoencoder_t1']  # (B, 1, 240, 240, 160)
-        latent_t1 = self._get_encoded_autoencoder(autoencoder_t1)  # (B, 4, 60, 60, 40)
+        latent = self._collect_encoded(batch['autoencoder_modalities'])  # (B, 4, 60, 60, 40) or (B, 16, 60, 60, 40)
         latent_conditioning = batch['latent_conditioning']  # (B, 4, 60, 60, 40)
 
         # Sample random timesteps
-        timesteps = torch.randint(self.scheduler.num_train_timesteps, (latent_t1.shape[0],), device=self.device)
+        timesteps = torch.randint(self.scheduler.num_train_timesteps, (latent.shape[0],), device=self.device)
 
         # Standard inpainting approach: Add noise to entire clean image
-        noise = torch.randn_like(latent_t1)
-        noisy_latent = self.scheduler.add_noise(latent_t1, noise, timesteps)
+        noise = torch.randn_like(latent)
+        noisy_latent = self.scheduler.add_noise(latent, noise, timesteps)
 
-        noise_pred = self._get_noise_prediction(noisy_latent, timesteps, latent_conditioning)
+        noise_pred = self._predict_noise(noisy_latent, timesteps, latent_conditioning)
         loss = self.loss_fn(noise_pred, noise)
 
         # Log training metrics
@@ -261,27 +310,27 @@ class LatentDiffusion(pl.LightningModule):
         """Validation step"""
         patients = batch['patient']  # (B,)
         affines = batch['affine']  # (B,)
-        normalized_t1 = batch['normalized_t1']  # (B, 1, 240, 240, 155)
+        normalized = self._collect_normalized(batch['normalized_modalities'])  # (B, 1, 240, 240, 155) or (B, 4, 240, 240, 155)
         latent_conditioning = batch['latent_conditioning']  # (B, 4, 60, 60, 40)
         
         # Generate inpainted image
         with torch.no_grad():
-            denoised_t1 = self._generate_denoising( 
+            denoised = self._generate_denoising( 
                 latent_conditioning
-            ).float()
+            ).float()  # (B, 4, 60, 60, 40) or (B, 16, 60, 60, 40)
 
-            reconstructed_t1 = self._get_decoded_autoencoder(denoised_t1)  # (B, 1, 240, 240, 155)
+            reconstructed = self._collect_decoded(denoised)  # (B, 1, 240, 240, 155) or (B, 4, 240, 240, 155)
 
         if batch_idx == 0:
             self.validation_outputs_for_saving = {
                 'patients': patients,
                 'affines': affines,
-                'normalized_t1': normalized_t1.cpu(),
-                'reconstructed_t1': reconstructed_t1.cpu(),
+                'normalized': normalized.cpu(),
+                'reconstructed': reconstructed.cpu(),
             }
 
         # Compute validation loss (MSE in image space)
-        val_loss = self.loss_fn(reconstructed_t1, normalized_t1)
+        val_loss = self.loss_fn(reconstructed, normalized)
         
         # Log validation metrics
         self.log('val_loss', val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
@@ -297,26 +346,29 @@ class LatentDiffusion(pl.LightningModule):
         patients = batch['patient']  # (B,)
         affines = batch['affine']  # (B,)
 
-        original_t1_voided = batch['original_t1_voided']  # (B, 1, 240, 240, 155)
-        autoencoder_t1_voided = batch['autoencoder_t1_voided']  # (B, 1, 240, 240, 160)
-        latent_t1_voided = self._get_encoded_autoencoder(autoencoder_t1_voided)  # (B, 4, 60, 60, 40)
-        
-        original_mask = batch['original_mask']  # (B, 1, 240, 240, 155)
-        latent_mask = batch['latent_mask']  # (B, 1, 60, 60, 40)
+        latent_conditioning = batch['latent_conditioning']  # (B, 4, 60, 60, 40)
 
-        original_conditioning = batch['original_conditioning']  # (B, 1, 240, 240, 155)
-        latent_conditioning = batch['latent_conditioning']  # (B, 1, 60, 60, 40)
+        if mode in ['inpainting_inference', 'inpainting_inference_conditioning', 'inpainting_inference_challenge']:
 
-        if mode in ['inference', 'inference_conditioning']:
-            masks = batch['mask']  # (B,)
-        elif mode == 'inference_challenge':
-            masks = None
-            exists_conditioning = all(batch['exists_conditioning'])
-            paths_original_t1_voided = batch['path_original_t1_voided']  # (B,)
-            paths_original_mask = batch['path_original_mask']  # (B,)
+            original_t1_voided = batch['original_t1_voided']  # (B, 1, 240, 240, 155)
+            autoencoder_t1_voided = batch['autoencoder_t1_voided']  # (B, 1, 240, 240, 160)
+            latent_t1_voided = self._get_encoded(autoencoder_t1_voided)  # (B, 4, 60, 60, 40)
+            
+            original_mask = batch['original_mask']  # (B, 1, 240, 240, 155)
+            latent_mask = batch['latent_mask']  # (B, 1, 60, 60, 40)
+
+            original_conditioning = batch['original_conditioning']  # (B, 4, 240, 240, 155)
+
+            if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
+                masks = batch['mask']  # (B,)
+            elif mode == 'inpainting_inference_challenge':
+                masks = None
+                exists_conditioning = all(batch['exists_conditioning'])
+                paths_original_t1_voided = batch['path_original_t1_voided']  # (B,)
+                paths_original_mask = batch['path_original_mask']  # (B,)
 
         with torch.no_grad():
-            if mode == 'inference_challenge':
+            if mode == 'inpainting_inference_challenge':
                 '''
                 While generating your predictions, keep in mind the following:
                     - All individual files must be NIfTI format and use the .nii.gz file extension
@@ -347,22 +399,24 @@ class LatentDiffusion(pl.LightningModule):
             }
 
             # Generation
-            if mode == 'only_generation':  # not implemented yet, also naming will be changed
+            if mode == 'training':  # not implemented yet, also naming will be changed
 
-                denoised_t1 = denoisings[self.denoising]( 
+                denoised = denoisings[self.denoising]( 
                     latent_conditioning
-                ).float()
-                reconstructed_t1 = self._get_decoded_autoencoder(denoised_t1)  # (B, 1, 240, 240, 155)
+                ).float()  # (B, 4, 60, 60, 40) or (B, 16, 60, 60, 40)
+                reconstructed = self._collect_decoded(denoised)  # (B, 1, 240, 240, 155) or (B, 4, 240, 240, 155)
+
+                return reconstructed
 
             # Inpainting
-            elif mode in ['inference', 'inference_conditioning', 'inference_challenge']:
+            elif mode in ['inpainting_inference', 'inpainting_inference_conditioning', 'inpainting_inference_challenge']:
 
                 inpainted_t1 = denoisings[self.denoising](
                     latent_conditioning,
                     latent_voided=latent_t1_voided,
                     latent_mask=latent_mask,
                 ).float()
-                reconstructed_t1 = self._get_decoded_autoencoder(inpainted_t1)  # (B, 1, 240, 240, 155)
+                reconstructed_t1 = self._get_decoded(inpainted_t1)  # (B, 1, 240, 240, 155)
                 
                 original_min, original_max = original_t1_voided.min(), original_t1_voided.max()
                 reconstructed_t1 = reconstructed_t1 * (original_max - original_min) + original_min
@@ -462,8 +516,7 @@ class LatentDiffusion(pl.LightningModule):
         t,
         latent_conditioning,
         latent_voided,
-        latent_mask,
-    ):
+        latent_mask):
         """
         Sample x_{t-1} from the model at the given timestep.
 
@@ -500,7 +553,7 @@ class LatentDiffusion(pl.LightningModule):
 
         x = gt_keep_mask * weighed_gt + (1 - gt_keep_mask) * x
 
-        noise_pred = self._get_noise_prediction(
+        noise_pred = self._predict_noise(
             x,  # x is the current sample
             t,  # t is the current timestep
             latent_conditioning
@@ -774,21 +827,21 @@ class LatentDiffusion(pl.LightningModule):
         return reconstructed_t1_pi  # (B, 1, 240, 240, 155)
 
     def _save_reconstruction(self, reconstructed_t1, patients, masks, affines, identifier, mode):
-        if mode == 'inference_challenge' and identifier != 'pixel_injection':
+        if mode == 'inpainting_inference_challenge' and identifier != 'pixel_injection':
             return
 
-        if mode in ['inference', 'inference_conditioning']:
+        if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
             dir_output = self.dir_output_model / identifier
-        elif mode == 'inference_challenge':
+        elif mode == 'inpainting_inference_challenge':
             dir_output = self.dir_output_model
         dir_output.mkdir(parents=True, exist_ok=True)
 
         # Save images
         for i, patient in enumerate(patients):
-            if mode in ['inference', 'inference_conditioning']:
+            if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
                 mask = masks[i]
                 file_name = f"{patient}_{mask}.nii.gz"
-            elif mode == 'inference_challenge':
+            elif mode == 'inpainting_inference_challenge':
                 file_name = f"{patient}-t1n-inference.nii.gz"
             path_reconstructed_t1 = dir_output / file_name
 
@@ -804,23 +857,36 @@ class LatentDiffusion(pl.LightningModule):
             print("No output directory specified for saving sample images.")
             return
 
+        if self.modalities == 1:
+            modalities = ['t1']
+        elif self.modalities == 4:
+            modalities = ['t1', 't1c', 't2', 'flair']
+
         patients = self.validation_outputs_for_saving['patients']
-        affines = self.validation_outputs_for_saving['affines']
-        normalized_t1 = self.validation_outputs_for_saving['normalized_t1'][:, 0, :, :, :].float().numpy()  # (4, 240, 240, 155)
-        reconstructed_t1 = self.validation_outputs_for_saving['reconstructed_t1'][:, 0, :, :, :].float().numpy()  # (4, 240, 240, 155)
+        affines = self.validation_outputs_for_saving['affines'].cpu().float().numpy()
+        normalized = self.validation_outputs_for_saving['normalized'].cpu().float().numpy()  # (B, 1, 240, 240, 155) or (B, 4, 240, 240, 155)
+        reconstructed = self.validation_outputs_for_saving['reconstructed'].cpu().float().numpy()  # (B, 1, 240, 240, 155) or (B, 4, 240, 240, 155)
 
         # Create output directory
-        output_dir = self.dir_output_model.parent / 'images' / f'epoch_{self.current_epoch+1:04d}'
-        output_dir.mkdir(parents=True, exist_ok=True)
+        dir_output = self.dir_output_model.parent / 'images' / f'epoch_{self.current_epoch+1:04d}'
+        dir_output.mkdir(parents=True, exist_ok=True)
 
+        # Save as NIfTI files
         for i, patient in enumerate(patients):
-            # Save as NIfTI files
-            affine = affines[i].cpu().float().numpy()
-            normalized_t1_nii = nib.Nifti1Image(normalized_t1[i], affine)
-            reconstructed_t1_nii = nib.Nifti1Image(reconstructed_t1[i], affine)
+            dir_patient = dir_output / patient
+            dir_patient.mkdir(parents=True, exist_ok=True)
 
-            nib.save(normalized_t1_nii, output_dir / f"{patient}_normalized_t1.nii.gz")
-            nib.save(reconstructed_t1_nii, output_dir / f"{patient}_reconstructed_t1.nii.gz")
+            for j, modality in enumerate(modalities):
+                affine = affines[i]
+                
+                normalized_modality = normalized[i][j]  # (240, 240, 155)
+                reconstructed_modality = reconstructed[i][j]  # (240, 240, 155)
+
+                normalized_modality_nii = nib.Nifti1Image(normalized_modality, affine)
+                reconstructed_modality_nii = nib.Nifti1Image(reconstructed_modality, affine)
+
+                nib.save(normalized_modality_nii, dir_patient / f"normalized_{modality}.nii.gz")
+                nib.save(reconstructed_modality_nii, dir_patient / f"reconstructed_{modality}.nii.gz")
                 
     def configure_optimizers(self):
         """Configure optimizer"""
@@ -835,17 +901,3 @@ class LatentDiffusion(pl.LightningModule):
         )
         
         return optimizer
-
-        # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-        #     optimizer,
-        #     T_max=self.trainer.max_epochs,
-        #     eta_min=1e-6
-        # )
-        
-        # return {
-        #     "optimizer": optimizer,
-        #     "lr_scheduler": {
-        #         "scheduler": scheduler,
-        #         "monitor": "val_loss"
-        #     }
-        # }

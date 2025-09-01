@@ -22,9 +22,9 @@ from utils.challenge_metrics import generate_metrics
 
 def inference():
 
-    if mode in ['inference', 'inference_conditioning']:
+    if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
         batch_size, num_workers = 4, 4
-    elif mode == 'inference_challenge':
+    elif mode == 'inpainting_inference_challenge':
         batch_size, num_workers = 1, 0
 
     # Initialize data module
@@ -35,7 +35,6 @@ def inference():
         dir_data=dir_data,
         dir_data_challenge=dir_data_challenge,
         dir_output_model=dir_output_model,
-        latent_shape=(60, 60, 40),
         batch_size=batch_size,
         num_workers=num_workers,
     )
@@ -56,7 +55,7 @@ def inference():
         # Try GPU/auto device first
         trainer = pl.Trainer(
             accelerator='auto',
-            devices='auto' if mode != 'inference_challenge' else 1,
+            devices='auto' if mode != 'inpainting_inference_challenge' else 1,
             logger=False,
             enable_progress_bar=True
         )
@@ -181,9 +180,9 @@ def calculate_metrics(expected_entries=721):
 
             reconstructed = nib.load(path_reconstructed).get_fdata()
             original = nib.load(dir_data / patient / 't1.nii.gz').get_fdata()
-            if mode == 'inference':
+            if mode == 'inpainting_inference':
                 mask_ = nib.load(dir_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz').get_fdata()
-            elif mode == 'inference_conditioning':
+            elif mode == 'inpainting_inference_conditioning':
                 mask_ = nib.load(dir_data / patient / 'masks' / f'mask-{mask}.nii.gz').get_fdata()
             voided = nib.load(dir_data / patient / 'voided' / f't1-voided-{mask}.nii.gz').get_fdata()
 
@@ -360,65 +359,65 @@ def create_slices():
     '''
 
     dir_output_model = Path("/vol/miltank/users/bilv/ldm/output")
-    dir_output_model_inference = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference' / denoising
-    dir_output_model_inference_conditioning = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inference_conditioning' / denoising
+    dir_output_model_inpainting_inference = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inpainting_inference' / denoising
+    dir_output_model_inpainting_inference_conditioning = dir_output_model / f'{model_}_{scheduler_}_v{version_}' / 'inpainting_inference_conditioning' / denoising
 
-    path_psnr_inference = dir_output_model_inference / 'metrics' / "filtered_psnr.csv"
-    path_psnr_inference_conditioning = dir_output_model_inference_conditioning / 'metrics' / "filtered_psnr.csv"
+    path_psnr_inpainting_inference = dir_output_model_inpainting_inference / 'metrics' / "filtered_psnr.csv"
+    path_psnr_inpainting_inference_conditioning = dir_output_model_inpainting_inference_conditioning / 'metrics' / "filtered_psnr.csv"
 
-    with open(path_psnr_inference, newline='') as f:
+    with open(path_psnr_inpainting_inference, newline='') as f:
         reader = csv.DictReader(f)
-        rows_inference = sorted(reader, key=lambda x: float(x['value']), reverse=True)
+        rows_inpainting_inference = sorted(reader, key=lambda x: float(x['value']), reverse=True)
 
-    with open(path_psnr_inference_conditioning, newline='') as f:
+    with open(path_psnr_inpainting_inference_conditioning, newline='') as f:
         reader = csv.DictReader(f)
-        rows_inference_conditioning = sorted(reader, key=lambda x: float(x['value']), reverse=True)
+        rows_inpainting_inference_conditioning = sorted(reader, key=lambda x: float(x['value']), reverse=True)
 
     top = 15
-    top_patients_inference = [row['patient'] for row in rows_inference[:top]]
-    top_patients_inference_conditioning = [row['patient'] for row in rows_inference_conditioning[:top]]
+    top_patients_inpainting_inference = [row['patient'] for row in rows_inpainting_inference[:top]]
+    top_patients_inpainting_inference_conditioning = [row['patient'] for row in rows_inpainting_inference_conditioning[:top]]
 
-    common_patients = set(top_patients_inference) & set(top_patients_inference_conditioning)
+    common_patients = set(top_patients_inpainting_inference) & set(top_patients_inpainting_inference_conditioning)
     print(f"Patients in both top patients (count={len(common_patients)}):", common_patients)
 
-    rows_inference = [row for row in rows_inference if row['patient'] in common_patients]
-    rows_inference_conditioning = [row for row in rows_inference_conditioning if row['patient'] in common_patients]    
+    rows_inpainting_inference = [row for row in rows_inpainting_inference if row['patient'] in common_patients]
+    rows_inpainting_inference_conditioning = [row for row in rows_inpainting_inference_conditioning if row['patient'] in common_patients]    
 
     start = 0
     end = 50
     patients = 20
 
-    row_volumes_inference = []
-    for row in rows_inference[start:end]:
+    row_volumes_inpainting_inference = []
+    for row in rows_inpainting_inference[start:end]:
         # path_mask = dir_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
         path_mask = dir_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
         volume = np.sum(mask_data == 1)
-        row_volumes_inference.append((row, volume))
+        row_volumes_inpainting_inference.append((row, volume))
         print(f"{row['patient']:<25} {row['mask']:5} {row['value']:>25} {volume:>10}")
-    row_volumes_inference.sort(key=lambda x: x[1], reverse=True)
+    row_volumes_inpainting_inference.sort(key=lambda x: x[1], reverse=True)
 
-    row_volumes_inference_conditioning = []
-    for row in rows_inference_conditioning[start:end]:
+    row_volumes_inpainting_inference_conditioning = []
+    for row in rows_inpainting_inference_conditioning[start:end]:
         # path_mask = dir_data / row['patient'] / 'masks' / f"mask-healthy-{row['mask']}.nii.gz"
         path_mask = dir_data / row['patient'] / 'masks' / "mask-unhealthy.nii.gz"
         mask_data = nib.load(str(path_mask)).get_fdata()
         volume = np.sum(mask_data == 1)
-        row_volumes_inference_conditioning.append((row, volume))
+        row_volumes_inpainting_inference_conditioning.append((row, volume))
         print(f"{row['patient']:<25} {row['mask']:5} {row['value']:>25} {volume:>10}")
-    row_volumes_inference_conditioning.sort(key=lambda x: x[1], reverse=True)
+    row_volumes_inpainting_inference_conditioning.sort(key=lambda x: x[1], reverse=True)
 
     print('-' * 63)
-    patients_masks_reconstructed_inference = []
-    for row_volume in row_volumes_inference[:patients]:
-        patients_masks_reconstructed_inference.append((row_volume[0]['patient'], row_volume[0]['mask']))
+    patients_masks_reconstructed_inpainting_inference = []
+    for row_volume in row_volumes_inpainting_inference[:patients]:
+        patients_masks_reconstructed_inpainting_inference.append((row_volume[0]['patient'], row_volume[0]['mask']))
         print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:10}")
-    patients_masks_reconstructed_inference_conditioning = []
-    for row_volume in row_volumes_inference_conditioning[:patients]:
-        patients_masks_reconstructed_inference_conditioning.append((row_volume[0]['patient'], row_volume[0]['mask']))
+    patients_masks_reconstructed_inpainting_inference_conditioning = []
+    for row_volume in row_volumes_inpainting_inference_conditioning[:patients]:
+        patients_masks_reconstructed_inpainting_inference_conditioning.append((row_volume[0]['patient'], row_volume[0]['mask']))
         print(f"{row_volume[0]['patient']:25} {row_volume[0]['mask']:5} {row_volume[0]['value']:25} {row_volume[1]:10}")
 
-    for dir_output_model, patients_masks_reconstructed in zip([dir_output_model_inference, dir_output_model_inference_conditioning], [patients_masks_reconstructed_inference, patients_masks_reconstructed_inference_conditioning]):
+    for dir_output_model, patients_masks_reconstructed in zip([dir_output_model_inpainting_inference, dir_output_model_inpainting_inference_conditioning], [patients_masks_reconstructed_inpainting_inference, patients_masks_reconstructed_inpainting_inference_conditioning]):
         for patient, mask in patients_masks_reconstructed:
             # path_mask = dir_data / patient / 'masks' / f'mask-healthy-{mask}.nii.gz'
             path_mask = dir_data / patient / 'masks' / 'mask-unhealthy.nii.gz'
@@ -481,9 +480,9 @@ def create_slices():
 
 def create_failure():
     paths_failures = [
-        ('/vol/miltank/users/bilv/ldm/output/inference/reconstructed/BraTS2021_00012_0000.nii.gz', 100, 'BraTS2021_00012_0000'),
-        ('/vol/miltank/users/bilv/ldm/output/inference/reconstructed/egd-0692_0000.nii.gz', 128, 'egd-0692_0000'),
-        ('/vol/miltank/users/bilv/ldm/output/inference/reconstructed/egd-0615_0002.nii.gz', 125, 'egd-0615_0002')
+        ('/vol/miltank/users/bilv/ldm/output/inpainting_inference/reconstructed/BraTS2021_00012_0000.nii.gz', 100, 'BraTS2021_00012_0000'),
+        ('/vol/miltank/users/bilv/ldm/output/inpainting_inference/reconstructed/egd-0692_0000.nii.gz', 128, 'egd-0692_0000'),
+        ('/vol/miltank/users/bilv/ldm/output/inpainting_inference/reconstructed/egd-0615_0002.nii.gz', 125, 'egd-0615_0002')
     ]
 
     for path_failure, slice, patient_mask in paths_failures:
@@ -506,8 +505,8 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str, default='big', choices=['small', 'big', 'big_old'], help='Model')
     parser.add_argument('--scheduler', type=str, default='ddpm', choices=['ddpm', 'ddim'], help='Scheduler')
     parser.add_argument('--version', type=int, default=2, help='Version')
-    parser.add_argument('--mode', type=str, default='inference', choices=['inference', 'inference_challenge', 'inference_conditioning'], help='Mode')
-    parser.add_argument('--denoising', type=str, default='repaint', choices=['repaint', 'own'], help='Denoising')
+    parser.add_argument('--mode', type=str, default='inpainting_inference', choices=['inpainting_inference', 'inpainting_inference_challenge', 'inpainting_inference_conditioning'], help='Mode')
+    parser.add_argument('--denoising', type=str, default='own', choices=['repaint', 'own'], help='Denoising')
     parser.add_argument('--dir_data', type=str, default='/vol/miltank/users/bilv/data', help='Dir Data')
     parser.add_argument('--dir_data_challenge', type=str, default='/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation', help='Dir Data Challenge')
     parser.add_argument('--dir_output_model', type=str, default=None, help='Dir Output Model')
@@ -550,7 +549,7 @@ if __name__ == "__main__":
         rows = []
         reconstructed_files = {}
         for model_scheduler_version in ['big_old_ddim_v2', 'big_ddpm_v1', 'big_ddpm_v2']:
-            for mode in ['inference', 'inference_challenge', 'inference_conditioning']:
+            for mode in ['inpainting_inference', 'inpainting_inference_challenge', 'inpainting_inference_conditioning']:
                 for denoising in ['own', 'repaint']:
                     if denoising == 'repaint' and model_scheduler_version == 'big_old_ddim_v2':
                         continue
@@ -563,7 +562,7 @@ if __name__ == "__main__":
                     count_reconstructed = len(list((dir_output_model / 'reconstructed').iterdir()))
                     assert count_original == count_reconstructed, f"Mismatch in counts for {model_scheduler_version}, {mode}, {denoising}: {count_original} != {count_reconstructed}"
 
-                    if mode == 'inference_challenge':
+                    if mode == 'inpainting_inference_challenge':
                         complete = True if count_reconstructed == 219 else False
                     else:
                         if model_scheduler_version == 'big_ddpm_v2':
@@ -581,7 +580,7 @@ if __name__ == "__main__":
                         "count_reconstructed": count_reconstructed
                     })
 
-                    if mode != 'inference_challenge':
+                    if mode != 'inpainting_inference_challenge':
                         calculate_metrics(expected_entries=expected_entries)
 
         df = pd.DataFrame(rows)

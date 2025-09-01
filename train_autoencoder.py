@@ -64,7 +64,6 @@ is_main_process = rank == 0
 dir_data = "/vol/miltank/users/bilv/data"
 dir_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
 
-latent_shape = (60, 60, 40)
 path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
 
 pl.seed_everything(42)
@@ -134,7 +133,6 @@ datamodule = DataModule(
     mode='training',
     dir_data=dir_data,
     dir_data_challenge=dir_data_challenge,
-    latent_shape=latent_shape,
     batch_size=batch_size,
     num_workers=num_workers,
 )

@@ -41,10 +41,11 @@ def main():
     parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning Rate")
 
     # Mode options:
-    #   training               - Standard training procedure
-    #   inference              - Evaluate challenge metrics on the validation dataset
-    #   inference_challenge    - Save predictions for challenge submission
-    #   inference_conditioning - Run inference with non-zero tumor concentration
+    #   training                          - Standard training (also used for standard inference)
+    #   inpainting_inference              - [Inpainting] Save reconstructions for own test dataset
+    #   inpainting_inference_conditioning - [Inpainting] Save reconstructions for own test dataset (non-zero tumor concentration)
+    #   inpainting_inference_challenge    - [Inpainting] Save reconstructions for challenge dataset
+    #   baseline                          - Dataloader for baseline dataset (cropped volumes)
     parser.add_argument("--mode", type=str, default="training", choices=["training"], help="Mode of Operation")
     parser.add_argument("--oversampling", action="store_false", help="Disable Oversampling")
 
@@ -64,7 +65,6 @@ def main():
     dir_data = "/vol/miltank/users/bilv/data"
     dir_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
     
-    latent_shape = (60, 60, 40)
     path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
 
     print('Model', args.model)
@@ -128,7 +128,6 @@ def main():
         oversampling=args.oversampling,
         dir_data=dir_data,
         dir_data_challenge=dir_data_challenge,
-        latent_shape=latent_shape,
         batch_size=args.batch_size,
         num_workers=args.num_workers,
     )
