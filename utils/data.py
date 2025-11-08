@@ -1,13 +1,17 @@
+import time
 import random
 import numpy as np
 from pathlib import Path
 
 import torch
-import pytorch_lightning as pl
+import lightning.pytorch as L
 from torch.utils.data import Dataset, DataLoader, random_split
 
 import nibabel as nib
 from monai import transforms
+
+
+MODALITIES = ['t1', 't1c', 't2', 'flair']
 
 
 def create_conditioning(growth_model, tissue_segmentation, threshold=0.001):
@@ -28,67 +32,68 @@ def create_conditioning(growth_model, tissue_segmentation, threshold=0.001):
 
     return conditioning
 
-class DataModule(pl.LightningDataModule):
+
+def get_baseline_slices(data_growth_model, baseline_shape, threshold=0.001):
+    baseline_center = np.mean(np.argwhere(data_growth_model.numpy() >= threshold), axis=0).astype(int)
+    start = np.clip(baseline_center - np.array(baseline_shape) // 2, 0, np.array(data_growth_model.shape) - np.array(baseline_shape))
+    end = start + np.array(baseline_shape)
+    baseline_slices = [slice(start[0], end[0]), slice(start[1], end[1]), slice(start[2], end[2])]
+    return baseline_slices
+
+
+class DataModule(L.LightningDataModule):
     """
     PyTorch Lightning data module for brain MRI data
     """
     
     def __init__(
         self,
-        debug=False,
-        mode='training',  # training, inpainting_inference, inpainting_inference_conditioning, inpainting_inference_challenge, baseline
-        oversampling=True,
         dir_data=None,
-        dir_data_challenge=None,
-        dir_output_model=None,
         dir_utils=None,
-        latent_shape=(60, 60, 40),
-        batch_size=2,
-        num_workers=4,
+        dir_output_model=None,
+        use_latents=True,
+        mask_conditioning=256,  # 256, 64, None
+        modality_conditioning=True,  # True, False
+        mode='training',
+        oversampling=True,
+        undersampling=False,
+        batch_size=16,
+        num_workers=16,
+        latent_shape=None,
         train_val_split=0.8,
         **kwargs
     ):
         super().__init__()
-        self.debug = debug
+
+        self.dir_data = None if dir_data is None else Path(dir_data)
+        self.dir_utils = Path(__file__).resolve().parent if dir_utils is None else Path(dir_utils)
+        self.dir_output_model = None if dir_output_model is None else Path(dir_output_model)
+        
+        self.use_latents = use_latents
+        self.mask_conditioning = mask_conditioning
+        self.modality_conditioning = modality_conditioning
+
         self.mode = mode
         self.oversampling = oversampling
-        self.dir_data = None if dir_data is None else Path(dir_data)
-        self.dir_data_challenge = None if dir_data_challenge is None else Path(dir_data_challenge)
-        self.dir_output_model = None if dir_output_model is None else Path(dir_output_model)
-        self.dir_utils = Path(__file__).resolve().parent if dir_utils is None else Path(dir_utils)
-        self.latent_shape = latent_shape
+        self.undersampling = undersampling
+
         self.batch_size = batch_size
         self.num_workers = num_workers
+
+        self.latent_shape = latent_shape
         self.train_val_split = train_val_split
 
-        assert self.mode in ['training', 'inpainting_inference', 'inpainting_inference_conditioning', 'inpainting_inference_challenge', 'baseline'], f"Invalid mode: {self.mode}."
+        assert self.mode in ['training', 'inpainting_inference_healthy', 'inpainting_inference_tumor', 'baseline'], f"Invalid mode: {self.mode}."
     
         self.print_length = 25
-        pl.seed_everything(42)
+        L.seed_everything(42)
     
     def setup(self, stage=None): 
+        path_patients_challenge_identifier = str(self.dir_utils / '.patients_challenge_identifier.txt')
+        with open(path_patients_challenge_identifier, 'r') as f:
+            patients_challenge_identifier = set([line.strip() for line in f.readlines()])
 
-        if self.dir_data_challenge is None:
-            patients_challenge = []
-            path_patients_challenge_identifier = str(self.dir_utils / '.patients_challenge_identifier.txt')
-            with open(path_patients_challenge_identifier, 'r') as f:
-                patients_challenge_identifier = set([line.strip() for line in f.readlines()])
-        else:
-            patients_challenge = []
-            if self.dir_data_challenge.exists():
-                for folder in sorted(self.dir_data_challenge.iterdir()):
-                    if folder.is_dir():
-                        patient = folder.name
-                        path_mask = folder / f"{patient}-mask.nii.gz"
-                        path_t1_voided = folder / f"{patient}-t1n-voided.nii.gz"
-                        if path_mask.exists() and path_t1_voided.exists():
-                            patients_challenge.append(patient)
-            patients_challenge_identifier = set([folder.split('-')[2] for folder in patients_challenge])
-            if self.mode == 'training':
-                with open(str(self.dir_utils / '.patients_challenge_identifier.txt'), "w") as f:
-                    for patient in sorted(patients_challenge_identifier):
-                        f.write(f"{patient}\n")
-
+        # Splitting
         '''
         patients = []
         for folder in sorted(os.listdir(self.dir_data)):
@@ -121,108 +126,90 @@ class DataModule(pl.LightningDataModule):
 
         with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
             patients_val = [line.strip() for line in f if line.strip()]
+            patients_val = []  # TODO delete line
 
         patients = patients_train + patients_val
 
         # Only do inference for the patients that haven't been inferred
-        if self.dir_output_model is not None:
-            if self.mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
-                dir_output = self.dir_output_model / 'pixel_injection'
-            elif self.mode == 'inpainting_inference_challenge':
-                dir_output = self.dir_output_model
+        if self.mode in ['inpainting_inference_healthy', 'inpainting_inference_tumor'] and self.dir_output_model is not None:
+            dir_output = self.dir_output_model / 'pixel_injection'
             if dir_output.exists():
                 files_completed = list(dir_output.iterdir())
-                if self.mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
-                        patient_masks = {}
-                        for file in files_completed:
-                            name = file.name
-                            patient_mask = name[:-7]
-                            patient = patient_mask[:-5]
-                            mask = patient_mask[-4:]
-                            patient_masks.setdefault(patient, set()).add(mask)
-                        # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
-                        patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
-                        patients_val = [patient for patient in patients_val if patient not in patients_completed]
-                        self._print_numbers('Completed', patients_completed)
-                elif self.mode == 'inpainting_inference_challenge':
-                    patients_completed = ['-'.join(file.name.split('-')[:-2]) for file in files_completed]
-                    patients_challenge = [patient for patient in patients_challenge if patient not in patients_completed]
-                    self._print_numbers('Completed', patients_completed)
+                patient_masks = {}
+                for file in files_completed:
+                    name = file.name
+                    patient_mask = name[:-7]
+                    patient = patient_mask[:-5]
+                    mask = patient_mask[-4:]
+                    patient_masks.setdefault(patient, set()).add(mask)
+                # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
+                patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
+                patients_val = [patient for patient in patients_val if patient not in patients_completed]
+                self._print_numbers('Completed', patients_completed)
 
+        # Summary
         print(self.print_length * '=')
-        if self.mode == 'inpainting_inference_challenge':
-            self._print_numbers('Challenge', patients_challenge)
-        else:
-            self._print_numbers('Total', patients)
+        self._print_numbers('Total', patients)
+        self._print_numbers('Train', patients_train)
+        self._print_numbers('Val', patients_val)
+
+        # Counting Prefixes
+        prefixes = ["900", "BraTS", "egd", "glioma", "hf", "Patient", "tcga", "ucsf", "upenn"]
+        groups_train = self._count_prefixes('Train', patients_train, prefixes)
+        groups_val = self._count_prefixes('Val', patients_val, prefixes)
+
+        # Oversampling
+        if self.oversampling and self.mode in ['training', 'baseline']:
+            patients_train = self._oversample_prefixes(groups_train)
+            groups_train = self._count_prefixes('Train Oversampling', patients_train, prefixes)
             self._print_numbers('Train', patients_train)
+
+        # Undersampling
+        if self.undersampling: 
+            sampled = []
+            for prefix in prefixes:
+                group = [p for p in patients_val if p.startswith(prefix)]
+                sampled += random.sample(group, min(3, len(group)))
+            patients_val = sampled
+            groups_val = self._count_prefixes('Val Undersampling', patients_val, prefixes)
             self._print_numbers('Val', patients_val)
-
-        ## Counting Prefixes, Oversampling and Debugging
-        if self.mode in ['training', 'inpainting_inference', 'inpainting_inference_conditioning', 'baseline']:
-            prefixes = ["900", "BraTS", "egd", "glioma", "hf", "Patient", "tcga", "ucsf", "upenn"]
-            groups_train = self._count_prefixes('Train', patients_train, prefixes)
-            groups_val = self._count_prefixes('Val', patients_val, prefixes)
-
-            if self.mode in ['training', 'baseline'] and self.oversampling:
-                patients_train = self._oversample_prefixes(groups_train)
-                groups_train = self._count_prefixes('Train Oversampling', patients_train, prefixes)
-                self._print_numbers('Train', patients_train)
-
-            if self.mode in ['training', 'inpainting_inference', 'inpainting_inference_conditioning', 'baseline'] and self.debug:
-                sampled = []
-                for prefix in prefixes:
-                    group = [p for p in patients_val if p.startswith(prefix)]
-                    sampled += random.sample(group, min(3, len(group)))
-                patients_val = sampled
-                groups_val = self._count_prefixes('Val Debug', patients_val, prefixes)
-                self._print_numbers('Val', patients_val)
-
+              
         self.dataset_train = DataSet(
-            mode=self.mode,
             dir_data=self.dir_data,
-            dir_data_challenge=self.dir_data_challenge,
-            latent_shape=self.latent_shape,
+            use_latents=self.use_latents,
+            mask_conditioning=self.mask_conditioning,
+            modality_conditioning=self.modality_conditioning,
+            mode=self.mode,
             patients=patients_train,
+            latent_shape=self.latent_shape,
         )
         
         self.dataset_val = DataSet(
-            mode=self.mode,
             dir_data=self.dir_data,
-            dir_data_challenge=self.dir_data_challenge,
-            latent_shape=self.latent_shape,
+            use_latents=self.use_latents,
+            mask_conditioning=self.mask_conditioning,
+            modality_conditioning=self.modality_conditioning,
+            mode=self.mode if self.mode != 'training' else 'validation',
             patients=patients_val,
+            latent_shape=self.latent_shape,
         )
 
-        self.dataset_challenge = DataSet(
-            mode=self.mode,
-            dir_data=self.dir_data,
-            dir_data_challenge=self.dir_data_challenge,
-            latent_shape=self.latent_shape,
-            patients=patients_challenge,
-        )
-        
         self.dataloader_train = DataLoader(
             self.dataset_train,
             batch_size=self.batch_size,
-            shuffle=True,
             num_workers=self.num_workers,
-            pin_memory=True
+            shuffle=True,
+            pin_memory=True,
+            persistent_workers=True,  # prefetch_factor: no speed improvements / degradations (if any, then degradations)
         )
         
         self.dataloader_val = DataLoader(
             self.dataset_val,
             batch_size=self.batch_size,
-            shuffle=False,
             num_workers=self.num_workers,
-            pin_memory=True
-        )
-
-        self.dataloader_challenge = DataLoader(
-            self.dataset_challenge,
-            batch_size=self.batch_size,
             shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=True
+            pin_memory=True,
+            persistent_workers=True,  # prefetch_factor: no speed improvements / degradations (if any, then degradations)
         )
 
     def train_dataloader(self):
@@ -232,10 +219,7 @@ class DataModule(pl.LightningDataModule):
         return self.dataloader_val
     
     def test_dataloader(self):
-        if self.mode in ['training', 'inpainting_inference', 'inpainting_inference_conditioning', 'baseline']:
-            return self.dataloader_val
-        elif self.mode == 'inpainting_inference_challenge':
-            return self.dataloader_challenge
+        return self.dataloader_val
         
     def _print_numbers(self, identifier, patients):
         length = self.print_length - 5
@@ -273,22 +257,33 @@ class DataSet(Dataset):
     
     def __init__(
         self,
-        mode='training',
         dir_data=None,
-        dir_data_challenge=None,
-        latent_shape=None,
+        use_latents=True,
+        mask_conditioning=True,
+        modality_conditioning=True,
+        mode='training',
         patients=None,
+        latent_shape=None,
     ):
-        self.mode = mode
         self.dir_data = dir_data
-        self.dir_data_challenge = dir_data_challenge
 
-        self.latent_shape = latent_shape
+        self.use_latents = use_latents
+        self.mask_conditioning = mask_conditioning
+        self.modality_conditioning = modality_conditioning
+
+        self.mode = mode
         self.patients = patients
+        self.latent_shape = latent_shape
     
-        if self.mode in ['training', 'inpainting_inference_challenge', 'baseline']:
+        if self.mode in ['training', 'validation']:
+            self.samples = []
+            modalities = MODALITIES if self.modality_conditioning else ['t1']
+            for patient_id in self.patients:
+                for modality in modalities:
+                    self.samples.append((patient_id, modality))
+        elif self.mode in ['baseline']:
             self.samples = self.patients
-        elif self.mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
+        elif self.mode in ['inpainting_inference_healthy', 'inpainting_inference_tumor']:
             self.samples = []
             for patient_id in self.patients:
                 # Check for mask files 0000, 0001, 0002
@@ -299,11 +294,24 @@ class DataSet(Dataset):
         self.autoencoder_pad = transforms.SpatialPad(spatial_size=(240, 240, 160))
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
+    def _nib_load(self, file_path):
+        retries = 10
+        delay = 3
+        exception = None
+        for i in range(retries):
+            try:
+                return nib.load(file_path)
+            except Exception as e:
+                exception = e
+                print(f"[WARNING]: {e}. Retrying ({i+1}/{retries}) in {delay}s...")
+                time.sleep(delay)
+        raise exception
+
     def _get_affine(self, file_path):
-        img = nib.load(file_path)
+        img = self._nib_load(file_path)
         return img.affine
     def _get_data(self, file_path):
-        img = nib.load(file_path)
+        img = self._nib_load(file_path)
         return torch.as_tensor(img.get_fdata())
     
     def _get_file_modality(self, patient, modality):
@@ -330,11 +338,11 @@ class DataSet(Dataset):
     def _process_autoencoder_modality(self, normalized_modality):
         autoencoder_modality = self.autoencoder_pad(normalized_modality)
         return torch.as_tensor(autoencoder_modality)  # 1, 240, 240, 160
-    def _process_interpolation(self, original):
+    def _process_interpolation(self, original, mode='nearest'):
         latent = torch.nn.functional.interpolate(
             original.unsqueeze(0),
-            size=(self.latent_shape[0], self.latent_shape[1], self.latent_shape[2]),
-            mode='nearest'
+            size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
+            mode=mode  # TODO support for 'trilinear'
         )[0]
         return latent  # 4, 60, 60, 40
 
@@ -388,39 +396,75 @@ class DataSet(Dataset):
     
     def __getitem__(self, idx):
         if self.mode == 'training':
-            patient = self.samples[idx]
+            patient, modality = self.samples[idx]
 
-            affine = self._get_affine(self._get_file_modality(patient, 't1'))
+            if self.use_latents:
+                path_latent_modality = self.dir_data / patient / 'latents_64_64_40' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40
+                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40
+                return_ = {
+                    'modality': modality,
+                    'latent_modality': latent_modalitiy.float(),
+                }
 
-            # data_t1 = self._get_data(self._get_file_modality(patient, 't1'))
-            # original_t1 = self._process_original_modality(data_t1)  # 1, 240, 240, 155
-            # normalized_t1 = self._process_normalized_modality(data_t1)  # 1, 240, 240, 155
-            # autoencoder_t1 = self._process_autoencoder_modality(normalized_t1)  # 1, 240, 240, 160
+                if self.mask_conditioning is not None:
+                    path_conditioning = self.dir_data / patient / 'latents_64_64_40' / f'{self.mask_conditioning}_conditioning.pt'  # 4, 256, 256, 160 or 4, 64, 64, 40
+                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 4, 256, 256, 160 or 4, 64, 64, 40
+                    return_['conditioning'] = conditioning.float()
 
-            data_modalities = self._collect_data_modalities(patient)
-            original_modalities = self._collect_original_modalities(data_modalities)
-            normalized_modalities = self._collect_normalized_modalities(data_modalities)
-            autoencoder_modalities = self._collect_autoencoder_modalities(normalized_modalities)
+                return return_
+            else:
+                raise NotImplementedError("Training without latents is not implemented.")
 
-            data_growth_model = self._get_data(self._get_file_growth_model(patient))
-            data_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))
-            original_conditioning = create_conditioning(data_growth_model, data_tissue_segmentation)  # 4, 240, 240, 155
-            latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
+                data_modalities = self._collect_data_modalities(patient)
+                # original_modalities = self._collect_original_modalities(data_modalities)
+                normalized_modalities = self._collect_normalized_modalities(data_modalities)
+                autoencoder_modalities = self._collect_autoencoder_modalities(normalized_modalities)
 
-            return {
-                'mode': self.mode,
-                'patient': patient,
-                'affine': affine,
-                # 'original_t1': original_t1.float(),
-                # 'normalized_t1': normalized_t1.float(),
-                # 'autoencoder_t1': autoencoder_t1.float(),
-                'original_modalities': original_modalities,
-                'normalized_modalities': normalized_modalities,
-                'autoencoder_modalities': autoencoder_modalities,
-                'latent_conditioning': latent_conditioning.float()
-            }
+                data_growth_model = self._get_data(self._get_file_growth_model(patient))
+                data_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))
+                original_conditioning = create_conditioning(data_growth_model, data_tissue_segmentation)  # 4, 240, 240, 155
+                latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
 
-        elif self.mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
+                return {
+                    'mode': self.mode,
+                    'patient': patient,
+                    'affine': affine,
+                    'normalized_modalities': normalized_modalities,
+                    'autoencoder_modalities': autoencoder_modalities,
+                    'original_conditioning': original_conditioning.float(),
+                    'latent_conditioning': latent_conditioning.float()
+                }
+        
+        elif self.mode == 'validation':
+            patient, modality = self.samples[idx]
+
+            affine = self._get_affine(self._get_file_modality(patient, modality))
+
+            if self.use_latents:
+                path_latent_modality = self.dir_data / patient / 'latents_64_64_40' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40
+                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40
+                
+                path_conditioning = self.dir_data / patient / 'latents_64_64_40' / f'{self.mask_conditioning}_conditioning.pt'  # 4, 256, 256, 160 or 4, 64, 64, 40
+                conditioning = torch.load(path_conditioning, map_location="cpu")  # 4, 64, 64, 40 or 4, 256, 256, 160
+                
+                data_modality = self._get_data(self._get_file_modality(patient, modality))
+                normalized_modality = self._process_normalized_modality(data_modality)  # 1, 240, 240, 155
+
+                return {
+                    'mode': self.mode,
+                    'patient': patient,
+
+                    'modality': modality,
+                    'latent_modality': latent_modalitiy.float(),
+                    'conditioning': conditioning.float(),
+
+                    'affine': affine,
+                    'normalized_modality': normalized_modality.float(),
+                }
+            else:
+                raise NotImplementedError("Validation without latents is not implemented.")
+
+        elif self.mode in ['inpainting_inference_healthy', 'inpainting_inference_tumor']:
             patient, mask = self.samples[idx]
 
             affine = self._get_affine(self._get_file_modality(patient, 't1'))
@@ -437,9 +481,9 @@ class DataSet(Dataset):
             latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
             
             original_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))  # 240, 240, 155
-            if self.mode == 'inpainting_inference':
+            if self.mode == 'inpainting_inference_healthy':
                 original_growth_model = torch.zeros(240, 240, 155)
-            elif self.mode == 'inpainting_inference_conditioning':
+            elif self.mode == 'inpainting_inference_tumor':
                 original_growth_model = self._get_data(self._get_file_growth_model(patient))  # 240, 240, 155
             original_conditioning = create_conditioning(original_growth_model, original_tissue_segmentation)  # 4, 240, 240, 155
             latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
@@ -515,8 +559,9 @@ class DataSet(Dataset):
 
             data_growth_model = self._get_data(self._get_file_growth_model(patient))
             data_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))
-            
-            baseline_slices = self._get_baseline_slices(data_growth_model)
+            original_conditioning = create_conditioning(data_growth_model, data_tissue_segmentation)  # 4, 240, 240, 155
+
+            baseline_slices = get_baseline_slices(data_growth_model, self.baseline_shape)
             baseline_conditioning = self._process_baseline_conditioning(data_growth_model, data_tissue_segmentation, baseline_slices)
 
             data_modalities = self._collect_data_modalities(patient)
@@ -530,16 +575,12 @@ class DataSet(Dataset):
             return {
                 'patient': patient,
                 'affine': affine,
+                'original_conditioning': original_conditioning.float(),
                 'baseline_conditioning': baseline_conditioning.float(),
-                'baseline_modalities': baseline_modalities.float()
+                'baseline_modalities': baseline_modalities.float(),
+                # 'baseline_slices': torch.as_tensor([(s.start, s.stop) for s in baseline_slices])
             }
 
-    def _get_baseline_slices(self, data_growth_model, threshold=0.001):
-        baseline_center = np.mean(np.argwhere(data_growth_model.numpy() >= threshold), axis=0).astype(int)
-        start = np.clip(baseline_center - np.array(self.baseline_shape) // 2, 0, np.array(data_growth_model.shape) - np.array(self.baseline_shape))
-        end = start + np.array(self.baseline_shape)
-        baseline_slices = [slice(start[0], end[0]), slice(start[1], end[1]), slice(start[2], end[2])]
-        return baseline_slices
     def _get_baseline_affine(self, affine, baseline_slices):
         R = affine[:3, :3]
         start = np.array([baseline_slices[0].start, baseline_slices[1].start, baseline_slices[2].start], float)

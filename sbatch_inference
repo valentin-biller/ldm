@@ -8,17 +8,17 @@
 #SBATCH --partition=universe,asteroids
 #SBATCH --qos=master
 #SBATCH --time=3-00:00:00
-#SBATCH --gres=gpu:1,gpumem:80G
+#SBATCH --gres=gpu:0,gpumem:0G
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 
 cd /vol/miltank/users/bilv/ldm
 uv run /vol/miltank/users/bilv/ldm/inference_diffusion.py \
-    --function inference \
+    --function calculate_metrics \
     --model big \
     --scheduler ddpm \
     --version 2 \
-    --mode inference_conditioning \
+    --mode inpainting_inference_conditioning \
     --denoising repaint
 ### 'inference'
 ### 'inference_challenge'

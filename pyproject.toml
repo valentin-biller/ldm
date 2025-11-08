@@ -3,7 +3,7 @@ name = "ldm"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "matplotlib",
     "monai[all]",
@@ -31,6 +31,7 @@ dependencies = [
     "blobfile>=3.0.0",
     "brainles-preprocessing",
     "antspyx==0.5.3",
+    "timm>=1.0.22",
 ]
 
 [tool.uv.sources]

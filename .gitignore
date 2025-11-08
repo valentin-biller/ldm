@@ -1,7 +1,11 @@
+debug
+maisi/maisi_vae_finetuned.pt
+maisi/latents/
 models
 output*
 slurm
 temp*
+
 
 # Python-generated files
 __pycache__/

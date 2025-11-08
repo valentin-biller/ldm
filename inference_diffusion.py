@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from pathlib import Path
+from collections import defaultdict
 
 import seaborn as sns
 import nibabel as nib
@@ -14,13 +15,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 import torch
-import pytorch_lightning as pl
+import lightning.pytorch as L
 from utils.data import DataModule, create_conditioning
 from utils.trainer import LatentDiffusion
 from utils.challenge_metrics import generate_metrics
 
 
 def inference():
+
+    L.seed_everything(42)
 
     if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
         batch_size, num_workers = 4, 4
@@ -53,7 +56,7 @@ def inference():
 
     try:
         # Try GPU/auto device first
-        trainer = pl.Trainer(
+        trainer = L.Trainer(
             accelerator='auto',
             devices='auto' if mode != 'inpainting_inference_challenge' else 1,
             logger=False,
@@ -66,7 +69,7 @@ def inference():
         print("[Info] Falling back to CPU...")
 
         # Retry with CPU
-        trainer = pl.Trainer(
+        trainer = L.Trainer(
             accelerator='cpu',
             devices=1,
             logger=False,
@@ -174,6 +177,7 @@ def calculate_metrics(expected_entries=721):
             print(f"WARNING: Expected {expected_entries} files (patient, mask), found {len(paths_reconstructed)} for '{folder}'")
 
         metrics_rows = []
+        metrics_nan = defaultdict(int)
         for path_reconstructed in tqdm(paths_reconstructed):
             patient = path_reconstructed.name[:-12]
             mask = path_reconstructed.name[-11:-7]
@@ -194,6 +198,9 @@ def calculate_metrics(expected_entries=721):
             )
                 
             for metric_name, metric_value in metrics_dict.items():
+                if np.isnan(metric_value):
+                    metrics_nan[metric_name] += 1
+                    continue
                 metrics_rows.append([patient, mask, metric_name, metric_value])
 
         stats = {}
@@ -206,9 +213,9 @@ def calculate_metrics(expected_entries=721):
             metric_df.to_csv(dir_metrics / f"{metric_name}.csv", index=False)
 
             assert not metric_df.duplicated(['patient', 'mask']).any(), f"Duplicate (patient, mask) pairs found for {metric_name}"
-            assert len(metric_df) == len(paths_reconstructed), (
+            assert len(metric_df) + metrics_nan[metric_name] == len(paths_reconstructed), (
                 f"Number of (patient, mask) pairs ({len(metric_df)}) does not match number of files in {dir_output} ({len(list(dir_output.iterdir()))})"
-            )      
+            )
             
             values = metric_df['value'].values
             stats[metric_name] = {
@@ -244,6 +251,23 @@ def calculate_metrics(expected_entries=721):
         plt.tight_layout()
         plt.savefig(dir_metrics / 'all_metrics.svg', format='svg', dpi=300)
         plt.close(fig)
+
+def collect_ablation():
+    ablation = defaultdict(dict)
+
+    all_metrics = ['ssim', 'psnr', 'mae', 'mse', 'rmse', 'msle']
+    for folder in ['inpainted', 'histogram_equalization', 'poisson_blending', 'pixel_injection']:
+        dir_metrics = dir_output_model / 'metrics' / folder
+        path_stats = dir_metrics / "stats.json"
+
+        with open(path_stats, 'r') as f:
+            data = json.load(f)
+            for metric in all_metrics:
+                ablation[folder][metric] = data[metric]['mean']
+
+    path_ablation = dir_output_model / 'metrics' / "ablation.json"
+    with open(path_ablation, 'w') as f:
+        json.dump(ablation, f, indent=4)
 
 def generate_conditioning():
     import sys
@@ -500,7 +524,7 @@ def create_failure():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Inference  Diffusion")
-    parser.add_argument('--function', type=str, default='inference', choices=['inference', 'calculate_metrics', 'generate_conditioning', 'create_slices', 'create_failure', 'call_complete'], help='Function')
+    parser.add_argument('--function', type=str, default='inference', choices=['inference', 'calculate_metrics', 'collect_ablation', 'generate_conditioning', 'create_slices', 'create_failure', 'call_complete'], help='Function')
     parser.add_argument('--debug', action='store_true', help='Debug Mode')
     parser.add_argument('--model', type=str, default='big', choices=['small', 'big', 'big_old'], help='Model')
     parser.add_argument('--scheduler', type=str, default='ddpm', choices=['ddpm', 'ddim'], help='Scheduler')
@@ -537,6 +561,8 @@ if __name__ == "__main__":
         inference()
     elif args.function == 'calculate_metrics':
         calculate_metrics()
+    elif args.function == 'collect_ablation':
+        collect_ablation()
     elif args.function == 'generate_conditioning':
         generate_conditioning()
     elif args.function == 'create_slices':
