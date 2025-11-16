@@ -51,15 +51,16 @@ class DataModule(L.LightningDataModule):
         dir_data=None,
         dir_utils=None,
         dir_output_model=None,
+        mlflow_use=True,
         use_latents=True,
-        mask_conditioning=256,  # 256, 64, None
+        mask_conditioning=64,  # 64, 32, None
         modality_conditioning=True,  # True, False
+        latent_shape=None,
         mode='training',
         oversampling=True,
         undersampling=False,
         batch_size=16,
         num_workers=16,
-        latent_shape=None,
         train_val_split=0.8,
         **kwargs
     ):
@@ -69,6 +70,8 @@ class DataModule(L.LightningDataModule):
         self.dir_utils = Path(__file__).resolve().parent if dir_utils is None else Path(dir_utils)
         self.dir_output_model = None if dir_output_model is None else Path(dir_output_model)
         
+        self.mlflow_use = mlflow_use
+
         self.use_latents = use_latents
         self.mask_conditioning = mask_conditioning
         self.modality_conditioning = modality_conditioning
@@ -124,9 +127,11 @@ class DataModule(L.LightningDataModule):
         with open(str(self.dir_utils / '.patients_train.txt'), "r") as f:
             patients_train = [line.strip() for line in f if line.strip()]
 
-        with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
-            patients_val = [line.strip() for line in f if line.strip()]
-            patients_val = []  # TODO delete line
+        if self.mlflow_use:
+            with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
+                patients_val = [line.strip() for line in f if line.strip()]
+        else:
+            patients_val = []
 
         patients = patients_train + patients_val
 
@@ -169,7 +174,7 @@ class DataModule(L.LightningDataModule):
             sampled = []
             for prefix in prefixes:
                 group = [p for p in patients_val if p.startswith(prefix)]
-                sampled += random.sample(group, min(3, len(group)))
+                sampled += random.sample(group, min(1, len(group)))
             patients_val = sampled
             groups_val = self._count_prefixes('Val Undersampling', patients_val, prefixes)
             self._print_numbers('Val', patients_val)
@@ -179,9 +184,9 @@ class DataModule(L.LightningDataModule):
             use_latents=self.use_latents,
             mask_conditioning=self.mask_conditioning,
             modality_conditioning=self.modality_conditioning,
+            latent_shape=self.latent_shape,
             mode=self.mode,
             patients=patients_train,
-            latent_shape=self.latent_shape,
         )
         
         self.dataset_val = DataSet(
@@ -189,9 +194,9 @@ class DataModule(L.LightningDataModule):
             use_latents=self.use_latents,
             mask_conditioning=self.mask_conditioning,
             modality_conditioning=self.modality_conditioning,
+            latent_shape=self.latent_shape,
             mode=self.mode if self.mode != 'training' else 'validation',
             patients=patients_val,
-            latent_shape=self.latent_shape,
         )
 
         self.dataloader_train = DataLoader(
@@ -261,9 +266,9 @@ class DataSet(Dataset):
         use_latents=True,
         mask_conditioning=True,
         modality_conditioning=True,
+        latent_shape=None,
         mode='training',
         patients=None,
-        latent_shape=None,
     ):
         self.dir_data = dir_data
 
@@ -274,6 +279,7 @@ class DataSet(Dataset):
         self.mode = mode
         self.patients = patients
         self.latent_shape = latent_shape
+        self.latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}"
     
         if self.mode in ['training', 'validation']:
             self.samples = []
@@ -290,7 +296,10 @@ class DataSet(Dataset):
                 for mask_id in ["0000"]:  # "0001", "0002"
                     self.samples.append((patient_id, mask_id))
 
-        self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
+        if self.latent_shape == (4, 64, 64, 40):
+            self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
+        elif self.latent_shape == (16, 32, 32, 20):
+            self.intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
         self.autoencoder_pad = transforms.SpatialPad(spatial_size=(240, 240, 160))
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
@@ -399,16 +408,16 @@ class DataSet(Dataset):
             patient, modality = self.samples[idx]
 
             if self.use_latents:
-                path_latent_modality = self.dir_data / patient / 'latents_64_64_40' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40
-                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40
+                path_latent_modality = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40 or 1, 4, 32, 32, 20
+                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40 or 4, 32, 32, 20
                 return_ = {
                     'modality': modality,
                     'latent_modality': latent_modalitiy.float(),
                 }
 
                 if self.mask_conditioning is not None:
-                    path_conditioning = self.dir_data / patient / 'latents_64_64_40' / f'{self.mask_conditioning}_conditioning.pt'  # 4, 256, 256, 160 or 4, 64, 64, 40
-                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 4, 256, 256, 160 or 4, 64, 64, 40
+                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 32, 32, 32, 20
+                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 32, 32, 32, 20
                     return_['conditioning'] = conditioning.float()
 
                 return return_
@@ -441,26 +450,29 @@ class DataSet(Dataset):
             affine = self._get_affine(self._get_file_modality(patient, modality))
 
             if self.use_latents:
-                path_latent_modality = self.dir_data / patient / 'latents_64_64_40' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40
-                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40
-                
-                path_conditioning = self.dir_data / patient / 'latents_64_64_40' / f'{self.mask_conditioning}_conditioning.pt'  # 4, 256, 256, 160 or 4, 64, 64, 40
-                conditioning = torch.load(path_conditioning, map_location="cpu")  # 4, 64, 64, 40 or 4, 256, 256, 160
-                
                 data_modality = self._get_data(self._get_file_modality(patient, modality))
                 normalized_modality = self._process_normalized_modality(data_modality)  # 1, 240, 240, 155
-
-                return {
+                
+                path_latent_modality = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40 or 1, 4, 32, 32, 20
+                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40 or 4, 32, 32, 20
+                
+                return_ = {
                     'mode': self.mode,
                     'patient': patient,
+                    
+                    'affine': affine,
+                    'normalized_modality': normalized_modality.float(),
 
                     'modality': modality,
                     'latent_modality': latent_modalitiy.float(),
-                    'conditioning': conditioning.float(),
-
-                    'affine': affine,
-                    'normalized_modality': normalized_modality.float(),
                 }
+
+                if self.mask_conditioning is not None:
+                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 32, 32, 32, 20
+                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 32, 32, 32, 20
+                    return_['conditioning'] = conditioning.float()
+
+                return return_
             else:
                 raise NotImplementedError("Validation without latents is not implemented.")
 

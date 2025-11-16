@@ -3,19 +3,18 @@ import schedulers_helper
 from monai.networks.schedulers import DDPMScheduler, DDIMScheduler
 
 class Scheduler():
-    def __init__(self, scheduler_, num_train_timesteps, num_inference_steps, device):
+    def __init__(self, scheduler_, num_train_timesteps, num_inference_steps):
         self.scheduler_ = scheduler_
         self.num_train_timesteps = num_train_timesteps
         self.num_inference_steps = num_inference_steps
-        self.device = device
 
-        if self.scheduler_ in ['ddpm', 'ddim']:
+        if self.scheduler_ == 'ddpm':
             self.diffusion = None
             self.schedulers = {
                 "ddpm": DDPMScheduler,
                 "ddim": DDIMScheduler,
             }
-            self.scheduler = self.schedulers[self.scheduler_](
+            self.scheduler_training = self.schedulers['ddpm'](
                 num_train_timesteps=self.num_train_timesteps,
                 beta_start=0.0015,
                 beta_end=0.0195,
@@ -23,17 +22,24 @@ class Scheduler():
                 prediction_type="epsilon",
                 clip_sample=False,
             )
+            self.scheduler_inference = self.schedulers['ddim'](
+                num_train_timesteps=self.num_inference_steps,
+                beta_start=0.0015,
+                beta_end=0.0195,
+                schedule="scaled_linear_beta",  # or "linear_beta" or "scaled_linear_beta" ?
+                prediction_type="epsilon",
+                clip_sample=False,
+            )
         elif self.scheduler_ == 'iddpm':
-            steps=4000  # TODO diffusion steps 4000
+            steps=self.num_train_timesteps  # diffusions steps 4000
             learn_sigma=True
             sigma_small=False
-            noise_schedule="cosine"  # TODO noise schedule cosine
+            noise_schedule="cosine"  # noise schedule cosine
             use_kl=False
             predict_xstart=False
-            rescale_timesteps=False  # TODO rescale_learned_sigmas False
-            rescale_learned_sigmas=False  # TODO rescale_timesteps False
+            rescale_timesteps=False  # rescale_timesteps False
+            rescale_learned_sigmas=False  # rescale_learned_sigmas False
             timestep_respacing=""
-
 
             betas = schedulers_helper.get_named_beta_schedule(noise_schedule, steps)
             if use_kl:
@@ -41,11 +47,9 @@ class Scheduler():
             elif rescale_learned_sigmas:
                 loss_type = schedulers_helper.LossType.RESCALED_MSE
             else:
-                print('Here 1')
-                loss_type = schedulers_helper.LossType.MSE
+                loss_type = schedulers_helper.LossType.MSE  # this condition is used
             if not timestep_respacing:
-                print('Here 2')
-                timestep_respacing = [steps]
+                timestep_respacing = [steps]  # this condition is used
             self.diffusion = schedulers_helper.SpacedDiffusion(
                 use_timesteps=schedulers_helper.space_timesteps(steps, timestep_respacing),
                 betas=betas,
@@ -59,17 +63,14 @@ class Scheduler():
                         else schedulers_helper.ModelVarType.FIXED_SMALL
                     )
                     if not learn_sigma
-                    else schedulers_helper.ModelVarType.LEARNED_RANGE  # this one
+                    else schedulers_helper.ModelVarType.LEARNED_RANGE  # this condition is used
                 ),
                 loss_type=loss_type,
                 rescale_timesteps=rescale_timesteps,
             )
-            self.scheduler = schedulers_helper.LossSecondMomentResampler(self.diffusion)  # TODO schedule_sampler loss-second-moment
 
-        for key, value in self.scheduler.__dict__.items():
-            if isinstance(value, torch.Tensor):
-                self.scheduler.__dict__[key] = value.to(self.device)
-    
+            self.scheduler = schedulers_helper.LossSecondMomentResampler(self.diffusion)  # schedule_sampler loss-second-moment
+
 # def run(self, batch, cond):
 #     t, weights = self.scheduler.sample(batch_size)
 

@@ -500,6 +500,7 @@ class DiT(nn.Module):
         class_dropout_prob=0.1,
         num_classes=1000,
         learn_sigma=True,
+        mask_in_channels=8,  # TODO for mask_conditioning
     ):
         super().__init__()
         assert len(input_size) == len(patch_size), f"input_size and patch_size must have the same length, got {input_size} and {patch_size}"
@@ -510,7 +511,7 @@ class DiT(nn.Module):
         self.patch_size = patch_size
         self.num_heads = num_heads
 
-        self.z_embedder = PatchEmbed(to_embed='conv', img_size=input_size, patch_size=patch_size, in_chans=in_channels, embed_dim=hidden_size)  # TODO for mask_conditioning
+        self.z_embedder = PatchEmbed(to_embed='conv', img_size=input_size, patch_size=patch_size, in_chans=mask_in_channels, embed_dim=hidden_size)  # TODO for mask_conditioning
 
         self.x_embedder = PatchEmbed(to_embed='conv', img_size=input_size, patch_size=patch_size, in_chans=in_channels, embed_dim=hidden_size)
         self.to_pixel = ToPixel(to_pixel='identity', img_size=input_size, in_channels=self.out_channels, in_dim=hidden_size, patch_size=patch_size)
@@ -664,7 +665,18 @@ def DiT_S_4(dims=2, **kwargs):
 def DiT_S_8(dims=2, **kwargs):
     return DiT(depth=12, hidden_size=384, patch_size=[8]*dims, num_heads=6, **kwargs)
 
-
+def DiT_Custom(scheduler_, latent_shape):
+    return DiT(
+        input_size=[latent_shape[1], latent_shape[2], latent_shape[3]], 
+        patch_size=[2, 2, 2],  # DiT_B_2: [2]*dims
+        in_channels=latent_shape[0],
+        hidden_size=768,  # DiT_B_2: 768, Default: 1152
+        depth=12,  # DiT_B_2: 12, Default: 28
+        num_heads=12,  # DiT_B_2: 12, Default: 16
+        num_classes=4,
+        learn_sigma=True if scheduler_ == 'iddpm' else False,
+        mask_in_channels=latent_shape[0]*2,  # TODO for mask_conditioning
+    )
 
 if __name__ == "__main__":
     model = DiT_S_1(input_size=[32, 32, 32], patch_size=[2, 2, 2])

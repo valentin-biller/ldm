@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# printf 'jobs=(%s)\n' "$(squeue -u bilv -h -o '%i' | sort -n | xargs)"
+
+jobs=(77512 77513 77502 77503 77505 77507)
+ 
+SLACK_WEBHOOK_URL=
+SLACK_WEBHOOK_URL=
+
+declare -A last_state
+for job in "${jobs[@]}"; do
+  last_state["$job"]=""
+done
+
+while true; do
+  alerts=()
+  recoveries=()
+  for job in "${jobs[@]}"; do
+    state=$(squeue -u bilv -j "$job" -h -o "%T")
+    if [[ -z $state ]]; then
+      name=MISSING
+    elif [[ $state == RUNNING ]]; then
+      name=RUNNING
+    else
+      name=PENDING
+    fi
+
+    if [[ ${last_state["$job"]} != "$name" ]]; then
+      if [[ $name == RUNNING ]]; then
+        recoveries+=("$job $name")
+      elif [[ $name == MISSING ]]; then
+        alerts+=("$job $name")
+      else
+        alerts+=("$job $name")
+      fi
+      last_state["$job"]="$name"
+    fi
+  done
+
+  if (( ${#alerts[@]} || ${#recoveries[@]} )); then
+    lines=()
+    for job in "${jobs[@]}"; do
+      lines+=("$job ${last_state[$job]}")
+    done
+    message=$(printf '%s\n' "${lines[@]}")
+    printf 'SLURM\n%s\n' "$message"
+    message=${message//$'\n'/\\n}
+    payload=$(printf '{"text":"SLURM\n%s"}' "$message")
+    curl -s -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL" >/dev/null
+  fi
+
+  printf 'Sleeping for 60 seconds...\n'
+  sleep 60
+done
+
+payload=$(printf '{"text":"TMUX : JOBWATCH ERROR"}')
+curl -s -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL" >/dev/null
+
+# ./jobwatch.sh

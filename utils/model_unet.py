@@ -2,7 +2,7 @@ import torch.nn as nn
 from monai.networks.nets import ControlNet, DiffusionModelUNet
 
 class UNet(nn.Module):
-    def __init__(self, mask_conditioning, modality_conditioning):
+    def __init__(self, mask_conditioning, modality_conditioning, scheduler_, latent_shape):
         super().__init__()
         self.mask_conditioning = mask_conditioning
         self.modality_conditioning = modality_conditioning
@@ -10,10 +10,10 @@ class UNet(nn.Module):
         config_unet = {
             "spatial_dims": 3,
             "in_channels": 4,
-            "out_channels": 4,
-            "channels": (64, 128, 256, 512),
-            "attention_levels": [False, False, True, True],
-            "num_head_channels": (0, 0, 32, 32),
+            "out_channels": 4 if scheduler_ == 'ddpm' else 8,  # output 8 channels to learn sigma
+            "channels": (64, 128, 256, 512) if latent_shape == (4, 64, 64, 40) else (128, 256, 512),
+            "attention_levels": [False, False, True, True] if latent_shape == (4, 64, 64, 40) else [False, True, True],
+            "num_head_channels": (0, 0, 32, 32) if latent_shape == (4, 64, 64, 40) else (0, 32, 32),
             "num_class_embeds": 4 if self.modality_conditioning else None,
             "num_res_blocks": 2,
             "use_flash_attention": True,
@@ -21,8 +21,8 @@ class UNet(nn.Module):
         }
         config_controlnet = config_unet.copy()
         config_controlnet.pop('out_channels')
-        conditioning_embedding_in_channels = 4  # original: 8
-        conditioning_embedding_num_channels = [4, 32, 64]  if self.mask_conditioning == 256 else [4,]  # original 8, 32, 64
+        conditioning_embedding_in_channels = 8 if latent_shape == (4, 64, 64, 40) else 32  # original: 8
+        conditioning_embedding_num_channels = [8,] if latent_shape == (4, 64, 64, 40) else [32,]  # original 8, 32, 64
 
         self.unet = DiffusionModelUNet(**config_unet)
         if self.mask_conditioning is not None:
