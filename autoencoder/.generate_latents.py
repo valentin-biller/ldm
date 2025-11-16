@@ -19,7 +19,7 @@ dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
 path_ae_latent = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent.pkl")
 path_ae_latent_patients = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent_patients.pkl")
 
-latent_shape = (4, 64, 64, 40)  # (4, 64, 64, 40), (16, 32, 32, 20)
+latent_shape = (16, 32, 32, 20)  # (4, 64, 64, 40), (16, 32, 32, 20)
 domain = ['condition']  # 'modality' or 'condition'  # TODO
 mode = ['psnr']  # 'ae_latent' or 'psnr'  # TODO
 save_latent_modality = False  # TODO
