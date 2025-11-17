@@ -125,14 +125,13 @@ class DataModule(L.LightningDataModule):
         '''
 
         with open(str(self.dir_utils / '.patients_train.txt'), "r") as f:
-            patients_train = [line.strip() for line in f if line.strip()][:10] # TODO
+            patients_train = [line.strip() for line in f if line.strip()]
 
-        # TODO
-        # if self.mlflow_use:
-        with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
-            patients_val = [line.strip() for line in f if line.strip()][:2]
-        # else:
-        #     patients_val = []
+        if self.mlflow_use:
+            with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
+                patients_val = [line.strip() for line in f if line.strip()]
+        else:
+            patients_val = []
 
         patients = patients_train + patients_val
 
