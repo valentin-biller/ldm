@@ -46,7 +46,7 @@ def main():
     parser.add_argument("--modality_conditioning", action="store_false", help="Disable Modality Conditioning")
     parser.add_argument("--denoising", type=str, default="own", choices=["own", "repaint"], help="Denoising Type")
     parser.add_argument("--scheduler", type=str, default="ddpm", choices=["ddpm", "iddpm"], help="Scheduler Type")
-    parser.add_argument("--latent_shape", type=str, default="4,64,64,40", help="Latent Shape")
+    parser.add_argument("--latent_shape", type=str, default="4,64,64,40", choices=["4,64,64,40", "4,32,32,20"], help="Latent Shape")
     parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning Rate")
 
     # Mode options:
@@ -82,7 +82,7 @@ def main():
     else:
         args.mask_conditioning = int(args.mask_conditioning)
     args.latent_shape = tuple(int(s) for s in args.latent_shape.split(','))
-    assert args.latent_shape in [(4, 64, 64, 40), (16, 32, 32, 20)], "Latent shape must be (4,64,64,40) or (16,32,32,20)."
+    assert args.latent_shape in [(4, 64, 64, 40), (4, 32, 32, 20)], "Latent shape must be (4,64,64,40) or (4,32,32,20)."
 
 
     # automatic checks and changes
@@ -98,7 +98,7 @@ def main():
     # automatic path autoencoder
     if args.latent_shape == (4, 64, 64, 40):
         path_autoencoder = dir_autoencoder / 'maisi_vae.pt'
-    elif args.latent_shape == (16, 32, 32, 20):
+    elif args.latent_shape == (4, 32, 32, 20):
         path_autoencoder = dir_autoencoder / 'f8d16_vae.pt'
 
 

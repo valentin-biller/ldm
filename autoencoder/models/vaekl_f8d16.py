@@ -797,7 +797,7 @@ class AutoencoderKL(nn.Module):
         super().__init__()
         self.dims = ddconfig.get("dims", 2)  # Default to 2D for backward compatibility
         conv_layer = get_conv_layer(self.dims)
-        
+
         self.encoder = Encoder(**ddconfig)
         self.decoder = Decoder(**ddconfig)
         assert ddconfig["double_z"]

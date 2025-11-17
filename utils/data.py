@@ -125,13 +125,14 @@ class DataModule(L.LightningDataModule):
         '''
 
         with open(str(self.dir_utils / '.patients_train.txt'), "r") as f:
-            patients_train = [line.strip() for line in f if line.strip()]
+            patients_train = [line.strip() for line in f if line.strip()][:10] # TODO
 
-        if self.mlflow_use:
-            with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
-                patients_val = [line.strip() for line in f if line.strip()]
-        else:
-            patients_val = []
+        # TODO
+        # if self.mlflow_use:
+        with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
+            patients_val = [line.strip() for line in f if line.strip()][:2]
+        # else:
+        #     patients_val = []
 
         patients = patients_train + patients_val
 
@@ -298,7 +299,7 @@ class DataSet(Dataset):
 
         if self.latent_shape == (4, 64, 64, 40):
             self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
-        elif self.latent_shape == (16, 32, 32, 20):
+        elif self.latent_shape == (4, 32, 32, 20):
             self.intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
         self.autoencoder_pad = transforms.SpatialPad(spatial_size=(240, 240, 160))
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
@@ -416,8 +417,8 @@ class DataSet(Dataset):
                 }
 
                 if self.mask_conditioning is not None:
-                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 32, 32, 32, 20
-                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 32, 32, 32, 20
+                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 8, 32, 32, 20
+                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 8, 32, 32, 20
                     return_['conditioning'] = conditioning.float()
 
                 return return_
@@ -468,8 +469,8 @@ class DataSet(Dataset):
                 }
 
                 if self.mask_conditioning is not None:
-                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 32, 32, 32, 20
-                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 32, 32, 32, 20
+                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 8, 32, 32, 20
+                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 8, 32, 32, 20
                     return_['conditioning'] = conditioning.float()
 
                 return return_

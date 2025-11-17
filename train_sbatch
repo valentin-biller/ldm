@@ -13,7 +13,7 @@
 #SBATCH --mem=128G
 
 cd /vol/miltank/users/bilv/ldm
-uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 4 --model dit --scheduler ddpm --mask_conditioning 64
+uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 5 --model dit --scheduler iddpm --mask_conditioning 64
 
 ### unet:  ddpm - mask:  no / modality:  no - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 0 --model unet --scheduler ddpm --mask_conditioning none --modality_conditioning
 ### unet:  ddpm - mask:  no / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 1 --model unet --scheduler ddpm --mask_conditioning none
@@ -25,5 +25,5 @@ uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 4 --model dit --s
 ###  dit: iddpm - mask:  64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 5 --model dit --scheduler iddpm --mask_conditioning 64
 
 ### LRZ ###
-### unet:  ddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 6 --model unet --scheduler ddpm --mask_conditioning 32 --latent_shape 16,32,32,20
-###  dit:  ddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 7 --model dit --scheduler ddpm --mask_conditioning 32 --latent_shape 16,32,32,20
+### unet:  ddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 6 --model unet --scheduler ddpm --mask_conditioning 32 --latent_shape 4,32,32,20
+###  dit:  ddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 7 --model dit --scheduler ddpm --mask_conditioning 32 --latent_shape 4,32,32,20

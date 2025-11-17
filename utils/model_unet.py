@@ -21,8 +21,8 @@ class UNet(nn.Module):
         }
         config_controlnet = config_unet.copy()
         config_controlnet.pop('out_channels')
-        conditioning_embedding_in_channels = 8 if latent_shape == (4, 64, 64, 40) else 32  # original: 8
-        conditioning_embedding_num_channels = [8,] if latent_shape == (4, 64, 64, 40) else [32,]  # original 8, 32, 64
+        conditioning_embedding_in_channels = latent_shape[0]*2  # original: 8
+        conditioning_embedding_num_channels = [latent_shape[0]*2,]  # original 8, 32, 64
 
         self.unet = DiffusionModelUNet(**config_unet)
         if self.mask_conditioning is not None:

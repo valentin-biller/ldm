@@ -19,25 +19,26 @@ dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
 path_ae_latent = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent.pkl")
 path_ae_latent_patients = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent_patients.pkl")
 
-latent_shape = (16, 32, 32, 20)  # (4, 64, 64, 40), (16, 32, 32, 20)
-domain = ['condition']  # 'modality' or 'condition'  # TODO
-mode = ['psnr']  # 'ae_latent' or 'psnr'  # TODO
+latent_shape = (4, 32, 32, 20)  # (4, 64, 64, 40) or (4, 32, 32, 20)
+domain = ['modality', 'condition']  # 'modality' and/or 'condition'  # TODO
+mode = []  # 'ae_latent' and/or 'psnr'  # TODO
 save_latent_modality = True  # TODO
 
 shape_pad = (256, 256, 160)
 if latent_shape == (4, 64, 64, 40):
     intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
-elif latent_shape == (16, 32, 32, 20):
+elif latent_shape == (4, 32, 32, 20):
     intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
 autoencoder_pad = transforms.SpatialPad(spatial_size=shape_pad)
 autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
 
-MODALITIES = ['t1', 't1c', 't2', 'flair'] if domain == 'modality' else ['growth_model', 'tissue_segmentation']
+MODALITIES = ['t1', 't1c', 't2', 'flair']
 if latent_shape == (4, 64, 64, 40):
     path_autoencoder = dir_autoencoder / 'maisi_vae.pt'
-elif latent_shape == (16, 32, 32, 20):
+elif latent_shape == (4, 32, 32, 20):
     path_autoencoder = dir_autoencoder / 'f8d16_vae.pt'
+
 
 # psnr
 def psnr(reconstructed, original):
@@ -46,16 +47,19 @@ def psnr(reconstructed, original):
 
 
 # latent stats
-with path_ae_latent.open("rb") as f:
-    ae_latent = pickle.load(f)
-print(json.dumps(ae_latent, indent=4))
+if latent_shape == (4, 64, 64, 40):
+    with path_ae_latent.open("rb") as f:
+        ae_latent = pickle.load(f)
+    print(json.dumps(ae_latent, indent=4))
+if latent_shape == (4, 32, 32, 20):
+    assert 'ae_latent' not in mode, "Latent stats not supported for F8D16 autoencoder yet."
 
 
 # autoencoder
 device = torch.device("cuda")
 if latent_shape == (4, 64, 64, 40):
     autoencoder = MaisiAutoencoder(path_autoencoder=str(path_autoencoder), device=device)
-elif latent_shape == (16, 32, 32, 20):
+elif latent_shape == (4, 32, 32, 20):
     autoencoder = F8D16Autoencoder(path_autoencoder=str(path_autoencoder), device=device)
 def _get_encoded(autoencoder, autoencoder_modality):
     latent_modality = autoencoder.encode(autoencoder_modality)  # (B, 4, 64, 64, 40)
@@ -64,8 +68,10 @@ def _get_decoded(autoencoder, latent_modality):
     reconstructed_modality = autoencoder.decode(latent_modality).squeeze(0)
     if latent_shape == (4, 64, 64, 40):
         reconstructed_modality = torch.clamp(reconstructed_modality, 0.0, 1.0)  # B, 256, 256, 160
-    elif latent_shape == (16, 32, 32, 20):
+    elif latent_shape == (4, 32, 32, 20):
         reconstructed_modality = torch.clamp(reconstructed_modality, -1.0, 1.0)  # 1, 256, 256, 160 
+    else:
+        raise ValueError("Unsupported latent shape.")
     reconstructed_modality = autoencoder_crop(reconstructed_modality)  # B, 240, 240, 155
     return reconstructed_modality
 def _encode(data):
@@ -132,11 +138,13 @@ else:
 
 latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}"
 
-for folder in tqdm(sorted(dir_data.iterdir())[3500:]):
+pbar = tqdm(sorted(dir_data.iterdir()))
+for folder in pbar:
     if not folder.is_dir():
         continue
     count_patients += 1
     patient = folder.name
+    pbar.set_description(f"Patient: {patient}")
 
     if 'condition' in domain:
         path_latent_conditioning = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_conditioning.pt'
@@ -157,6 +165,9 @@ for folder in tqdm(sorted(dir_data.iterdir())[3500:]):
         for modality in MODALITIES:
             path_latent_modality = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_{modality}.pt'
             if 'ae_latent' in mode and patient in ae_latent_patients['mean'][modality].keys() and path_latent_modality.exists():
+                continue
+
+            if save_latent_modality == True and path_latent_modality.exists():
                 continue
 
             data_modality = _get_data(folder / f'{modality}.nii.gz')  # 240, 240, 155

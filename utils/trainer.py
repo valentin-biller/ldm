@@ -123,7 +123,7 @@ class LatentDiffusion(L.LightningModule):
         # Autoencoder
         if self.latent_shape == (4, 64, 64, 40):
             self.autoencoder = MaisiAutoencoder(path_autoencoder=str(self.path_autoencoder), device=self.device)
-        elif self.latent_shape == (16, 32, 32, 20):
+        elif self.latent_shape == (4, 32, 32, 20):
             self.autoencoder = F8D16Autoencoder(path_autoencoder=str(self.path_autoencoder), device=self.device)
 
         # Scheduler
@@ -275,7 +275,7 @@ class LatentDiffusion(L.LightningModule):
             # TODO
             # if self.latent_shape == (4, 64, 64, 40):
             #     reconstructed_modality_i = torch.clamp(reconstructed_modality_i, 0.0, 1.0)  # 1, 256, 256, 160
-            # elif self.latent_shape == (16, 32, 32, 20):
+            # elif self.latent_shape == (4, 32, 32, 20):
             #     reconstructed_modality_i = torch.clamp(reconstructed_modality_i, -1.0, 1.0)  # 1, 256, 256, 160 
             # TODO
             reconstructed_modality_i = self.autoencoder_crop(reconstructed_modality_i)  # 1, 240, 240, 155
@@ -290,7 +290,7 @@ class LatentDiffusion(L.LightningModule):
         modality = batch['modality']  # (B,)
         latent_modality = batch['latent_modality']  # (B, 4, 64, 64, 40)
         if self.mask_conditioning is not None: 
-            conditioning = batch['conditioning']  # (B, 8, 64, 64, 40) or (B, 32, 32, 32, 20)
+            conditioning = batch['conditioning']  # (B, 8, 64, 64, 40) or (B, 8, 32, 32, 20)
         else:
             conditioning = None
         
@@ -334,7 +334,7 @@ class LatentDiffusion(L.LightningModule):
 
         modality = batch['modality']  # (B,)
         if self.mask_conditioning is not None: 
-            conditioning = batch['conditioning']  # (B, 8, 64, 64, 40) or (B, 32, 32, 32, 20)
+            conditioning = batch['conditioning']  # (B, 8, 64, 64, 40) or (B, 8, 32, 32, 20)
         else:
             conditioning = None
 
@@ -379,7 +379,7 @@ class LatentDiffusion(L.LightningModule):
         patients = batch['patient']  # (B,)
 
         modality = batch['modality']  # (B,)
-        conditioning = batch['conditioning']  # (B, 8, 64, 64, 40) or (B, 32, 32, 32, 20)
+        conditioning = batch['conditioning']  # (B, 8, 64, 64, 40) or (B, 8, 32, 32, 20)
         
         affines = batch['affine']  # (B,)
 
