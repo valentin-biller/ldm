@@ -1,11 +1,12 @@
-debug
-maisi/maisi_vae_finetuned.pt
-maisi/latents/
-models
+/models
+
 output*
-slurm
+slurm*
 temp*
 
+**/sbtc.tar
+**/f8d16_vae.pt
+**/maisi_vae_finetuned.pt
 
 # Python-generated files
 __pycache__/

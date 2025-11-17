@@ -465,7 +465,7 @@ class LatentDiffusion(L.LightningModule):
                 reconstructed_t1_pi = self._pixel_injection(reconstructed_t1_pb, original_t1_voided, original_mask)  # (B, 1, 240, 240, 155)
                 helpers._save_reconstruction(self, reconstructed_t1_pi, patients, masks, affines, identifier='pixel_injection', mode=mode)
 
-    def on_save_checkpoint(self):
+    def on_save_checkpoint(self, checkpoint):
         helpers._save_ema(self)
 
     def on_after_backward(self):

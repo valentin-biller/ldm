@@ -216,6 +216,9 @@ def main():
         filename="last",
         every_n_epochs=1,
         save_top_k=0,
+        save_last=True,
+        verbose=True,
+        save_on_train_epoch_end=True,
     )
     
     class ProfilerLoggerCallback(L.Callback):

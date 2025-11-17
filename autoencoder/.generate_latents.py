@@ -22,7 +22,7 @@ path_ae_latent_patients = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_laten
 latent_shape = (16, 32, 32, 20)  # (4, 64, 64, 40), (16, 32, 32, 20)
 domain = ['condition']  # 'modality' or 'condition'  # TODO
 mode = ['psnr']  # 'ae_latent' or 'psnr'  # TODO
-save_latent_modality = False  # TODO
+save_latent_modality = True  # TODO
 
 shape_pad = (256, 256, 160)
 if latent_shape == (4, 64, 64, 40):

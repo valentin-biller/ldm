@@ -13,7 +13,7 @@
 #SBATCH --mem=128G
 
 cd /vol/miltank/users/bilv/ldm
-uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 1 --model unet --scheduler ddpm --mask_conditioning none
+uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 4 --model dit --scheduler ddpm --mask_conditioning 64
 
 ### unet:  ddpm - mask:  no / modality:  no - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 0 --model unet --scheduler ddpm --mask_conditioning none --modality_conditioning
 ### unet:  ddpm - mask:  no / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 1 --model unet --scheduler ddpm --mask_conditioning none
