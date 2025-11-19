@@ -189,7 +189,6 @@ def main():
     # Create data module
     datamodule = DataModule(
         dir_data=dir_data,
-        mlflow_use=args.mlflow_use,
         use_latents=args.use_latents,
         mask_conditioning=args.mask_conditioning,
         modality_conditioning=args.modality_conditioning,
@@ -260,7 +259,8 @@ def main():
         logger=mlf_logger if args.mlflow_use else False,
         callbacks=callbacks,
         log_every_n_steps=1,
-        check_val_every_n_epoch=args.save_samples_every,
+        limit_val_batches=1.0 if args.save_samples_every>0 else 0,
+        check_val_every_n_epoch=args.save_samples_every if args.save_samples_every>0 else 1,
         enable_model_summary=True,
         enable_progress_bar=True,
         deterministic=False,  # had it originally set to True, but caused issues with avg_pool3d_backward_cuda

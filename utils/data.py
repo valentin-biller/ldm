@@ -51,7 +51,6 @@ class DataModule(L.LightningDataModule):
         dir_data=None,
         dir_utils=None,
         dir_output_model=None,
-        mlflow_use=True,
         use_latents=True,
         mask_conditioning=64,  # 64, 32, None
         modality_conditioning=True,  # True, False
@@ -70,8 +69,6 @@ class DataModule(L.LightningDataModule):
         self.dir_utils = Path(__file__).resolve().parent if dir_utils is None else Path(dir_utils)
         self.dir_output_model = None if dir_output_model is None else Path(dir_output_model)
         
-        self.mlflow_use = mlflow_use
-
         self.use_latents = use_latents
         self.mask_conditioning = mask_conditioning
         self.modality_conditioning = modality_conditioning
@@ -127,11 +124,8 @@ class DataModule(L.LightningDataModule):
         with open(str(self.dir_utils / '.patients_train.txt'), "r") as f:
             patients_train = [line.strip() for line in f if line.strip()]
 
-        if self.mlflow_use:
-            with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
-                patients_val = [line.strip() for line in f if line.strip()]
-        else:
-            patients_val = []
+        with open(str(self.dir_utils / '.patients_val.txt'), "r") as f:
+            patients_val = [line.strip() for line in f if line.strip()]
 
         patients = patients_train + patients_val
 

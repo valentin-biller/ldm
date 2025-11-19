@@ -23,7 +23,7 @@ def _distribution_shift(z, ae_latent_mean, ae_latent_std):
 
 # --------- Debugging ---------
 @torch.no_grad()
-def _debugging(self, tensor, tag, print_=False, logging_=False, distribution_=False, target_mean=0.0, target_std=1.0, target_tolerance=0.1):  # print_: False, 'scientific', 'float'
+def _debugging(self, tensor, tag, print_=False, logging_=False, distribution_=False, target_mean=0.0, target_std=1.0, target_tolerance=0.25):  # print_: False, 'scientific', 'float'
     if not self.debugging:
         return
     

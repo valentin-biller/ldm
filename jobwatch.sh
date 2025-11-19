@@ -2,21 +2,28 @@
 
 # printf 'jobs=(%s)\n' "$(squeue -u bilv -h -o '%i' | sort -n | xargs)"
 
-jobs=(77512 77513 77502 77503 77505 77507)
+jobs=(77621 77622 77624 77859 77868)  # 77623
+file=/vol/miltank/users/bilv/ldm/slurm/77623.txt  # 77623
  
 SLACK_WEBHOOK_URL=
 SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:?set Slack webhook}
 
+# jobs
 declare -A last_state
 for job in "${jobs[@]}"; do
   last_state["$job"]=""
 done
+# file
+file_hash_last=""
+file_state_last=""
 
 while true; do
   alerts=()
   recoveries=()
+
+  # jobs
   for job in "${jobs[@]}"; do
-    state=$(squeue -u bilv -j "$job" -h -o "%T")
+    state=$(squeue -j "$job" -h -o "%T")
     if [[ -z $state ]]; then
       name=MISSING
     elif [[ $state == RUNNING ]]; then
@@ -37,11 +44,37 @@ while true; do
     fi
   done
 
+  # file
+  if [[ -n $file ]]; then
+    file_hash_curr=$(md5sum "$file" 2>/dev/null | awk '{print $1}')
+    if [[ -n $file_hash_curr && $file_hash_curr == "$file_hash_last" ]]; then
+      file_state="NOT CHANGED"
+    elif [[ -n $file_hash_curr && $file_hash_curr != "$file_hash_last" ]]; then
+      file_state="CHANGED"
+    fi
+    file_hash_last="$file_hash_curr"
+
+    if [[ $file_state != "$file_state_last" ]]; then
+      if [[ $file_state == "CHANGED" ]]; then
+        recoveries+=("FILE $file_state")
+      elif [[ $file_state == "NOT CHANGED" ]]; then
+        alerts+=("FILE $file_state")
+      fi
+      file_state_last="$file_state"
+    fi
+  fi
+
   if (( ${#alerts[@]} || ${#recoveries[@]} )); then
     lines=()
+    # jobs
     for job in "${jobs[@]}"; do
       lines+=("$job ${last_state[$job]}")
     done
+    # file
+    if [[ -n $file ]]; then
+      lines+=("FILE $file_state")
+    fi
+
     message=$(printf '%s\n' "${lines[@]}")
     printf 'SLURM\n%s\n' "$message"
     message=${message//$'\n'/\\n}
