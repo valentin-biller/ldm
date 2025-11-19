@@ -243,7 +243,9 @@ def main():
             if hasattr(self, 'system_monitor') and self.system_monitor is not None:
                 self.system_monitor.finish()
 
-    callbacks = [best_checkpoint_callback, every_checkpoint_callback, ProfilerLoggerCallback()]
+    callbacks = [ProfilerLoggerCallback(), every_checkpoint_callback]
+    if args.save_samples_every > 0:
+        callbacks.append(best_checkpoint_callback)
     if args.mlflow_use and local_rank == 0 and mlf_logger is not None:
         callbacks.append(MLFlowSystemMonitorCallback())
 
@@ -259,8 +261,8 @@ def main():
         logger=mlf_logger if args.mlflow_use else False,
         callbacks=callbacks,
         log_every_n_steps=1,
-        limit_val_batches=1.0 if args.save_samples_every>0 else 0,
-        check_val_every_n_epoch=args.save_samples_every if args.save_samples_every>0 else 1,
+        limit_val_batches=1.0 if args.save_samples_every > 0 else 0,
+        check_val_every_n_epoch=args.save_samples_every if args.save_samples_every > 0 else 1,
         enable_model_summary=True,
         enable_progress_bar=True,
         deterministic=False,  # had it originally set to True, but caused issues with avg_pool3d_backward_cuda
