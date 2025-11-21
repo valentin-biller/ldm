@@ -222,7 +222,7 @@ class LatentDiffusion(L.LightningModule):
             # Debugging
             if t % 100 == 0 or t <= 10:
                 helpers._debugging(self, sample, f'denoising/sample/t_{t.item()}', logging_=True, distribution_=True)
-                if self.debugging:
+                if self.debugging and self.dir_output_model is not None:
                     generate_denoising_outputs = {
                         'timestep': t,
                         'patients': patients,
@@ -417,7 +417,7 @@ class LatentDiffusion(L.LightningModule):
 
             # Generate inpainted latent
             denoisings = {
-                'repaint': self._repaint_generate_denoising,
+                # 'repaint': self._repaint_generate_denoising,
                 'own': self._generate_denoising,
             }
 

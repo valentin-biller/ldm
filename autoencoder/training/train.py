@@ -8,110 +8,70 @@ sys.path.append(str(dir_autoencoder))
 sys.path.append(str(dir_utils))
 sys.path.append(str(dir_models))
 
-import os
+from data import DataModule
+from mlflow_continue import MLFlowContinue
+from maisi_f8_autoencoder import MaisiF8Autoencoder
+
 import math
-from tqdm import tqdm
+import mlflow
+import nibabel as nib
+
+
+import argparse
+import os
+from pathlib import Path
 
 import torch
-import torch.distributed as dist
-from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.utils.data.distributed import DistributedSampler
-from torch.utils.data import DataLoader
-from torch.nn import L1Loss, MSELoss
-from torch.optim import lr_scheduler
+from monai.networks.nets import PatchDiscriminator
+from monai.inferers.inferer import SimpleInferer, SlidingWindowInferer
+from monai.losses.adversarial_loss import PatchAdversarialLoss
+from monai.losses.perceptual import PerceptualLoss
+from monai.utils import set_determinism
 from torch.cuda.amp import GradScaler
 from torch.amp import autocast
-import pytorch_lightning as pl
+from torch.nn import L1Loss, MSELoss
+from torch.optim import lr_scheduler
 
-import mlflow
-from mlflow_continue import MLFlowContinue
-from data import DataModule
-from maisi_autoencoder import MaisiAutoencoder
-
-from monai.networks.nets import PatchDiscriminator
-from monai.losses.perceptual import PerceptualLoss
-from monai.losses.adversarial_loss import PatchAdversarialLoss
-from monai.inferers.inferer import SimpleInferer, SlidingWindowInferer
-
-
-def setup_distributed():
-    """Initialize distributed training"""
-    if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
-        rank = int(os.environ['RANK'])
-        world_size = int(os.environ['WORLD_SIZE'])
-        local_rank = int(os.environ['LOCAL_RANK'])
-    else:
-        rank = 0
-        world_size = 1
-        local_rank = 0
-    
-    if world_size > 1:
-        dist.init_process_group(backend='nccl')
-        torch.cuda.set_device(local_rank)
-    
-    return rank, world_size, local_rank
-
-
-def cleanup_distributed():
-    """Clean up distributed training"""
-    if dist.is_initialized():
-        dist.destroy_process_group()
-
-
-# Initialize distributed training
-rank, world_size, local_rank = setup_distributed()
-is_main_process = rank == 0
 
 # Configuration
-dir_data = "/vol/miltank/users/bilv/data"
-dir_data_challenge = "/vol/miltank/datasets/glioma/brats_inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Validation"
+args = argparse.Namespace()
 
-path_autoencoder = dir_current / 'maisi' / 'maisi_vae.pt'
+args.batch_size = 4  # TODO
+args.patch_size = [64, 64, 64]
+args.val_batch_size = 1
+args.val_patch_size = None
+args.val_sliding_window_patch_size = [96, 96, 64]
+args.lr = 1e-4
+args.perceptual_weight = 0.3
+args.kl_weight = 1e-7
+args.adv_weight = 0.1
+args.recon_loss = "l1"
+args.val_interval = 10  # TODO
+args.cache = 0.5
+args.amp = True
+args.n_epochs = 1000  # TODO
 
-pl.seed_everything(42)
-device = f"cuda:{local_rank}" if torch.cuda.is_available() else "cpu"
+args.spatial_dims = 3
 
-amp = True
-batch_size = 1
-num_workers = 4
-learning_rate = 1e-4
 
-val_interval = 10
-best_val_recon_epoch_loss = 10000000.0
+####################################################################################################
+# Initialize mlflow and networks
+####################################################################################################
 
-total_step = 0
-start_epoch = 0
-max_epochs = 10000
-
-perceptual_weight = 0.3
-kl_weight = 1e-07
-adv_weight = 0.1
-
-val_batch_size = 1
-val_patch_size = None
-val_sliding_window_patch_size = [60, 60, 40]
-
-# Setup MLflow continuation
-mlflow_params = {
-    "batch_size": batch_size,
-    "learning_rate": learning_rate,
-    "max_epochs": max_epochs,
-    "num_workers": num_workers,
-    # "precision": amp,
-    # "conditioning_channels": 4,
-    # "image_size": "240x240x155",
-    # "latent_size": "60x60x40",
-}
+# initialize mlflow
+mlflow_params = vars(args)
 mlflow_continue = MLFlowContinue(
     identifier='ldm-autoencoder',
     mlflow_params=mlflow_params
 )
 resume, dir_output_model, mlf_logger = mlflow_continue.mlflow_continue()
 
-# Initialize models
+# initialize networks
+device = torch.device("cuda")
+
 discriminator_norm = "INSTANCE"
 discriminator = PatchDiscriminator(
-    spatial_dims=3,
+    spatial_dims=args.spatial_dims,
     num_layers_d=3,
     channels=32,
     in_channels=1,
@@ -120,63 +80,58 @@ discriminator = PatchDiscriminator(
 ).to(device)
 
 if resume[0]:
-    autoencoder = MaisiAutoencoder(path_autoencoder=resume[1].replace('discriminator', 'autoencoder'), device=device).model
+    autoencoder = MaisiF8Autoencoder(path_autoencoder=str(resume[1]).replace('discriminator', 'autoencoder'), device=device).model
     discriminator.load_state_dict(torch.load(resume[1], map_location=device))
 else:
-    autoencoder = MaisiAutoencoder(path_autoencoder=path_autoencoder, device=device).model
+    autoencoder = MaisiF8Autoencoder(path_autoencoder=None, device=device).model
 
-# Wrap models with DDP for multi-GPU
-if world_size > 1:
-    autoencoder = DDP(autoencoder, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=True)
-    discriminator = DDP(discriminator, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=True)
+trained_g_path = os.path.join(dir_output_model, "autoencoder.pt")
+trained_d_path = os.path.join(dir_output_model, "discriminator.pt")
+
+####################################################################################################
+# Set deterministic training for reproducibility
+####################################################################################################
+
+set_determinism(seed=42)
+
+####################################################################################################
+# Build training dataset and data loader
+####################################################################################################
 
 # Create data module
 datamodule = DataModule(
-    mode='training',
-    dir_data=dir_data,
-    dir_data_challenge=dir_data_challenge,
-    batch_size=batch_size,
-    num_workers=num_workers,
+    dir_data=Path('/vol/miltank/users/bilv/data'),
+    use_latents=None,
+    mask_conditioning=None,
+    modality_conditioning=None,
+    latent_shape=None,
+    mode='autoencoder',
+    oversampling=True,
+    undersampling=True,
+    batch_size=args.batch_size,
+    num_workers=4,
 )
 datamodule.setup(stage='fit')
 
-# Add distributed samplers
-train_sampler = DistributedSampler(
-    datamodule.dataset_train, 
-    num_replicas=world_size, 
-    rank=rank
-) if world_size > 1 else None
+dataloader_train = datamodule.dataloader_train
+dataloader_val = datamodule.dataloader_val
 
-val_sampler = DistributedSampler(
-    datamodule.dataset_val, 
-    num_replicas=world_size, 
-    rank=rank,
-    shuffle=False
-) if world_size > 1 else None
+####################################################################################################
+# Training config
+####################################################################################################
 
-# Update dataloaders
-dataloader_train = DataLoader(
-    datamodule.dataset_train,
-    batch_size=batch_size,
-    shuffle=(train_sampler is None),
-    num_workers=num_workers,
-    sampler=train_sampler,
-    pin_memory=True
+# config loss and loss weight
+if args.recon_loss == "l2":
+    intensity_loss = MSELoss()
+    print("Use l2 loss")
+else:
+    intensity_loss = L1Loss(reduction="mean")
+    print("Use l1 loss")
+adv_loss = PatchAdversarialLoss(criterion="least_squares")
+
+loss_perceptual = (
+    PerceptualLoss(spatial_dims=3, network_type="squeeze", is_fake_3d=True, fake_3d_ratio=0.2).eval().to(device)
 )
-
-dataloader_val = DataLoader(
-    datamodule.dataset_val,
-    batch_size=val_batch_size,
-    shuffle=False,
-    num_workers=num_workers,
-    sampler=val_sampler,
-    pin_memory=True
-)
-
-
-def psnr(input, target, max_val=1.0):
-    mse = torch.mean((input - target) ** 2)
-    return 20 * torch.log10(max_val / torch.sqrt(mse))
 
 def KL_loss(z_mu, z_sigma):
     eps = 1e-10
@@ -185,6 +140,63 @@ def KL_loss(z_mu, z_sigma):
         dim=list(range(1, len(z_sigma.shape))),
     )
     return torch.sum(kl_loss) / kl_loss.shape[0]
+
+def loss_weighted_sum(losses):
+    return losses["recons_loss"] + args.kl_weight * losses["kl_loss"] + args.perceptual_weight * losses["p_loss"]
+
+
+# config optimizer and lr scheduler
+optimizer_g = torch.optim.Adam(params=autoencoder.parameters(), lr=args.lr, eps=1e-06 if args.amp else 1e-08)
+optimizer_d = torch.optim.Adam(params=discriminator.parameters(), lr=args.lr, eps=1e-06 if args.amp else 1e-08)
+
+
+# please adjust the learning rate warmup rule based on your dataset and n_epochs
+def warmup_rule(epoch):
+    # learning rate warmup rule
+    if epoch < 10:
+        return 0.01
+    elif epoch < 20:
+        return 0.1
+    else:
+        return 1.0
+
+
+scheduler_g = lr_scheduler.LambdaLR(optimizer_g, lr_lambda=warmup_rule)
+scheduler_d = lr_scheduler.LambdaLR(optimizer_d, lr_lambda=warmup_rule)
+
+
+# set AMP scaler
+if args.amp:
+    # test use mean reduction for everything
+    # scaler_g = GradScaler("cuda", init_scale=2.0**8, growth_factor=1.5)
+    # scaler_d = GradScaler("cuda", init_scale=2.0**8, growth_factor=1.5)
+    scaler_g = GradScaler(init_scale=2.0**8, growth_factor=1.5)
+    scaler_d = GradScaler(init_scale=2.0**8, growth_factor=1.5)
+
+####################################################################################################
+# Training
+####################################################################################################
+
+# Initialize variables
+val_interval = args.val_interval
+best_val_recon_epoch_loss = 10000000.0
+total_step = 0
+start_epoch = 0
+max_epochs = args.n_epochs
+
+# Setup validation inferer
+val_inferer = (
+    SlidingWindowInferer(
+        roi_size=args.val_sliding_window_patch_size,
+        sw_batch_size=1,
+        progress=False,
+        overlap=0.0,
+        device=torch.device("cpu"),
+        sw_device=device,
+    )
+    if args.val_sliding_window_patch_size
+    else SimpleInferer()
+)
 
 def dynamic_infer(inferer, model, images):
     if torch.numel(images[0:1, 0:1, ...]) <= math.prod(inferer.roi_size):
@@ -205,341 +217,142 @@ def dynamic_infer(inferer, model, images):
         inferer.roi_size = orig_roi
         return output
 
-def loss_weighted_sum(losses):
-    return losses["recons_loss"] + kl_weight * losses["kl_loss"] + perceptual_weight * losses["p_loss"]
-
-def warmup_rule(epoch):
-    # learning rate warmup rule
-    if epoch < 10:
-        return 0.01
-    elif epoch < 20:
-        return 0.1
-    else:
-        return 1.0
-
-def reduce_tensor(tensor, world_size):
-    """Reduce tensor across all processes"""
-    if world_size > 1:
-        tensor = tensor.clone()
-        dist.all_reduce(tensor, op=dist.ReduceOp.SUM)
-        tensor = tensor / world_size
-    return tensor
-
-
-# Initialize loss functions
-intensity_loss = L1Loss(reduction="mean")
-adv_loss = PatchAdversarialLoss(criterion="least_squares")
-loss_perceptual = (
-    PerceptualLoss(spatial_dims=3, network_type="squeeze", is_fake_3d=True, fake_3d_ratio=0.2).eval().to(device)
-)
-
-# Initialize optimizers
-optimizer_g = torch.optim.Adam(
-    params=autoencoder.parameters(), 
-    lr=learning_rate, 
-    eps=1e-06 if amp else 1e-08
-)
-optimizer_d = torch.optim.Adam(
-    params=discriminator.parameters(), 
-    lr=learning_rate, 
-    eps=1e-06 if amp else 1e-08
-)
-    
-scheduler_g = lr_scheduler.LambdaLR(optimizer_g, lr_lambda=warmup_rule)
-scheduler_d = lr_scheduler.LambdaLR(optimizer_d, lr_lambda=warmup_rule)
-
-scaler_g = GradScaler(init_scale=2.0**8, growth_factor=1.5)
-scaler_d = GradScaler(init_scale=2.0**8, growth_factor=1.5)
-
-# Setup validation inferer
-val_inferer = (
-    SlidingWindowInferer(
-        roi_size=val_sliding_window_patch_size,
-        sw_batch_size=1,
-        progress=False,
-        overlap=0.0,
-        device=torch.device("cpu"),
-        sw_device=device,
-    )
-    if val_sliding_window_patch_size
-    else SimpleInferer()
-)
 
 # Training and validation loops
 for epoch in range(start_epoch, max_epochs):
-    # Set epoch for distributed sampler
-    if world_size > 1:
-        train_sampler.set_epoch(epoch)
-    
-    if is_main_process:
-        print("lr:", scheduler_g.get_lr())
-    
+    print("lr:", scheduler_g.get_lr())
     autoencoder.train()
     discriminator.train()
     train_epoch_losses = {"recons_loss": 0, "kl_loss": 0, "p_loss": 0}
 
-    progress_bar = tqdm(dataloader_train, desc=f"Epoch {epoch} Training", ncols=100) if is_main_process else dataloader_train
-    for batch in progress_bar:
-        # images = batch["autoencoder_t1"].to(device, non_blocking=True).contiguous()
-        modalities = batch["autoencoder_modalities"].to(device, non_blocking=True).contiguous()
+    for batch in dataloader_train:
+        # images = batch["image"].to(device).contiguous()
+        images = batch["padded_modality"].to(device).contiguous()
+        optimizer_g.zero_grad(set_to_none=True)
+        optimizer_d.zero_grad(set_to_none=True)
+        with autocast("cuda", enabled=args.amp):
+            # Train Generator
+            reconstruction, z_mu, z_sigma = autoencoder(images)
+            losses = {
+                "recons_loss": intensity_loss(reconstruction, images),
+                "kl_loss": KL_loss(z_mu, z_sigma),
+                "p_loss": loss_perceptual(reconstruction.float(), images.float()),
+            }
+            logits_fake = discriminator(reconstruction.contiguous().float())[-1]
+            generator_loss = adv_loss(logits_fake, target_is_real=True, for_discriminator=False)
+            loss_g = loss_weighted_sum(losses) + args.adv_weight * generator_loss
 
-        train_batch_loss_g = 0
-        train_batch_loss_d = 0
-        train_batch_losses = {"recons_loss": 0, "kl_loss": 0, "p_loss": 0}
-        train_batch_generator_loss = 0
-        train_batch_loss_d_fake = 0
-        train_batch_loss_d_real = 0
+            if args.amp:
+                scaler_g.scale(loss_g).backward()
+                scaler_g.unscale_(optimizer_g)
+                scaler_g.step(optimizer_g)
+                scaler_g.update()
+            else:
+                loss_g.backward()
+                optimizer_g.step()
 
-        # Accumulate gradients from all modalities
-        for i in range(4):  # For each modality (t1, t1c, t2, flair)
-            modality = modalities[:, i:i+1, ...]  # Shape: [B, 1, H, W, D]
-        
-            optimizer_g.zero_grad(set_to_none=True)
-            optimizer_d.zero_grad(set_to_none=True)
-            
-            with autocast("cuda", enabled=amp):
-                # Train Generator
-                reconstruction, z_mu, z_sigma = autoencoder(modality)
-                losses = {
-                    "recons_loss": intensity_loss(reconstruction, modality),
-                    "kl_loss": KL_loss(z_mu, z_sigma),
-                    "p_loss": loss_perceptual(reconstruction.float(), modality.float()),
-                }
-                logits_fake = discriminator(reconstruction.contiguous().float())[-1]
-                generator_loss = adv_loss(logits_fake, target_is_real=True, for_discriminator=False)
-                loss_g = loss_weighted_sum(losses) + adv_weight * generator_loss
+            # Train Discriminator
+            logits_fake = discriminator(reconstruction.contiguous().detach())[-1]
+            loss_d_fake = adv_loss(logits_fake, target_is_real=False, for_discriminator=True)
+            logits_real = discriminator(images.contiguous().detach())[-1]
+            loss_d_real = adv_loss(logits_real, target_is_real=True, for_discriminator=True)
+            loss_d = (loss_d_fake + loss_d_real) * 0.5
 
-                if amp:
-                    scaler_g.scale(loss_g).backward()
-                    scaler_g.unscale_(optimizer_g)
-                    scaler_g.step(optimizer_g)
-                    scaler_g.update()
-                else:
-                    loss_g.backward()
-                    optimizer_g.step()
-                
-                # Train Discriminator
-                logits_fake = discriminator(reconstruction.contiguous().detach())[-1]
-                loss_d_fake = adv_loss(logits_fake, target_is_real=False, for_discriminator=True)
-                logits_real = discriminator(modality.contiguous().detach())[-1]
-                loss_d_real = adv_loss(logits_real, target_is_real=True, for_discriminator=True)
-                loss_d = (loss_d_fake + loss_d_real) * 0.5
+            if args.amp:
+                scaler_d.scale(loss_d).backward()
+                scaler_d.step(optimizer_d)
+                scaler_d.update()
+            else:
+                loss_d.backward()
+                optimizer_d.step()
 
-                if amp:
-                    scaler_d.scale(loss_d).backward()
-                    scaler_d.step(optimizer_d)
-                    scaler_d.update()
-                else:
-                    loss_d.backward()
-                    optimizer_d.step()
-                
-                # Accumulate losses for logging
-                train_batch_loss_g += loss_g.item() / 4  # Convert back to original scale
-                train_batch_loss_d += loss_d.item() / 4  # Convert back to original scale
-                for key in losses:
-                    train_batch_losses[key] += losses[key].item() / 4
-                train_batch_generator_loss += generator_loss.item() / 4
-                train_batch_loss_d_fake += loss_d_fake.item() / 4
-                train_batch_loss_d_real += loss_d_real.item() / 4
-        
-        # Update progress bar
-        if is_main_process and hasattr(progress_bar, 'set_postfix'):
-            progress_bar.set_postfix({
-                "loss_g": f"{train_batch_loss_g:.4f}",
-                "loss_d": f"{train_batch_loss_d:.4f}"
-            })
-        
+        # Log training loss
         total_step += 1
-        for loss_name, loss_value in train_batch_losses.items():
-            if is_main_process:
-                mlflow.log_metric(f"train_{loss_name}_iter", loss_value, step=total_step)
-            train_epoch_losses[loss_name] += loss_value
-        
-        if is_main_process:
-            mlflow.log_metric("train_generator_loss_iter", train_batch_generator_loss, step=total_step)
-            mlflow.log_metric("train_loss_d_fake_iter", train_batch_loss_d_fake, step=total_step)
-            mlflow.log_metric("train_loss_d_real_iter", train_batch_loss_d_real, step=total_step)
-
-        # with autocast("cuda", enabled=amp):
-        #     # Train Generator
-        #     reconstruction, z_mu, z_sigma = autoencoder(images)
-        #     losses = {
-        #         "recons_loss": intensity_loss(reconstruction, images),
-        #         "kl_loss": KL_loss(z_mu, z_sigma),
-        #         "p_loss": loss_perceptual(reconstruction.float(), images.float()),
-        #     }
-        #     logits_fake = discriminator(reconstruction.contiguous().float())[-1]
-        #     generator_loss = adv_loss(logits_fake, target_is_real=True, for_discriminator=False)
-        #     loss_g = loss_weighted_sum(losses) + adv_weight * generator_loss
-
-        #     if amp:
-        #         scaler_g.scale(loss_g).backward()
-        #         scaler_g.unscale_(optimizer_g)
-        #         scaler_g.step(optimizer_g)
-        #         scaler_g.update()
-        #     else:
-        #         loss_g.backward()
-        #         optimizer_g.step()
-
-        #     # Train Discriminator
-        #     logits_fake = discriminator(reconstruction.contiguous().detach())[-1]
-        #     loss_d_fake = adv_loss(logits_fake, target_is_real=False, for_discriminator=True)
-        #     logits_real = discriminator(images.contiguous().detach())[-1]
-        #     loss_d_real = adv_loss(logits_real, target_is_real=True, for_discriminator=True)
-        #     loss_d = (loss_d_fake + loss_d_real) * 0.5
-
-        #     if amp:
-        #         scaler_d.scale(loss_d).backward()
-        #         scaler_d.step(optimizer_d)
-        #         scaler_d.update()
-        #     else:
-        #         loss_d.backward()
-        #         optimizer_d.step()
-
-        # # Update progress bar only on main process
-        # if is_main_process and hasattr(progress_bar, 'set_postfix'):
-        #     progress_bar.set_postfix({
-        #         "loss_g": f"{loss_g.item():.4f}",
-        #         "loss_d": f"{loss_d.item():.4f}"
-        #     })
-
-        # # Log training loss
-        # total_step += 1
-        # for loss_name, loss_value in losses.items():
-        #     if is_main_process:
-        #         mlflow.log_metric(f"train_{loss_name}_iter", loss_value.item(), step=total_step)
-        #     train_epoch_losses[loss_name] += loss_value.item()
-        # if is_main_process:
-        #     mlflow.log_metric("train_adv_loss_iter", generator_loss.item(), step=total_step)
-        #     mlflow.log_metric("train_fake_loss_iter", loss_d_fake.item(), step=total_step)
-        #     mlflow.log_metric("train_real_loss_iter", loss_d_real.item(), step=total_step)
-
-    # Synchronize losses across GPUs
-    if world_size > 1:
-        for key in train_epoch_losses:
-            train_epoch_losses[key] = reduce_tensor(
-                torch.tensor(train_epoch_losses[key], device=device), world_size
-            ).item()
+        for loss_name, loss_value in losses.items():
+            # tensorboard_writer.add_scalar(f"train_{loss_name}_iter", loss_value.item(), total_step)
+            mlflow.log_metric(f"train_{loss_name}_iter", loss_value.item(), step=total_step)
+            train_epoch_losses[loss_name] += loss_value.item()
+        # tensorboard_writer.add_scalar("train_adv_loss_iter", generator_loss, total_step)
+        # tensorboard_writer.add_scalar("train_fake_loss_iter", loss_d_fake, total_step)
+        # tensorboard_writer.add_scalar("train_real_loss_iter", loss_d_real, total_step)
+        mlflow.log_metric("train_adv_loss_iter", generator_loss.item(), step=total_step)
+        mlflow.log_metric("train_fake_loss_iter", loss_d_fake.item(), step=total_step)
+        mlflow.log_metric("train_real_loss_iter", loss_d_real.item(), step=total_step)
 
     scheduler_g.step()
     scheduler_d.step()
-    
-    # Calculate average losses
     for key in train_epoch_losses:
         train_epoch_losses[key] /= len(dataloader_train)
-    if is_main_process:
-        print(f"Epoch {epoch} train_vae_loss {loss_weighted_sum(train_epoch_losses)}: {train_epoch_losses}.")
-        for loss_name, loss_value in train_epoch_losses.items():
-            mlflow.log_metric(f"train_{loss_name}_epoch", loss_value, step=epoch)
-        
-        # Save models (only on main process)
-        model_to_save = autoencoder.module if hasattr(autoencoder, 'module') else autoencoder
-        discriminator_to_save = discriminator.module if hasattr(discriminator, 'module') else discriminator
-        
-        torch.save(model_to_save.state_dict(), dir_output_model + "/autoencoder.pt")
-        torch.save(discriminator_to_save.state_dict(), dir_output_model + "/discriminator.pt")
-        print("Save trained autoencoder to", dir_output_model)
-        print("Save trained discriminator to", dir_output_model)
+    print(f"Epoch {epoch} train_vae_loss {loss_weighted_sum(train_epoch_losses)}: {train_epoch_losses}.")
+    for loss_name, loss_value in train_epoch_losses.items():
+        # tensorboard_writer.add_scalar(f"train_{loss_name}_epoch", loss_value, epoch)
+        mlflow.log_metric(f"train_{loss_name}_epoch", loss_value, step=epoch)
+    torch.save(autoencoder.state_dict(), trained_g_path)
+    torch.save(discriminator.state_dict(), trained_d_path)
+    print("Save trained autoencoder to", trained_g_path)
+    print("Save trained discriminator to", trained_d_path)
 
     # Validation
     if epoch % val_interval == 0:
         autoencoder.eval()
         val_epoch_losses = {"recons_loss": 0, "kl_loss": 0, "p_loss": 0}
-        total_psnr = 0.0
-        
-        progress_bar = tqdm(dataloader_val, desc=f"Epoch {epoch} Validation", ncols=100) if is_main_process else dataloader_val
-        for batch in progress_bar:
+        val_loader_iter = iter(dataloader_val)
+        for batch in dataloader_val:
             with torch.no_grad():
-                modalities = batch["autoencoder_modalities"]
-                
-                val_batch_losses = {"recons_loss": 0, "kl_loss": 0, "p_loss": 0}
-                val_batch_psnr = 0
-                
-                for i in range(4):  # For each modality
-                    modality = modalities[:, i:i+1, ...]  # Shape: [B, 1, H, W, D]
-                    
-                    with autocast("cuda", enabled=amp):
-                        reconstruction, z_mu, z_sigma = dynamic_infer(val_inferer, autoencoder, modality)
-                        reconstruction = reconstruction.to(device)
+                with autocast("cuda", enabled=args.amp):
+                    # images = batch["image"]
+                    images = batch["padded_modality"]
+                    reconstruction, z_mu, z_sigma = dynamic_infer(val_inferer, autoencoder, images)
+                    reconstruction = reconstruction.to(device)
 
-                        # Accumulate losses (average across modalities)
-                        val_batch_losses["recons_loss"] += intensity_loss(reconstruction, modality.to(device)).item() / 4
-                        val_batch_losses["kl_loss"] += KL_loss(z_mu, z_sigma).item() / 4
-                        val_batch_losses["p_loss"] += loss_perceptual(reconstruction, modality.to(device)).item() / 4
-                        val_batch_psnr += psnr(reconstruction, modality.to(device)).item() / 4
+                    ### saving ###
+                    dir_output = dir_output_model.parent / "images"
 
-                # Add batch losses to epoch totals
-                for key in val_epoch_losses:
-                    val_epoch_losses[key] += val_batch_losses[key]
-                total_psnr += val_batch_psnr
+                    patients = batch["patient"]
+                    affines = batch["affine"].cpu().float().numpy()
+                    modality = batch["modality"]
+                    normalized = batch["normalized_modality"].cpu().float().numpy()
+                    reconstructed = reconstruction.detach().cpu().float().numpy()
 
-                # with autocast("cuda", enabled=amp):
-                #     images = batch["autoencoder_t1"]
+                    for i, (patient, modality_) in enumerate(zip(patients, modality)):
+                        dir_patient = dir_output / patient
+                        dir_patient.mkdir(exist_ok=True, parents=True)
 
-                #     reconstruction, z_mu, z_sigma = dynamic_infer(val_inferer, autoencoder, images)
-                #     reconstruction = reconstruction.to(device)
+                        affine = affines[i]
+                        
+                        normalized_modality = normalized[i][0]  # (240, 240, 155)
+                        reconstructed_modality = reconstructed[i][0]  # (240, 240, 155)
 
-                #     total_psnr += psnr(reconstruction, images.to(device)).item()
+                        normalized_modality_nii = nib.Nifti1Image(normalized_modality, affine)
+                        reconstructed_modality_nii = nib.Nifti1Image(reconstructed_modality, affine)
 
-                #     val_epoch_losses["recons_loss"] += intensity_loss(reconstruction, images.to(device)).item()
-                #     val_epoch_losses["kl_loss"] += KL_loss(z_mu, z_sigma).item()
-                #     val_epoch_losses["p_loss"] += loss_perceptual(reconstruction, images.to(device)).item()
+                        nib.save(normalized_modality_nii, dir_patient / f"normalized_{modality_}.nii.gz")
+                        nib.save(reconstructed_modality_nii, dir_patient / f"reconstructed_{modality_}.nii.gz")
+                    ### saving ###
 
-        # Synchronize validation losses across GPUs
-        if world_size > 1:
-            for key in val_epoch_losses:
-                val_epoch_losses[key] = reduce_tensor(
-                    torch.tensor(val_epoch_losses[key], device=device), world_size
-                ).item()
-            total_psnr = reduce_tensor(torch.tensor(total_psnr, device=device), world_size).item()
+                    val_epoch_losses["recons_loss"] += intensity_loss(reconstruction, images.to(device)).item()
+                    val_epoch_losses["kl_loss"] += KL_loss(z_mu, z_sigma).item()
+                    val_epoch_losses["p_loss"] += loss_perceptual(reconstruction, images.to(device)).item()
 
-        # Calculate average validation losses
         for key in val_epoch_losses:
             val_epoch_losses[key] /= len(dataloader_val)
 
         val_loss_g = loss_weighted_sum(val_epoch_losses)
+        print(f"Epoch {epoch} val_vae_loss {val_loss_g}: {val_epoch_losses}.")
 
-        val_loss_g = reduce_tensor(torch.tensor(val_loss_g, device=device), world_size).item()  # multi-GPU support
-        
-        if is_main_process:
-            print(f"Epoch {epoch} val_vae_loss {val_loss_g}: {val_epoch_losses}.")
-            print(f"Epoch {epoch} val_psnr: {total_psnr / len(dataloader_val):.4f}")
+        if val_loss_g < best_val_recon_epoch_loss:
+            best_val_recon_epoch_loss = val_loss_g
+            trained_g_path_epoch = f"{trained_g_path[:-3]}_epoch{epoch}.pt"
+            torch.save(autoencoder.state_dict(), trained_g_path_epoch)
+            print("Got best val vae loss.")
+            print("Save trained autoencoder to", trained_g_path_epoch)
 
-            # Save best model only on main process
-            if val_loss_g < best_val_recon_epoch_loss:
-                best_val_recon_epoch_loss = val_loss_g
-                trained_g_path_epoch = f"{dir_output_model}/autoencoder_epoch{epoch}.pt"
-                model_to_save = autoencoder.module if hasattr(autoencoder, 'module') else autoencoder
-                torch.save(model_to_save.state_dict(), trained_g_path_epoch)
-                print("Got best val vae loss.")
-                print("Save trained autoencoder to", trained_g_path_epoch)
-
-            for loss_name, loss_value in val_epoch_losses.items():
-                mlflow.log_metric(loss_name, loss_value, step=epoch)
+        for loss_name, loss_value in val_epoch_losses.items():
+            # tensorboard_writer.add_scalar(loss_name, loss_value, epoch)
+            mlflow.log_metric(loss_name, loss_value, step=epoch)
 
         # Monitor scale_factor
         # We'd like to tune kl_weights in order to make scale_factor close to 1.
-        # scale_factor_sample = 1.0 / z_mu.flatten().std()
-        # mlflow.log_metric("val_one_sample_scale_factor", scale_factor_sample, step=epoch)
-
-        # # Monitor reconstruction result
-        # center_loc_axis = find_label_center_loc(images[0, 0, ...])
-        # vis_image = get_xyz_plot(images[0, ...], center_loc_axis, mask_bool=False)
-        # vis_recon_image = get_xyz_plot(reconstruction[0, ...], center_loc_axis, mask_bool=False)
-
-        # tensorboard_writer.add_image(
-        #     "val_orig_img",
-        #     vis_image.transpose([2, 0, 1]),
-        #     epoch,
-        # )
-        # tensorboard_writer.add_image(
-        #     "val_recon_img",
-        #     vis_recon_image.transpose([2, 0, 1]),
-        #     epoch,
-        # )
-
-        # show_image(vis_image, title="val image")
-        # show_image(vis_recon_image, title="val recon result")
-
-# Clean up distributed training
-cleanup_distributed()
+        scale_factor_sample = 1.0 / z_mu.flatten().std()
+        # tensorboard_writer.add_scalar("val_one_sample_scale_factor", scale_factor_sample, epoch)
+        mlflow.log_metric("val_one_sample_scale_factor", scale_factor_sample.item(), step=epoch)

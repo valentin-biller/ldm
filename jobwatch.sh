@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 # printf 'jobs=(%s)\n' "$(squeue -u bilv -h -o '%i' | sort -n | xargs)"
+# printf 'jobs=(%s)\n' "$(squeue -u ge65mod2 -h -o '%i' | sort -n | xargs)"
 
 jobs=(77621 77622 77624 77859 77868)  # 77623
-file=/vol/miltank/users/bilv/ldm/slurm/77623.txt  # 77623
+file=/vol/miltank/users/bilv/ldm/slurm/77623_2.txt  # 77623
  
 SLACK_WEBHOOK_URL=
 SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:?set Slack webhook}

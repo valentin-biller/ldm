@@ -1,6 +1,12 @@
+import sys
+from pathlib import Path
+dir_current = Path(__file__).resolve().parent
+dir_autoencoder_models = dir_current/ 'models'
+sys.path.append(str(dir_autoencoder_models))
+
 import torch
 import nibabel as nib
-from models.vaekl_f8d16 import AutoencoderKL_f8
+from vaekl_f8d16 import AutoencoderKL_f8
 
 
 class F8D16Autoencoder:

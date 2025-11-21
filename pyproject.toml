@@ -32,6 +32,7 @@ dependencies = [
     "brainles-preprocessing",
     "antspyx==0.5.3",
     "timm>=1.0.22",
+    "simple-slurm>=0.3.6",
 ]
 
 [tool.uv.sources]

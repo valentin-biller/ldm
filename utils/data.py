@@ -83,7 +83,7 @@ class DataModule(L.LightningDataModule):
         self.latent_shape = latent_shape
         self.train_val_split = train_val_split
 
-        assert self.mode in ['training', 'inpainting_inference_healthy', 'inpainting_inference_tumor', 'baseline'], f"Invalid mode: {self.mode}."
+        assert self.mode in ['autoencoder', 'training', 'baseline', 'inpainting_inference_healthy', 'inpainting_inference_tumor'], f"Invalid mode: {self.mode}."
     
         self.print_length = 25
         L.seed_everything(42)
@@ -273,9 +273,14 @@ class DataSet(Dataset):
         self.mode = mode
         self.patients = patients
         self.latent_shape = latent_shape
-        self.latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}"
+        self.latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}" if latent_shape is not None else None
     
-        if self.mode in ['training', 'validation']:
+        if self.mode in ['autoencoder']:
+            self.samples = []
+            for patient_id in self.patients:
+                for modality in MODALITIES:
+                    self.samples.append((patient_id, modality))
+        elif self.mode in ['training', 'validation']:
             self.samples = []
             modalities = MODALITIES if self.modality_conditioning else ['t1']
             for patient_id in self.patients:
@@ -290,13 +295,17 @@ class DataSet(Dataset):
                 for mask_id in ["0000"]:  # "0001", "0002"
                     self.samples.append((patient_id, mask_id))
 
-        if self.latent_shape == (4, 64, 64, 40):
+        if self.mode in ['autoencoder']:
             self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
-        elif self.latent_shape == (4, 32, 32, 20):
-            self.intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
+        else:
+            if self.latent_shape == (4, 64, 64, 40):
+                self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
+            elif self.latent_shape == (4, 32, 32, 20):
+                self.intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
         self.autoencoder_pad = transforms.SpatialPad(spatial_size=(240, 240, 160))
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
+    # loading with nibabel
     def _nib_load(self, file_path):
         retries = 10
         delay = 3
@@ -309,7 +318,6 @@ class DataSet(Dataset):
                 print(f"[WARNING]: {e}. Retrying ({i+1}/{retries}) in {delay}s...")
                 time.sleep(delay)
         raise exception
-
     def _get_affine(self, file_path):
         img = self._nib_load(file_path)
         return img.affine
@@ -317,12 +325,19 @@ class DataSet(Dataset):
         img = self._nib_load(file_path)
         return torch.as_tensor(img.get_fdata())
     
+    # get files default
     def _get_file_modality(self, patient, modality):
         return self.dir_data / patient / f"{modality}.nii.gz"
     def _get_file_growth_model(self, patient):
         return self.dir_data / patient / 'processed' / 'growth_model.nii.gz'
     def _get_file_tissue_segmentation(self, patient):
         return self.dir_data / patient / 'processed' / 'tissue_segmentation.nii.gz'
+    # get files latents
+    def _get_file_latent_modality(self, patient, modality):
+        return self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_{modality}.pt'
+    def _get_file_latent_conditioning(self, patient):
+        return self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'
+    # get files inpainting
     def _get_file_modality_voided(self, patient, mask, modality):
         return self.dir_data / patient / 'voided' / f"{modality}-voided-{mask}.nii.gz"
     def _get_file_mask(self, patient, mask, healthy=False):
@@ -331,112 +346,64 @@ class DataSet(Dataset):
         else:
             return self.dir_data / patient / 'masks' / f"mask-{mask}.nii.gz"
         
-    def _process_mask(self, data):
+    # processing
+    def _to_torch(self, data):
         return torch.as_tensor(data).unsqueeze(0)  # 1, 240, 240, 155
-    def _process_original_modality(self, data):
-        return torch.as_tensor(data).unsqueeze(0)  # 1, 240, 240, 155
-    def _process_normalized_modality(self, data):
-        normalized_modality = self.intensity(data)
-        return torch.as_tensor(normalized_modality).unsqueeze(0)  # 1, 240, 240, 155
-    def _process_autoencoder_modality(self, normalized_modality):
-        autoencoder_modality = self.autoencoder_pad(normalized_modality)
-        return torch.as_tensor(autoencoder_modality)  # 1, 240, 240, 160
-    def _process_interpolation(self, original, mode='nearest'):
-        latent = torch.nn.functional.interpolate(
-            original.unsqueeze(0),
-            size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
-            mode=mode  # TODO support for 'trilinear'
-        )[0]
-        return latent  # 4, 60, 60, 40
-
-    def _collect_data_modalities(self, patient):
-        data_t1 = self._get_data(self._get_file_modality(patient, 't1'))
-        data_t1c = self._get_data(self._get_file_modality(patient, 't1c'))
-        data_t2 = self._get_data(self._get_file_modality(patient, 't2'))
-        data_flair = self._get_data(self._get_file_modality(patient, 'flair'))
-        return {
-            'data_t1': data_t1.float(),
-            'data_t1c': data_t1c.float(),
-            'data_t2': data_t2.float(),
-            'data_flair': data_flair.float()
-        }
-    def _collect_original_modalities(self, data_modalities):
-        original_t1 = self._process_original_modality(data_modalities['data_t1'])  # 1, 240, 240, 155
-        original_t1c = self._process_original_modality(data_modalities['data_t1c'])  # 1, 240, 240, 155
-        original_t2 = self._process_original_modality(data_modalities['data_t2'])  # 1, 240, 240, 155
-        original_flair = self._process_original_modality(data_modalities['data_flair'])  # 1, 240, 240, 155
-        return {
-            'original_t1': original_t1.float(),
-            'original_t1c': original_t1c.float(),
-            'original_t2': original_t2.float(),
-            'original_flair': original_flair.float()
-        }
-    def _collect_normalized_modalities(self, data_modalities):
-        normalized_t1 = self._process_normalized_modality(data_modalities['data_t1'])  # 1, 240, 240, 155
-        normalized_t1c = self._process_normalized_modality(data_modalities['data_t1c'])  # 1, 240, 240, 155
-        normalized_t2 = self._process_normalized_modality(data_modalities['data_t2'])  # 1, 240, 240, 155
-        normalized_flair = self._process_normalized_modality(data_modalities['data_flair'])  # 1, 240, 240, 155
-        return {
-            'normalized_t1': normalized_t1.float(),
-            'normalized_t1c': normalized_t1c.float(),
-            'normalized_t2': normalized_t2.float(),
-            'normalized_flair': normalized_flair.float()
-        }
-    def _collect_autoencoder_modalities(self, normalized_modalities):
-        autoencoder_t1 = self._process_autoencoder_modality(normalized_modalities['normalized_t1'])  # 1, 240, 240, 160
-        autoencoder_t1c = self._process_autoencoder_modality(normalized_modalities['normalized_t1c'])  # 1, 240, 240, 160
-        autoencoder_t2 = self._process_autoencoder_modality(normalized_modalities['normalized_t2'])  # 1, 240, 240, 160
-        autoencoder_flair = self._process_autoencoder_modality(normalized_modalities['normalized_flair'])  # 1, 240, 240, 160
-        return {
-            'autoencoder_t1': autoencoder_t1.float(),
-            'autoencoder_t1c': autoencoder_t1c.float(),
-            'autoencoder_t2': autoencoder_t2.float(),
-            'autoencoder_flair': autoencoder_flair.float()
-        }
+    def _load_torch(self, path_latent):
+        return torch.load(path_latent, map_location="cpu").squeeze(0)
+    def _normalize(self, data):
+        normalized = self.intensity(data)
+        return torch.as_tensor(normalized).unsqueeze(0)  # 1, 240, 240, 155
+    def _pad(self, data):
+        padded = self.autoencoder_pad(data)
+        return torch.as_tensor(padded)  # 1, 240, 240, 160
+    # def _process_mask(self, data):
+    #     return torch.as_tensor(data).unsqueeze(0)  # 1, 240, 240, 155
+    # def _process_interpolation(self, original, mode='nearest'):
+    #     latent = torch.nn.functional.interpolate(
+    #         original.unsqueeze(0),
+    #         size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
+    #         mode=mode
+    #     )[0]
+    #     return latent  # 4, 60, 60, 40
 
     def __len__(self):
         return len(self.samples)
     
     def __getitem__(self, idx):
-        if self.mode == 'training':
+        if self.mode == 'autoencoder':
+            patient, modality = self.samples[idx]
+            affine = self._get_affine(self._get_file_modality(patient, modality))
+            normalized_modality = self._normalize(self._get_data(self._get_file_modality(patient, modality)))  # 1, 240, 240, 155   
+            padded_modality = self._pad(normalized_modality)  # 1, 256, 256, 256
+
+            return {
+                'patient': patient,
+                    
+                'affine': affine,
+                'normalized_modality': normalized_modality.float(),
+
+                'modality': modality,
+                'padded_modality': padded_modality.float(),
+            }
+
+        elif self.mode == 'training':
             patient, modality = self.samples[idx]
 
             if self.use_latents:
-                path_latent_modality = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40 or 1, 4, 32, 32, 20
-                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40 or 4, 32, 32, 20
+                latent_modality = self._load_torch(self._get_file_latent_modality(patient, modality))  # 4, 64, 64, 40 or 4, 32, 32, 20
                 return_ = {
                     'modality': modality,
-                    'latent_modality': latent_modalitiy.float(),
+                    'latent_modality': latent_modality.float(),
                 }
 
                 if self.mask_conditioning is not None:
-                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 8, 32, 32, 20
-                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 8, 32, 32, 20
+                    conditioning = self._load_torch(self._get_file_latent_conditioning(patient))  # 8, 64, 64, 40 or 8, 32, 32, 20
                     return_['conditioning'] = conditioning.float()
 
                 return return_
             else:
                 raise NotImplementedError("Training without latents is not implemented.")
-
-                data_modalities = self._collect_data_modalities(patient)
-                # original_modalities = self._collect_original_modalities(data_modalities)
-                normalized_modalities = self._collect_normalized_modalities(data_modalities)
-                autoencoder_modalities = self._collect_autoencoder_modalities(normalized_modalities)
-
-                data_growth_model = self._get_data(self._get_file_growth_model(patient))
-                data_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))
-                original_conditioning = create_conditioning(data_growth_model, data_tissue_segmentation)  # 4, 240, 240, 155
-                latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
-
-                return {
-                    'mode': self.mode,
-                    'patient': patient,
-                    'affine': affine,
-                    'normalized_modalities': normalized_modalities,
-                    'autoencoder_modalities': autoencoder_modalities,
-                    'original_conditioning': original_conditioning.float(),
-                    'latent_conditioning': latent_conditioning.float()
-                }
         
         elif self.mode == 'validation':
             patient, modality = self.samples[idx]
@@ -444,11 +411,8 @@ class DataSet(Dataset):
             affine = self._get_affine(self._get_file_modality(patient, modality))
 
             if self.use_latents:
-                data_modality = self._get_data(self._get_file_modality(patient, modality))
-                normalized_modality = self._process_normalized_modality(data_modality)  # 1, 240, 240, 155
-                
-                path_latent_modality = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_{modality}.pt'  # 1, 4, 64, 64, 40 or 1, 4, 32, 32, 20
-                latent_modalitiy = torch.load(path_latent_modality, map_location="cpu").squeeze(0)  # 4, 64, 64, 40 or 4, 32, 32, 20
+                normalized_modality = self._normalize(self._get_data(self._get_file_modality(patient, modality)))  # 1, 240, 240, 155                
+                latent_modality = self._load_torch(self._get_file_latent_modality(patient, modality))  # 4, 64, 64, 40 or 4, 32, 32, 20
                 
                 return_ = {
                     'mode': self.mode,
@@ -458,12 +422,11 @@ class DataSet(Dataset):
                     'normalized_modality': normalized_modality.float(),
 
                     'modality': modality,
-                    'latent_modality': latent_modalitiy.float(),
+                    'latent_modality': latent_modality.float(),
                 }
 
                 if self.mask_conditioning is not None:
-                    path_conditioning = self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'  # 8, 64, 64, 40 or 8, 32, 32, 20
-                    conditioning = torch.load(path_conditioning, map_location="cpu")  # 8, 64, 64, 40 or 8, 32, 32, 20
+                    conditioning = self._load_torch(self._get_file_latent_conditioning(patient))  # 8, 64, 64, 40 or 8, 32, 32, 20
                     return_['conditioning'] = conditioning.float()
 
                 return return_
@@ -476,12 +439,12 @@ class DataSet(Dataset):
             affine = self._get_affine(self._get_file_modality(patient, 't1'))
 
             data_t1 = self._get_data(self._get_file_modality(patient, 't1'))
-            original_t1 = self._process_original_modality(data_t1)  # 1, 240, 240, 155
+            original_t1 = self._to_torch(data_t1)  # 1, 240, 240, 155
 
             data_t1_voided = self._get_data(self._get_file_modality_voided(patient, mask, 't1'))
-            original_t1_voided = self._process_original_modality(data_t1_voided)  # 1, 240, 240, 155
-            normalized_t1_voided = self._process_normalized_modality(data_t1_voided)  # 1, 240, 240, 155
-            autoencoder_t1_voided = self._process_autoencoder_modality(normalized_t1_voided)  # 1, 240, 240, 160
+            original_t1_voided = self._to_torch(data_t1_voided)  # 1, 240, 240, 155
+            normalized_t1_voided = self._normalize(data_t1_voided)  # 1, 240, 240, 155
+            autoencoder_t1_voided = self._pad(normalized_t1_voided)  # 1, 240, 240, 160
             
             original_mask = self._process_mask(self._get_data(self._get_file_mask(patient, mask)))  # 1, 240, 240, 155
             latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
@@ -521,9 +484,9 @@ class DataSet(Dataset):
             affine = self._get_affine(path_data_challenge_t1_voided)
 
             data_t1_voided = self._get_data(path_data_challenge_t1_voided)
-            original_t1_voided = self._process_original_modality(data_t1_voided)  # 1, 240, 240, 155
-            normalized_t1_voided = self._process_normalized_modality(data_t1_voided)  # 1, 240, 240, 155
-            autoencoder_t1_voided = self._process_autoencoder_modality(normalized_t1_voided)  # 1, 240, 240, 160
+            original_t1_voided = self._to_torch(data_t1_voided)  # 1, 240, 240, 155
+            normalized_t1_voided = self._normalize(data_t1_voided)  # 1, 240, 240, 155
+            autoencoder_t1_voided = self._pad(normalized_t1_voided)  # 1, 240, 240, 160
 
             original_mask = self._process_mask(self._get_data(path_data_challenge_mask))  # 1, 240, 240, 155
             latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
@@ -593,16 +556,38 @@ class DataSet(Dataset):
         new_affine = affine.copy()
         new_affine[:3, 3] = affine[:3, 3] + R @ start
         return new_affine
+    def _process_baseline_modality(self, normalized_modality, baseline_slices):  
+        baseline_modality = normalized_modality.squeeze(0)[baseline_slices].unsqueeze(0)
+        assert baseline_modality.shape == (1, *self.baseline_shape)
+        return torch.as_tensor(baseline_modality)
     def _process_baseline_conditioning(self, data_growth_model, data_tissue_segmentation, baseline_slices):
         baseline_growth_model = data_growth_model[baseline_slices]
         baseline_tissue_segmentation = data_tissue_segmentation[baseline_slices]
         baseline_conditioning = create_conditioning(baseline_growth_model, baseline_tissue_segmentation)
         assert baseline_conditioning.shape == (4, *self.baseline_shape)
         return baseline_conditioning
-    def _process_baseline_modality(self, normalized_modality, baseline_slices):  
-        baseline_modality = normalized_modality.squeeze(0)[baseline_slices].unsqueeze(0)
-        assert baseline_modality.shape == (1, *self.baseline_shape)
-        return torch.as_tensor(baseline_modality)
+    def _collect_data_modalities(self, patient):
+        data_t1 = self._get_data(self._get_file_modality(patient, 't1'))
+        data_t1c = self._get_data(self._get_file_modality(patient, 't1c'))
+        data_t2 = self._get_data(self._get_file_modality(patient, 't2'))
+        data_flair = self._get_data(self._get_file_modality(patient, 'flair'))
+        return {
+            'data_t1': data_t1.float(),
+            'data_t1c': data_t1c.float(),
+            'data_t2': data_t2.float(),
+            'data_flair': data_flair.float()
+        }
+    def _collect_normalized_modalities(self, data_modalities):
+        normalized_t1 = self._normalize(data_modalities['data_t1'])  # 1, 240, 240, 155
+        normalized_t1c = self._normalize(data_modalities['data_t1c'])  # 1, 240, 240, 155
+        normalized_t2 = self._normalize(data_modalities['data_t2'])  # 1, 240, 240, 155
+        normalized_flair = self._normalize(data_modalities['data_flair'])  # 1, 240, 240, 155
+        return {
+            'normalized_t1': normalized_t1.float(),
+            'normalized_t1c': normalized_t1c.float(),
+            'normalized_t2': normalized_t2.float(),
+            'normalized_flair': normalized_flair.float()
+        }
     def _collect_baseline_modalities(self, normalized_modalities, baseline_crop):
         baseline_t1 = self._process_baseline_modality(normalized_modalities['normalized_t1'], baseline_crop)
         baseline_t1c = self._process_baseline_modality(normalized_modalities['normalized_t1c'], baseline_crop)
