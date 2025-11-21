@@ -54,6 +54,9 @@ args.n_epochs = 1000  # TODO
 args.spatial_dims = 3
 
 
+dir_data = Path('/vol/miltank/users/bilv/data')
+
+
 ####################################################################################################
 # Initialize mlflow and networks
 ####################################################################################################
@@ -100,7 +103,7 @@ set_determinism(seed=42)
 
 # Create data module
 datamodule = DataModule(
-    dir_data=Path('/vol/miltank/users/bilv/data'),
+    dir_data=dir_data,
     use_latents=None,
     mask_conditioning=None,
     modality_conditioning=None,
