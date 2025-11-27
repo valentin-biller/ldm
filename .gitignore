@@ -6,6 +6,7 @@ temp*
 
 **/sbtc.tar
 **/f8d16_vae.pt
+**/maisi_f8_vae.pt
 **/maisi_vae_finetuned.pt
 
 # Python-generated files

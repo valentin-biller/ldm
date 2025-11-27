@@ -30,3 +30,6 @@ uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 5 --model dit --s
 
 ### unet: iddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 8 --model unet --scheduler iddpm --mask_conditioning 32 --latent_shape 4,32,32,20
 ###  dit: iddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 9 --model dit --scheduler iddpm --mask_conditioning 32 --latent_shape 4,32,32,20
+
+### flow matching ###
+### dit: flow_matching - mask: 64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 10 --model dit --scheduler flow_matching --mask_conditioning 64

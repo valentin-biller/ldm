@@ -158,7 +158,7 @@ class DataModule(L.LightningDataModule):
         groups_val = self._count_prefixes('Val', patients_val, prefixes)
 
         # Oversampling
-        if self.oversampling and self.mode in ['training', 'baseline']:
+        if self.oversampling and self.mode in ['autoencoder', 'training', 'baseline']:
             patients_train = self._oversample_prefixes(groups_train)
             groups_train = self._count_prefixes('Train Oversampling', patients_train, prefixes)
             self._print_numbers('Train', patients_train)

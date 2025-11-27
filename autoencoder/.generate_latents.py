@@ -10,6 +10,7 @@ from monai import transforms
 from torchmetrics.image import PeakSignalNoiseRatio
 
 from maisi_autoencoder import MaisiAutoencoder
+from maisi_f8_autoencoder import MaisiF8Autoencoder
 from f8d16_autoencoder import F8D16Autoencoder
 
 
@@ -19,59 +20,78 @@ dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
 path_ae_latent = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent.pkl")
 path_ae_latent_patients = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent_patients.pkl")
 
-latent_shape = (4, 32, 32, 20)  # (4, 64, 64, 40) or (4, 32, 32, 20)
-domain = ['modality', 'condition']  # 'modality' and/or 'condition'  # TODO
-mode = []  # 'ae_latent' and/or 'psnr'  # TODO
-save_latent_modality = True  # TODO
 
+models = {
+    'maisi_autoencoder': (4, 64, 64, 40),
+    'maisi_f8_autoencoder': (4, 32, 32, 20),
+    'f8d16_autoencoder': (4, 32, 32, 20),
+}
+
+model = 'maisi_f8_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
+domain = ['modality']  # 'modality' and/or 'condition'  # TODO
+mode = ['psnr']  # 'ae_latent' and/or 'psnr'  # TODO
+save_latent_modality = False  # TODO
+
+
+# initialization
+MODALITIES = ['t1', 't1c', 't2', 'flair']
 shape_pad = (256, 256, 160)
-if latent_shape == (4, 64, 64, 40):
-    intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
-elif latent_shape == (4, 32, 32, 20):
-    intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
 autoencoder_pad = transforms.SpatialPad(spatial_size=shape_pad)
 autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
-
-MODALITIES = ['t1', 't1c', 't2', 'flair']
-if latent_shape == (4, 64, 64, 40):
+device = torch.device("cuda")
+if model == 'maisi_autoencoder':
+    latent_shape = models['maisi_autoencoder']
+    intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
     path_autoencoder = dir_autoencoder / 'maisi_vae.pt'
-elif latent_shape == (4, 32, 32, 20):
-    path_autoencoder = dir_autoencoder / 'f8d16_vae.pt'
+    autoencoder = MaisiAutoencoder(path_autoencoder=str(path_autoencoder), device=device)
 
+    # latent stats
+    with path_ae_latent.open("rb") as f:
+        ae_latent = pickle.load(f)
+    print(json.dumps(ae_latent, indent=4))
+    if path_ae_latent_patients.exists():
+        with path_ae_latent_patients.open("rb") as f:
+            ae_latent_patients = pickle.load(f)
+    else:
+        ae_latent_patients = {stat: {modality: {} for modality in MODALITIES} for stat in ('mean', 'std', 'min', 'max')}
+
+elif model == 'maisi_f8_autoencoder':
+    latent_shape = models['maisi_f8_autoencoder']
+    intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
+    path_autoencoder = dir_autoencoder / 'maisi_f8_vae.pt'
+    autoencoder = MaisiF8Autoencoder(path_autoencoder=str(path_autoencoder), device=device)
+
+    assert 'ae_latent' not in mode, "Latent stats not supported for MAISI F8 autoencoder yet."
+
+elif model == 'f8d16_autoencoder':
+    latent_shape = models['f8d16_autoencoder']
+    intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
+    path_autoencoder = dir_autoencoder / 'f8d16_vae.pt'
+    autoencoder = F8D16Autoencoder(path_autoencoder=str(path_autoencoder), device=device)
+
+    assert 'ae_latent' not in mode, "Latent stats not supported for F8D16 autoencoder yet."
+
+else:
+    raise ValueError(f"Unsupported model: {model}")
 
 # psnr
 def psnr(reconstructed, original):
     psnr = PeakSignalNoiseRatio()
     return psnr(preds=reconstructed, target=original)
 
-
-# latent stats
-if latent_shape == (4, 64, 64, 40):
-    with path_ae_latent.open("rb") as f:
-        ae_latent = pickle.load(f)
-    print(json.dumps(ae_latent, indent=4))
-if latent_shape == (4, 32, 32, 20):
-    assert 'ae_latent' not in mode, "Latent stats not supported for F8D16 autoencoder yet."
-
-
 # autoencoder
-device = torch.device("cuda")
-if latent_shape == (4, 64, 64, 40):
-    autoencoder = MaisiAutoencoder(path_autoencoder=str(path_autoencoder), device=device)
-elif latent_shape == (4, 32, 32, 20):
-    autoencoder = F8D16Autoencoder(path_autoencoder=str(path_autoencoder), device=device)
 def _get_encoded(autoencoder, autoencoder_modality):
     latent_modality = autoencoder.encode(autoencoder_modality)  # (B, 4, 64, 64, 40)
     return latent_modality
 def _get_decoded(autoencoder, latent_modality):
     reconstructed_modality = autoencoder.decode(latent_modality).squeeze(0)
-    if latent_shape == (4, 64, 64, 40):
+    if model in ['maisi_autoencoder', 'maisi_f8_autoencoder']:
         reconstructed_modality = torch.clamp(reconstructed_modality, 0.0, 1.0)  # B, 256, 256, 160
-    elif latent_shape == (4, 32, 32, 20):
+    elif model == 'f8d16_autoencoder':
         reconstructed_modality = torch.clamp(reconstructed_modality, -1.0, 1.0)  # 1, 256, 256, 160 
     else:
-        raise ValueError("Unsupported latent shape.")
+        raise ValueError("Unsupported model.")
     reconstructed_modality = autoencoder_crop(reconstructed_modality)  # B, 240, 240, 155
     return reconstructed_modality
 def _encode(data):
@@ -130,12 +150,6 @@ count_patients = 0
 count_psnr_below_threshold = 0
 psnr_normalized_total = []
 
-if path_ae_latent_patients.exists():
-    with path_ae_latent_patients.open("rb") as f:
-        ae_latent_patients = pickle.load(f)
-else:
-    ae_latent_patients = {stat: {modality: {} for modality in MODALITIES} for stat in ('mean', 'std', 'min', 'max')}
-
 latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}"
 
 pbar = tqdm(sorted(dir_data.iterdir()))
@@ -186,13 +200,13 @@ for folder in pbar:
                     pickle.dump(ae_latent_patients, f, protocol=pickle.HIGHEST_PROTOCOL)
                 
             if 'psnr' in mode:
-                # nib.save(nib.Nifti1Image(latent_modality[0][0].cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/maisi/temp/{patient}_{modality}_latent.nii.gz')
+                # nib.save(nib.Nifti1Image(latent_modality[0][0].cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_latent.nii.gz')
 
                 reconstructed_modality = _get_decoded(autoencoder, latent_modality)  # B, 240, 240, 155
                 assert (reconstructed_modality.min() >= 0.0 or reconstructed_modality.min() >= -1.0) and reconstructed_modality.max() <= 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
 
-                # nib.save(nib.Nifti1Image(reconstructed_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/maisi/temp/{patient}_{modality}_reconstructed.nii.gz')
-                # nib.save(nib.Nifti1Image(normalized_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/maisi/temp/{patient}_{modality}_normalized.nii.gz')
+                # nib.save(nib.Nifti1Image(reconstructed_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_reconstructed.nii.gz')
+                # nib.save(nib.Nifti1Image(normalized_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_normalized.nii.gz')
 
                 assert reconstructed_modality.shape == normalized_modality.shape
                 psnr_normalized = psnr(reconstructed_modality.to('cpu'), torch.as_tensor(normalized_modality).to('cpu'))
@@ -205,7 +219,7 @@ for folder in pbar:
                 psnr_normalized_total.append(psnr_normalized.item())
                 tqdm.write(f'PSNR Normalized Total: {sum(psnr_normalized_total) / len(psnr_normalized_total)}')
 
-                # dir_temp = Path(f'/vol/miltank/users/bilv/ldm/maisi/output/{patient}')
+                # dir_temp = Path(f'/vol/miltank/users/bilv/ldm/autoencoder/output/{patient}')
                 # dir_temp.mkdir(parents=True, exist_ok=True)
                 # nib.save(nib.Nifti1Image(original.float().numpy(), np.eye(4)), dir_temp / 't1_original.nii.gz')
                 # nib.save(nib.Nifti1Image(reconstruction.float().numpy(), np.eye(4)), dir_temp / 't1_reconstruction.nii.gz')

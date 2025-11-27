@@ -8,7 +8,7 @@ class MaisiAutoencoder():
     def __init__(self, path_autoencoder, device):
 
         config_dict = {
-            "_target_": "models.autoencoderkl_maisi.AutoencoderKlMaisi", 
+            "_target_": "networks.autoencoderkl_maisi.AutoencoderKlMaisi", 
             "ckpt_path": path_autoencoder,
             "spatial_dims": 3,
             "in_channels": 1,

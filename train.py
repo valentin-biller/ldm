@@ -45,7 +45,7 @@ def main():
     parser.add_argument("--mask_conditioning", type=str, default="64", choices=["64", "32", "none"], help="Mask Conditioning")
     parser.add_argument("--modality_conditioning", action="store_false", help="Disable Modality Conditioning")
     parser.add_argument("--denoising", type=str, default="own", choices=["own", "repaint"], help="Denoising Type")
-    parser.add_argument("--scheduler", type=str, default="ddpm", choices=["ddpm", "iddpm"], help="Scheduler Type")
+    parser.add_argument("--scheduler", type=str, default="ddpm", choices=["ddpm", "iddpm", "flow_matching"], help="Scheduler Type")
     parser.add_argument("--latent_shape", type=str, default="4,64,64,40", choices=["4,64,64,40", "4,32,32,20"], help="Latent Shape")
     parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning Rate")
 

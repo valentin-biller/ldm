@@ -1,5 +1,7 @@
-import torch
 import schedulers_helper
+
+from flow_matching.path import AffineProbPath
+from flow_matching.path.scheduler import CondOTScheduler
 from monai.networks.schedulers import DDPMScheduler, DDIMScheduler
 
 class Scheduler():
@@ -70,22 +72,11 @@ class Scheduler():
             )
 
             self.scheduler = schedulers_helper.LossSecondMomentResampler(self.diffusion)  # schedule_sampler loss-second-moment
-
-# def run(self, batch, cond):
-#     t, weights = self.scheduler.sample(batch_size)
-
-#     compute_losses = functools.partial(
-#         self.diffusion.training_losses,
-#         self.ddp_model,
-#         micro,
-#         t,
-#         model_kwargs=micro_cond,
-#     )
-
-#     losses = compute_losses()
-#     if isinstance(self.scheduler, LossAwareSampler):
-#         self.scheduler.update_with_local_losses(
-#             t, losses["loss"].detach()
-#         )
-
-#     loss = (losses["loss"] * weights).mean()
+        elif self.scheduler_ == 'flow_matching':
+            pass
+            self.path = AffineProbPath(scheduler=CondOTScheduler())
+            self.solver_config = {
+                "method": "euler",
+                "step_size": 0.01,  # Solver step size for numeric integration
+                "time_points": 10,  # Number of time points for intermediate sampling or evaluation (must be ≤ 1 / step_size + 1).
+            }

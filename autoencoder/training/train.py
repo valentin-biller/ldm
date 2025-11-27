@@ -15,6 +15,10 @@ from maisi_f8_autoencoder import MaisiF8Autoencoder
 import math
 import mlflow
 import nibabel as nib
+from tqdm import tqdm
+from monai import transforms
+from torchmetrics.image import PeakSignalNoiseRatio
+autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
 
 import argparse
@@ -36,7 +40,7 @@ from torch.optim import lr_scheduler
 # Configuration
 args = argparse.Namespace()
 
-args.batch_size = 4  # TODO
+args.batch_size = 2  # TODO
 args.patch_size = [64, 64, 64]
 args.val_batch_size = 1
 args.val_patch_size = None
@@ -54,7 +58,7 @@ args.n_epochs = 1000  # TODO
 args.spatial_dims = 3
 
 
-dir_data = Path('/vol/miltank/users/bilv/data')
+dir_data = '/vol/miltank/users/bilv/data'
 
 
 ####################################################################################################
@@ -228,7 +232,7 @@ for epoch in range(start_epoch, max_epochs):
     discriminator.train()
     train_epoch_losses = {"recons_loss": 0, "kl_loss": 0, "p_loss": 0}
 
-    for batch in dataloader_train:
+    for batch in tqdm(dataloader_train):
         # images = batch["image"].to(device).contiguous()
         images = batch["padded_modality"].to(device).contiguous()
         optimizer_g.zero_grad(set_to_none=True)
@@ -300,7 +304,7 @@ for epoch in range(start_epoch, max_epochs):
         autoencoder.eval()
         val_epoch_losses = {"recons_loss": 0, "kl_loss": 0, "p_loss": 0}
         val_loader_iter = iter(dataloader_val)
-        for batch in dataloader_val:
+        for batch in tqdm(dataloader_val):
             with torch.no_grad():
                 with autocast("cuda", enabled=args.amp):
                     # images = batch["image"]
@@ -308,14 +312,13 @@ for epoch in range(start_epoch, max_epochs):
                     reconstruction, z_mu, z_sigma = dynamic_infer(val_inferer, autoencoder, images)
                     reconstruction = reconstruction.to(device)
 
-                    ### saving ###
-                    dir_output = dir_output_model.parent / "images"
+                    ### saving & psnr ###
+                    dir_output = dir_output_model.parent / "images" / f"epoch_{epoch}"
 
                     patients = batch["patient"]
                     affines = batch["affine"].cpu().float().numpy()
                     modality = batch["modality"]
                     normalized = batch["normalized_modality"].cpu().float().numpy()
-                    reconstructed = reconstruction.detach().cpu().float().numpy()
 
                     for i, (patient, modality_) in enumerate(zip(patients, modality)):
                         dir_patient = dir_output / patient
@@ -324,14 +327,17 @@ for epoch in range(start_epoch, max_epochs):
                         affine = affines[i]
                         
                         normalized_modality = normalized[i][0]  # (240, 240, 155)
-                        reconstructed_modality = reconstructed[i][0]  # (240, 240, 155)
+                        reconstructed_modality = autoencoder_crop(reconstruction[i])[0].detach().cpu().float().numpy()  # (240, 240, 155)
 
                         normalized_modality_nii = nib.Nifti1Image(normalized_modality, affine)
                         reconstructed_modality_nii = nib.Nifti1Image(reconstructed_modality, affine)
 
                         nib.save(normalized_modality_nii, dir_patient / f"normalized_{modality_}.nii.gz")
                         nib.save(reconstructed_modality_nii, dir_patient / f"reconstructed_{modality_}.nii.gz")
-                    ### saving ###
+                    
+                    psnr = PeakSignalNoiseRatio()
+                    print(f"PSNR: {psnr(preds=reconstruction.to('cpu'), target=images.to('cpu'))}")
+                    ### saving & psnr ###
 
                     val_epoch_losses["recons_loss"] += intensity_loss(reconstruction, images.to(device)).item()
                     val_epoch_losses["kl_loss"] += KL_loss(z_mu, z_sigma).item()

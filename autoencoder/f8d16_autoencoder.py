@@ -1,8 +1,8 @@
 import sys
 from pathlib import Path
 dir_current = Path(__file__).resolve().parent
-dir_autoencoder_models = dir_current/ 'models'
-sys.path.append(str(dir_autoencoder_models))
+dir_autoencoder_networks = dir_current/ 'networks'
+sys.path.append(str(dir_autoencoder_networks))
 
 import torch
 import nibabel as nib

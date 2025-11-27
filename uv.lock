@@ -694,6 +694,22 @@ wheels = [
 ]
 
 [[package]]
+name = "flow-matching"
+version = "1.0.10"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "torch", version = "2.2.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform == 'darwin'" },
+    { name = "torch", version = "2.2.0+cu121", source = { registry = "https://download.pytorch.org/whl/cu121" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torch", version = "2.6.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torchdiffeq" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/52/5d/e92c12d1df3d685c595371a9dcae5ce4c79d0e095c07217b80d02bfe5333/flow_matching-1.0.10.tar.gz", hash = "sha256:b9cebb2534a1bead4fd8b6af9269cf75da88335adec629865be41e5f93bf5821", size = 33400, upload-time = "2024-12-18T14:51:53.803Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/05/13/80d356a38b976df17be3fc3208da468488d5af7437aab4a694cd35432610/flow_matching-1.0.10-py3-none-any.whl", hash = "sha256:9e7bb6c51b5804bbb1450f59fbd04e2f843adc0b7665d0f4f341f420dce04136", size = 48680, upload-time = "2024-12-18T14:51:51.431Z" },
+]
+
+[[package]]
 name = "fonttools"
 version = "4.58.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1449,6 +1465,7 @@ dependencies = [
     { name = "blobfile" },
     { name = "brainles-preprocessing" },
     { name = "brats" },
+    { name = "flow-matching" },
     { name = "itk-elastix" },
     { name = "lightning" },
     { name = "loguru" },
@@ -1482,6 +1499,7 @@ requires-dist = [
     { name = "blobfile", specifier = ">=3.0.0" },
     { name = "brainles-preprocessing" },
     { name = "brats", specifier = ">=0.0.20" },
+    { name = "flow-matching", specifier = ">=1.0.10" },
     { name = "itk-elastix", specifier = ">=0.23.0" },
     { name = "lightning", specifier = ">=2.5.2" },
     { name = "loguru", specifier = ">=0.7.3" },
@@ -3856,6 +3874,21 @@ dependencies = [
     { name = "setuptools", marker = "python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "sympy", marker = "sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "typing-extensions", marker = "sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'" },
+]
+
+[[package]]
+name = "torchdiffeq"
+version = "0.2.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "scipy" },
+    { name = "torch", version = "2.2.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform == 'darwin'" },
+    { name = "torch", version = "2.2.0+cu121", source = { registry = "https://download.pytorch.org/whl/cu121" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torch", version = "2.6.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/87/ec/a40aa124660f0ee65e6760cb53df6a82ad91a1a3ef1da5e747f1336644dd/torchdiffeq-0.2.5.tar.gz", hash = "sha256:b50d3760d13fd138dcceac651f4b80396f44fefcebd037a033fecfeaa9cc12e7", size = 31197, upload-time = "2024-11-21T20:20:11.552Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b9/35/537f64f2d0b3cfebaae0f903b4e3a3b239abcc99d0f73cb15b9cee9b8212/torchdiffeq-0.2.5-py3-none-any.whl", hash = "sha256:aa1db4bed13bd04952f28a53cdf4336d1ab60417c1d9698d7a239fec1cf2bcf8", size = 32902, upload-time = "2024-11-21T20:20:09.938Z" },
 ]
 
 [[package]]

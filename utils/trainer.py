@@ -29,12 +29,14 @@ import skimage.exposure
 from scipy.ndimage import binary_dilation, gaussian_filter
 
 from monai import transforms
+from flow_matching.solver import ODESolver
 
 import helpers
 import schedulers
 from model_unet import UNet
 from model_dit import DiT_Custom
 from maisi_autoencoder import MaisiAutoencoder
+from maisi_f8_autoencoder import MaisiF8Autoencoder
 from f8d16_autoencoder import F8D16Autoencoder
 
 
@@ -54,7 +56,7 @@ class LatentDiffusion(L.LightningModule):
         mask_conditioning=64,  # 64, 32, None
         modality_conditioning=True,  # True, False
         denoising='own', # own, repaint
-        scheduler_='ddpm',  # ddpm, iddpm
+        scheduler_='ddpm',  # ddpm, iddpm, flow_matching
         latent_shape=None,
         learning_rate=1e-4,
         num_train_timesteps=1000,  # TODO 4000 for iddpm (fixed in schedulers.py)
@@ -98,10 +100,18 @@ class LatentDiffusion(L.LightningModule):
         self._scheduler_ = schedulers.Scheduler(self.scheduler_, self.num_train_timesteps, self.num_inference_steps)
         if self.scheduler_ == 'ddpm':
             self.scheduler_training = self._scheduler_.scheduler_training
-            self.scheduler_inference = self._scheduler_.scheduler_inference
+            if self.num_inference_steps <= 100:  # TODO
+                print('========== USING DDIM FOR INFERENCE =============')
+                self.scheduler_inference = self._scheduler_.scheduler_inference
+            else:
+                print('========== USING DDPM FOR INFERENCE =============')
+                self.scheduler_inference = self.scheduler_training
         elif self.scheduler_ == 'iddpm':
             self.scheduler = self._scheduler_.scheduler
             self.diffusion = self._scheduler_.diffusion
+        elif self.scheduler_ == 'flow_matching':
+            self.path = self._scheduler_.path
+            self.solver_config = self._scheduler_.solver_config
 
         # Autoencoders latent mean and std
         if self.use_distribution_shift:
@@ -142,12 +152,15 @@ class LatentDiffusion(L.LightningModule):
         Modular function to get noise prediction from (ControlNet +) UNet
         """
         modality = torch.tensor([self.modality_class_mapping[m] for m in modality], device=self.device, dtype=torch.long)
+
         noise_pred = self.model.forward(sample, timesteps, modality, conditioning)
 
         if self.scheduler_ == 'ddpm':
             _debugging_noise_pred = noise_pred
         elif self.scheduler_ == 'iddpm':
             _debugging_noise_pred = noise_pred[:, :4]  # only epsilon head
+        elif self.scheduler_ == 'flow_matching':
+            _debugging_noise_pred = noise_pred
 
         # Debugging
         if self.training:
@@ -183,55 +196,78 @@ class LatentDiffusion(L.LightningModule):
                 print('DEBUGGING Adding noise to self.volume_temporal_previous')
                 sample = self.scheduler_training.add_noise(self.volume_temporal_previous, sample, torch.tensor([100], device=self.device))
 
-        # Denoising loop
-        for t in list(range(self.num_inference_steps))[::-1]:
-            t = torch.tensor([t], device=self.device, dtype=torch.long)
-            
-            # inpainting
-            if latent_voided is not None and latent_mask is not None:
-                # Pixel injection: preserve known regions (add noise to ground truth based on timestep)
-                noise_gt = torch.randn(
-                    (batch_size, *self.latent_shape),
-                    device=self.device
-                )
-                noisy_gt = self.scheduler_training.add_noise(latent_voided, noise_gt, t)
-                sample = (sample * dilated_mask + noisy_gt * (1 - dilated_mask)).float()
-
-            if self.scheduler_ == 'ddpm':
-                noise_pred = self._predict_noise(
-                    sample,
-                    t.expand(batch_size),
-                    modality=modality,
-                    conditioning=conditioning,
-                )
-                # Denoising step
-                pred_prev_sample, pred_original_sample = self.scheduler_inference.step(noise_pred, t, sample)
-
-            elif self.scheduler_ == 'iddpm':
-                out = self.diffusion.p_sample(
-                    self._predict_noise,
-                    sample,
-                    t.expand(batch_size),
-                    clip_denoised=False,
-                    model_kwargs={"modality": modality, "conditioning": conditioning},
-                )
-                pred_prev_sample, pred_original_sample = out["sample"], out["pred_xstart"]
+        if self.scheduler_ in ['ddpm', 'iddpm']:
+            # Denoising loop
+            for t in list(range(self.num_inference_steps))[::-1]:
+                t = torch.tensor([t], device=self.device, dtype=torch.long)
                 
-            sample = pred_prev_sample
+                # inpainting
+                if latent_voided is not None and latent_mask is not None:
+                    # Pixel injection: preserve known regions (add noise to ground truth based on timestep)
+                    noise_gt = torch.randn(
+                        (batch_size, *self.latent_shape),
+                        device=self.device
+                    )
+                    noisy_gt = self.scheduler_training.add_noise(latent_voided, noise_gt, t)
+                    sample = (sample * dilated_mask + noisy_gt * (1 - dilated_mask)).float()
 
-            # Debugging
-            if t % 100 == 0 or t <= 10:
-                helpers._debugging(self, sample, f'denoising/sample/t_{t.item()}', logging_=True, distribution_=True)
-                if self.debugging and self.dir_output_model is not None:
-                    generate_denoising_outputs = {
-                        'timestep': t,
-                        'patients': patients,
-                        'affines': affines,
-                        'modality': modality,
-                        'pred_prev_sample': self._get_decoded(pred_prev_sample),
-                        'pred_original_sample': self._get_decoded(pred_original_sample),
-                    }
-                    helpers._save_generate_denoising_outputs(self, generate_denoising_outputs)
+                if self.scheduler_ == 'ddpm':
+                    noise_pred = self._predict_noise(
+                        sample,
+                        t.expand(batch_size),
+                        modality=modality,
+                        conditioning=conditioning,
+                    )
+                    # Denoising step
+                    pred_prev_sample, pred_original_sample = self.scheduler_inference.step(noise_pred, t, sample)
+
+                elif self.scheduler_ == 'iddpm':
+                    out = self.diffusion.p_sample(
+                        self._predict_noise,
+                        sample,
+                        t.expand(batch_size),
+                        clip_denoised=False,
+                        model_kwargs={"modality": modality, "conditioning": conditioning},
+                    )
+                    pred_prev_sample, pred_original_sample = out["sample"], out["pred_xstart"]
+                    
+                sample = pred_prev_sample
+
+                # Debugging
+                if t % 100 == 0 or t <= 10:
+                    helpers._debugging(self, sample, f'denoising/sample/t_{t.item()}', logging_=True, distribution_=True)
+                    if self.debugging and self.dir_output_model is not None:
+                        generate_denoising_outputs = {
+                            'timestep': t,
+                            'patients': patients,
+                            'affines': affines,
+                            'modality': modality,
+                            'pred_prev_sample': self._get_decoded(pred_prev_sample),
+                            'pred_original_sample': self._get_decoded(pred_original_sample),
+                        }
+                        helpers._save_generate_denoising_outputs(self, generate_denoising_outputs)
+
+        elif self.scheduler_ == 'flow_matching':
+            timesteps_max = 1000
+            solver = ODESolver(
+                velocity_model=lambda x, t, **kwargs: self._predict_noise(
+                    x, 
+                    (t * (timesteps_max - 1)).long().view(1).expand(batch_size), 
+                    **kwargs
+                )
+            )
+
+            time_grid = torch.linspace(0, 1, self.solver_config["time_points"], device=self.device)
+
+            sample = solver.sample(
+                x_init=sample,
+                time_grid=time_grid,
+                method=self.solver_config["method"],
+                step_size=self.solver_config["step_size"],
+                return_intermediates=False,
+                modality=modality,
+                conditioning=conditioning,
+            )
 
         if latent_voided is not None and latent_mask is not None:
             sample = sample * dilated_mask + latent_voided * (1 - dilated_mask)
@@ -320,6 +356,20 @@ class LatentDiffusion(L.LightningModule):
             )
             self.scheduler.update_with_local_losses(timesteps, losses["loss"].detach())
             loss = (losses["loss"] * weights).mean()
+
+        elif self.scheduler_ == 'flow_matching':
+            noise = torch.randn_like(latent_modality)
+            timesteps = torch.rand((batch_size,), device=self.device)
+
+            sample_info = self.path.sample(t=timesteps, x_0=noise, x_1=latent_modality)
+
+            velocity_pred = self._predict_noise(
+                sample=sample_info.x_t,
+                timesteps=sample_info.t,
+                modality=modality,
+                conditioning=conditioning,
+            )
+            loss = torch.nn.functional.mse_loss(velocity_pred, sample_info.dx_t)
 
         self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True)
 

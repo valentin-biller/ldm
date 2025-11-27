@@ -8,7 +8,7 @@ class MaisiF8Autoencoder():
     def __init__(self, path_autoencoder, device):
 
         config_dict = {
-            "_target_": "models.autoencoderkl_maisi.AutoencoderKlMaisi",
+            "_target_": "networks.autoencoderkl_maisi.AutoencoderKlMaisi",
             "ckpt_path": path_autoencoder,
             "spatial_dims": 3,
             "in_channels": 1,
@@ -64,12 +64,12 @@ class MaisiF8Autoencoder():
 
         return config
 
-    # def encode(self, data):
-    #     with torch.no_grad(), torch.autocast(device_type=self.device.type, dtype=torch.float16):
-    #         latent = self.model.sampling(*self.model.encode(data)) * 1.0 # latents variance needs to be scaled, but already is 1.0 for maisi
-    #         return latent
+    def encode(self, data):
+        with torch.no_grad(), torch.autocast(device_type=self.device.type, dtype=torch.float16):
+            latent = self.model.sampling(*self.model.encode(data)) * 1.0 # latents variance needs to be scaled, but already is 1.0 for maisi
+            return latent
         
-    # def decode(self, data):
-    #     with torch.no_grad(), torch.autocast(device_type=self.device.type):
-    #         reconstruction = self.model.decode(data)
-    #         return reconstruction
+    def decode(self, data):
+        with torch.no_grad(), torch.autocast(device_type=self.device.type):
+            reconstruction = self.model.decode(data)
+            return reconstruction
