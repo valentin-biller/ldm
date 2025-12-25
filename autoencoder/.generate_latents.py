@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+dir_current = Path(__file__).resolve().parent
+dir_tumor_growth = dir_current.parent.parent / '.tumor_growth'  # tumor growth
+sys.path.append(str(dir_tumor_growth))
+
 import json
 import torch
 import shutil
@@ -13,6 +19,8 @@ from maisi_autoencoder import MaisiAutoencoder
 from maisi_f8_autoencoder import MaisiF8Autoencoder
 from f8d16_autoencoder import F8D16Autoencoder
 
+from TumorGrowthToolkit.FK import Solver
+
 
 dir_data = Path('/vol/miltank/users/bilv/data')
 dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
@@ -27,14 +35,22 @@ models = {
     'f8d16_autoencoder': (4, 32, 32, 20),
 }
 
-model = 'maisi_f8_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
-domain = ['modality']  # 'modality' and/or 'condition'  # TODO
+model = 'maisi_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
+domain = ['condition']  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
 mode = ['psnr']  # 'ae_latent' and/or 'psnr'  # TODO
 save_latent_modality = False  # TODO
 
 
 # initialization
 MODALITIES = ['t1', 't1c', 't2', 'flair']
+
+tumor_concentrations = {
+    'random_1': [0.35, 0.35, 0.35],
+    'random_2': [0.35, 0.65, 0.65],
+    'random_3': [0.65, 0.35, 0.65],
+    'spatio_temporal': [0.5, 0.5, 0.5],
+}
+
 shape_pad = (256, 256, 160)
 autoencoder_pad = transforms.SpatialPad(spatial_size=shape_pad)
 autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
@@ -94,56 +110,44 @@ def _get_decoded(autoencoder, latent_modality):
         raise ValueError("Unsupported model.")
     reconstructed_modality = autoencoder_crop(reconstructed_modality)  # B, 240, 240, 155
     return reconstructed_modality
-def _encode(data):
-    normalized = _process_normalized_modality(data)  # 1, 240, 240, 155
-    assert (normalized.min() == 0.0 or normalized.min() == -1.0) and normalized.max() == 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
+def _encode(data, normalize=True):
+    if normalize:
+        normalized = _normalize(data)  # 1, 240, 240, 155
+        assert (normalized.min() == 0.0 or normalized.min() == -1.0) and normalized.max() == 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
+    else:
+        normalized = torch.as_tensor(data).unsqueeze(0).float()  # 1, 240, 240, 155
 
-    autoencoder_ = _process_autoencoder_modality(normalized).unsqueeze(0).to("cuda")  # 1, 1, 256, 256, 256
+    autoencoder_ = _pad(normalized).unsqueeze(0).to("cuda")  # 1, 1, 256, 256, 256
     assert autoencoder_.shape == (1, 1, shape_pad[0], shape_pad[1], shape_pad[2]), f"Expected shape (1, 1, {shape_pad[0]}, {shape_pad[1]}, {shape_pad[2]}), got {autoencoder_.shape}"
-    assert (autoencoder_.min() == 0.0 or autoencoder_.min() == -1.0) and autoencoder_.max() == 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
+    assert (autoencoder_.min() >= 0.0 or autoencoder_.min() >= -1.0) and autoencoder_.max() <= 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
 
     latent = _get_encoded(autoencoder, autoencoder_)  # B, 4, 64, 64, 40
     return latent, normalized
 
 
-# data
+# loading with nibabel
 def _get_data(file_path):
     img = nib.load(file_path)
     return torch.as_tensor(img.get_fdata())
-def _process_normalized_modality(data):
-    normalized_modality = intensity(data)
-    return torch.as_tensor(normalized_modality).unsqueeze(0)  # 1, 240, 240, 155
-def _process_autoencoder_modality(normalized_modality):
-    autoencoder_modality = autoencoder_pad(normalized_modality)
-    return torch.as_tensor(autoencoder_modality)  # 1, 240, 240, 160
+
+# get files default
 def _get_file_growth_model(patient):
-        return dir_data / patient / 'processed' / 'growth_model.nii.gz'
+    return dir_data / patient / 'processed' / 'growth_model.nii.gz'
 def _get_file_tissue_segmentation(patient):
     return dir_data / patient / 'processed' / 'tissue_segmentation.nii.gz'
-def create_conditioning(growth_model, tissue_segmentation, threshold=0.001):
-    """
-    Create 4-channel conditioning:
-    - Channel 0: Growth model (threshold)
-    - Channels 1-3: Tissue segmentation one-hot
-    """
-    # Apply threshold: values < threshold → 0, values >= threshold → keep
-    growth_model = np.where(growth_model >= threshold, growth_model, 0.0)
-    # Create one-hot encoding for tissue segmentation
-    tissue_segmentation_1 = np.where(tissue_segmentation == 1, 1.0, 0.0)  # Tissue type 1
-    tissue_segmentation_2 = np.where(tissue_segmentation == 2, 1.0, 0.0)  # Tissue type 2  
-    tissue_segmentation_3 = np.where(tissue_segmentation == 3, 1.0, 0.0)  # Tissue type 3
 
-    conditioning = np.stack([growth_model, tissue_segmentation_1, tissue_segmentation_2, tissue_segmentation_3], axis=0)  # 4, 240, 240, 155
-    conditioning = torch.as_tensor(conditioning)
+# processing
+def _normalize(data):
+    normalized = intensity(data)
+    return torch.as_tensor(normalized).unsqueeze(0)  # 1, 240, 240, 155
+def _pad(data):
+    padded = autoencoder_pad(data)
+    return torch.as_tensor(padded)  # 1, 256, 256, 160
 
-    return conditioning
-def _process_interpolation(original, size=(64, 64, 40), mode='nearest'):
-    latent = torch.nn.functional.interpolate(
-        original.unsqueeze(0),
-        size=size,
-        mode=mode
-    )[0]
-    return latent
+# patients val
+with open('/vol/miltank/users/bilv/ldm/utils/.patients_val.txt', "r") as f:
+    patients_val = [line.strip() for line in f if line.strip()]
+
 
 count_patients = 0
 
@@ -160,6 +164,65 @@ for folder in pbar:
     patient = folder.name
     pbar.set_description(f"Patient: {patient}")
 
+    if 'tumor_concentrations' in domain:
+        if patient in patients_val:
+            data_growth_model = _get_data(_get_file_growth_model(patient))  # 240, 240, 155
+            
+            path_grey_matter = folder / 'processed/processed/tissue_segmentation/gm_pbmap.nii.gz'
+            path_white_matter = folder / 'processed/processed/tissue_segmentation/wm_pbmap.nii.gz'
+            data_grey_matter = nib.load(path_grey_matter).get_fdata()
+            data_white_matter = nib.load(path_white_matter).get_fdata()
+
+            for key, value in tumor_concentrations.items():
+                path_result = folder / 'tumor_concentrations' / f'{key}.pt'
+                path_result.parent.mkdir(parents=True, exist_ok=True)
+
+                if not path_result.exists():
+
+                    def run_solver(key, values, data_growth_model):
+
+                        NxT1_pct, NyT1_pct, NzT1_pct = values
+
+                        parameters = {
+                            'Dw': 1.0,          # Diffusion coefficient for white matter
+                            'rho': 0.10,         # Proliferation rate
+                            'RatioDw_Dg': 10,  # Ratio of diffusion coefficients in white and grey matter
+                            'gm': data_grey_matter,      # Grey matter data
+                            'wm': data_white_matter,      # White matter data
+                            'NxT1_pct': NxT1_pct,  # 0.3   # tumor position [%]
+                            'NyT1_pct': NyT1_pct,  # 0.7
+                            'NzT1_pct': NzT1_pct,  # 0.5
+                            'init_scale': 1., #scale of the initial gaussian
+                            'resolution_factor': 0.5, #resultion scaling for calculations
+                            'th_matter': 0.1, #when to stop diffusing: at th_matter > gm+wm
+                            'verbose': True, #printing timesteps 
+                            'time_series_solution_Nt': 64 # number of timesteps in the output  
+                        }
+                        fk_solver = Solver(parameters)
+                        result = fk_solver.solve(original_growth_model=data_growth_model if key == 'spatio_temporal' else None)
+                    
+                        return result
+
+                    result = run_solver(key, tumor_concentrations[key], data_growth_model)
+
+                    if result['success'] == False:
+                        values = tumor_concentrations[key]
+                        values[2] = 0.5
+                        result = run_solver(key, values, data_growth_model)
+                        if result['success'] == False:
+                            values[1] = 0.5
+                            result = run_solver(key, values, data_growth_model)
+                            if result['success'] == False:
+                                values[0] = 0.5
+                                result = run_solver(key, values, data_growth_model)
+
+                    result = torch.as_tensor(result['time_series'])  # 64, 240, 240, 155
+                    
+                    # nib.save(nib.Nifti1Image(result[0].cpu().float().numpy(), np.eye(4)), folder / 'tumor_concentrations' / f'{key}_0.nii.gz')
+                    # nib.save(nib.Nifti1Image(result[63].cpu().float().numpy(), np.eye(4)), folder / 'tumor_concentrations' / f'{key}_63.nii.gz')
+                    
+                    torch.save(result, path_result)
+
     if 'condition' in domain:
         path_latent_conditioning = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_conditioning.pt'
         path_latent_conditioning.parent.mkdir(parents=True, exist_ok=True)
@@ -167,7 +230,7 @@ for folder in pbar:
             data_growth_model = _get_data(_get_file_growth_model(patient))  # 240, 240, 155
             data_tissue_segmentation = _get_data(_get_file_tissue_segmentation(patient))  # 240, 240, 155
 
-            latent_growth_model = _encode(data_growth_model)[0].squeeze(0)  # 4, 64, 64, 40
+            latent_growth_model = _encode(data_growth_model, normalize=False)[0].squeeze(0)  # 4, 64, 64, 40
             latent_tissue_segmentation = _encode(data_tissue_segmentation)[0].squeeze(0)  # 4, 64, 64, 40
 
             latent_conditioning = torch.cat((latent_growth_model, latent_tissue_segmentation), dim=0)
@@ -205,7 +268,7 @@ for folder in pbar:
                 reconstructed_modality = _get_decoded(autoencoder, latent_modality)  # B, 240, 240, 155
                 assert (reconstructed_modality.min() >= 0.0 or reconstructed_modality.min() >= -1.0) and reconstructed_modality.max() <= 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
 
-                # nib.save(nib.Nifti1Image(reconstructed_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_reconstructed.nii.gz')
+                nib.save(nib.Nifti1Image(reconstructed_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_reconstructed.nii.gz')
                 # nib.save(nib.Nifti1Image(normalized_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_normalized.nii.gz')
 
                 assert reconstructed_modality.shape == normalized_modality.shape

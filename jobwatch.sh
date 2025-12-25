@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # printf 'jobs=(%s)\n' "$(squeue -u bilv -h -o '%i' | sort -n | xargs)"
-# printf 'jobs=(%s)\n' "$(squeue -u ge65mod2 -h -o '%i' | sort -n | xargs)"
+# printf 'jobs=(%s)\n' "$(squeue -u ge65mod2 -h -o '%i %j' | awk '$2 ~ /^vb_/ {print $1}' | sort -n | xargs)"
 
-jobs=(77621 77622 77624 77859 77868)  # 77623
-file=/vol/miltank/users/bilv/ldm/slurm/77623_2.txt  # 77623
+jobs=(77859 77868 82764 85185)  # 77623
+file=/vol/miltank/users/bilv/ldm/slurm/77623_3.txt  # 77623
  
 SLACK_WEBHOOK_URL=
 SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:?set Slack webhook}
@@ -17,6 +17,8 @@ done
 # file
 file_hash_last=""
 file_state_last=""
+file_check_counter=0
+file_check_interval=5
 
 while true; do
   alerts=()
@@ -47,22 +49,25 @@ while true; do
 
   # file
   if [[ -n $file ]]; then
-    file_hash_curr=$(md5sum "$file" 2>/dev/null | awk '{print $1}')
-    if [[ -n $file_hash_curr && $file_hash_curr == "$file_hash_last" ]]; then
-      file_state="NOT CHANGED"
-    elif [[ -n $file_hash_curr && $file_hash_curr != "$file_hash_last" ]]; then
-      file_state="CHANGED"
-    fi
-    file_hash_last="$file_hash_curr"
-
-    if [[ $file_state != "$file_state_last" ]]; then
-      if [[ $file_state == "CHANGED" ]]; then
-        recoveries+=("FILE $file_state")
-      elif [[ $file_state == "NOT CHANGED" ]]; then
-        alerts+=("FILE $file_state")
+    if (( file_check_counter % file_check_interval == 0 )); then
+      file_hash_curr=$(md5sum "$file" 2>/dev/null | awk '{print $1}')
+      if [[ -n $file_hash_curr && $file_hash_curr == "$file_hash_last" ]]; then
+        file_state="NOT CHANGED"
+      elif [[ -n $file_hash_curr && $file_hash_curr != "$file_hash_last" ]]; then
+        file_state="CHANGED"
       fi
-      file_state_last="$file_state"
+      file_hash_last="$file_hash_curr"
+
+      if [[ $file_state != "$file_state_last" ]]; then
+        if [[ $file_state == "CHANGED" ]]; then
+          recoveries+=("FILE $file_state")
+        elif [[ $file_state == "NOT CHANGED" ]]; then
+          alerts+=("FILE $file_state")
+        fi
+        file_state_last="$file_state"
+      fi
     fi
+    file_check_counter=$((file_check_counter + 1))
   fi
 
   if (( ${#alerts[@]} || ${#recoveries[@]} )); then

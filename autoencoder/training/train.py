@@ -188,7 +188,7 @@ if args.amp:
 val_interval = args.val_interval
 best_val_recon_epoch_loss = 10000000.0
 total_step = 0
-start_epoch = 0
+start_epoch = int(mlflow_continue.mlflow_run_counter) - 1  # TODO
 max_epochs = args.n_epochs
 
 # Setup validation inferer

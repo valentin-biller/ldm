@@ -73,7 +73,6 @@ class Scheduler():
 
             self.scheduler = schedulers_helper.LossSecondMomentResampler(self.diffusion)  # schedule_sampler loss-second-moment
         elif self.scheduler_ == 'flow_matching':
-            pass
             self.path = AffineProbPath(scheduler=CondOTScheduler())
             self.solver_config = {
                 "method": "euler",

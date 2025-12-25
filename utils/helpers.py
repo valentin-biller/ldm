@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import nibabel as nib
 from tqdm import tqdm
+from scipy.ndimage import binary_dilation
 
 # --------- Gradients ---------  (doesn't slow down the training too much)
 def _gradients_compute_norm(parameters):
@@ -172,26 +173,76 @@ def _save_validation_step_outputs(self, validation_step_outputs):
         _nib_save(normalized_modality_nii, dir_patient / f"normalized_{modality_}.nii.gz")
         _nib_save(reconstructed_modality_nii, dir_patient / f"reconstructed_{modality_}.nii.gz")
 
-def _save_reconstruction(self, reconstructed_t1, patients, masks, affines, identifier, mode):
-    if mode == 'inpainting_inference_challenge' and identifier != 'pixel_injection':
-        return
-
-    if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
-        dir_output = self.dir_output_model / identifier
-    elif mode == 'inpainting_inference_challenge':
-        dir_output = self.dir_output_model
-    dir_output.mkdir(parents=True, exist_ok=True)
-
-    # Save images
+def _save_inpainting(self, inpainting_output, mode, identfier, conditioning, original_mask, normalized_modality, reconstructed, affines, patients, modality, masks, step=None):
+    if step is not None:
+        step, growth_model, tissue_segmentation = step
+    
+    dir_output = inpainting_output / 'inpainting' / mode
     for i, patient in enumerate(patients):
-        if mode in ['inpainting_inference', 'inpainting_inference_conditioning']:
-            mask = masks[i]
-            file_name = f"{patient}_{mask}.nii.gz"
-        elif mode == 'inpainting_inference_challenge':
-            file_name = f"{patient}-t1n-inference.nii.gz"
-        path_reconstructed_t1 = dir_output / file_name
+        dir_output_patient = dir_output / patient
+        dir_output_patient.mkdir(parents=True, exist_ok=True)
 
-        reconstructed_t1_ = reconstructed_t1[i, 0].cpu().float().numpy()
+        if step is not None:
+            dir_output_patient = dir_output_patient / f"{step:.2f}"
+            dir_output_patient.mkdir(parents=True, exist_ok=True)
+            growth_model_ = growth_model[i].cpu().float().numpy()  # (1, 240, 240, 155)
+            tissue_segmentation_ = tissue_segmentation[i].cpu().float().numpy()  # (1, 240, 240, 155)
+
+        conditioning_ = conditioning[i].cpu().float().numpy()
+        original_mask_ = original_mask[i].cpu().float().numpy()
+        normalized_modality_ = normalized_modality[i].cpu().float().numpy()
+        reconstructed_ = reconstructed[i].cpu().float().numpy()
         affine = affines[i].cpu().float().numpy()
 
-        _nib_save(nib.Nifti1Image(reconstructed_t1_, affine), path_reconstructed_t1)
+        if identfier == 'inpainted':
+            # conditioning
+            dir_conditioning = dir_output_patient / 'conditioning'
+            dir_conditioning.mkdir(exist_ok=True, parents=True)
+            if step is None:
+                for num, condition in enumerate(['growth_model', 'tissue_segmentation']):
+                    for layer in range(4):
+                        # print('Saving layer', num*4 + layer)
+                        layer_ = conditioning_[num*4 + layer]
+                        layer_nii = nib.Nifti1Image(layer_, affine)
+                        nib.save(layer_nii, dir_conditioning / f"{condition}_{layer}.nii.gz")
+            else:
+                growth_model_nii = nib.Nifti1Image(growth_model_[0], affine)
+                nib.save(growth_model_nii, dir_conditioning / f"growth_model.nii.gz")
+                tissue_segmentation_nii = nib.Nifti1Image(tissue_segmentation_[0], affine)
+                nib.save(tissue_segmentation_nii, dir_conditioning / f"tissue_segmentation.nii.gz")
+
+            # masks
+            dir_masks = dir_output_patient / 'masks'
+            dir_masks.mkdir(exist_ok=True, parents=True)
+
+            original_masks_nii = nib.Nifti1Image(original_mask_[0], affine)
+            nib.save(original_masks_nii, dir_masks / f"original_mask_{masks[i]}.nii.gz")
+
+            # normalized
+            dir_normalized = dir_output_patient / 'normalized'
+            dir_normalized.mkdir(exist_ok=True, parents=True)
+            
+            normalized_nii = nib.Nifti1Image(normalized_modality_[0], affine)
+            nib.save(normalized_nii, dir_normalized / f"normalized_{modality[i]}_{masks[i]}.nii.gz")
+
+        # images
+        dir_images = dir_output_patient / identfier
+        dir_images.mkdir(parents=True, exist_ok=True)
+
+        reconstructed_nii = nib.Nifti1Image(reconstructed_[0], affine)
+        nib.save(reconstructed_nii, dir_images / f"reconstructed_{modality[i]}_{masks[i]}.nii.gz")
+
+def _get_inpainting_masks(self, growth_model, threshold=0.001, margin=1):
+    # growth_model: (1, 1, 240, 240, 155)
+    original_mask = growth_model > threshold
+    if margin > 0:
+        original_mask = original_mask.cpu().numpy()
+        original_mask = binary_dilation(original_mask, iterations=margin)
+        original_mask = torch.from_numpy(original_mask).to(self.device).float().clamp(0, 1)
+
+    latent_mask = torch.nn.functional.interpolate(
+        original_mask,
+        size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
+        mode='nearest'
+    )
+    return original_mask, latent_mask

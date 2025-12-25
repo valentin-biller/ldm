@@ -52,7 +52,7 @@ class DataModule(L.LightningDataModule):
         dir_utils=None,
         dir_output_model=None,
         use_latents=True,
-        mask_conditioning=64,  # 64, 32, None
+        mask_conditioning=64,  # 64, 32, scalar, None
         modality_conditioning=True,  # True, False
         latent_shape=None,
         mode='training',
@@ -83,7 +83,7 @@ class DataModule(L.LightningDataModule):
         self.latent_shape = latent_shape
         self.train_val_split = train_val_split
 
-        assert self.mode in ['autoencoder', 'training', 'baseline', 'inpainting_inference_healthy', 'inpainting_inference_tumor'], f"Invalid mode: {self.mode}."
+        assert self.mode in ['autoencoder', 'training', 'baseline', 'inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal'], f"Invalid mode: {self.mode}."
     
         self.print_length = 25
         L.seed_everything(42)
@@ -129,22 +129,22 @@ class DataModule(L.LightningDataModule):
 
         patients = patients_train + patients_val
 
-        # Only do inference for the patients that haven't been inferred
-        if self.mode in ['inpainting_inference_healthy', 'inpainting_inference_tumor'] and self.dir_output_model is not None:
-            dir_output = self.dir_output_model / 'pixel_injection'
-            if dir_output.exists():
-                files_completed = list(dir_output.iterdir())
-                patient_masks = {}
-                for file in files_completed:
-                    name = file.name
-                    patient_mask = name[:-7]
-                    patient = patient_mask[:-5]
-                    mask = patient_mask[-4:]
-                    patient_masks.setdefault(patient, set()).add(mask)
-                # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
-                patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
-                patients_val = [patient for patient in patients_val if patient not in patients_completed]
-                self._print_numbers('Completed', patients_completed)
+        # # Only do inference for the patients that haven't been inferred
+        # if self.mode in ['inpainting_healthy_tissue', 'inpainting_tumorous_tissue'] and self.dir_output_model is not None:
+        #     dir_output = self.dir_output_model / 'pixel_injection'
+        #     if dir_output.exists():
+        #         files_completed = list(dir_output.iterdir())
+        #         patient_masks = {}
+        #         for file in files_completed:
+        #             name = file.name
+        #             patient_mask = name[:-7]
+        #             patient = patient_mask[:-5]
+        #             mask = patient_mask[-4:]
+        #             patient_masks.setdefault(patient, set()).add(mask)
+        #         # patients_completed = [patient for patient, masks in patient_masks.items() if {'0000', '0001', '0002'}.issubset(masks)]
+        #         patients_completed = [patient for patient, masks in patient_masks.items() if '0000' in masks]
+        #         patients_val = [patient for patient in patients_val if patient not in patients_completed]
+        #         self._print_numbers('Completed', patients_completed)
 
         # Summary
         print(self.print_length * '=')
@@ -258,8 +258,8 @@ class DataSet(Dataset):
         self,
         dir_data=None,
         use_latents=True,
-        mask_conditioning=True,
-        modality_conditioning=True,
+        mask_conditioning=64,  # 64, 32, scalar, None
+        modality_conditioning=True,  # True, False
         latent_shape=None,
         mode='training',
         patients=None,
@@ -288,12 +288,14 @@ class DataSet(Dataset):
                     self.samples.append((patient_id, modality))
         elif self.mode in ['baseline']:
             self.samples = self.patients
-        elif self.mode in ['inpainting_inference_healthy', 'inpainting_inference_tumor']:
+        elif self.mode in ['inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal']:
             self.samples = []
+            modalities = MODALITIES if self.modality_conditioning else ['t1']
             for patient_id in self.patients:
-                # Check for mask files 0000, 0001, 0002
-                for mask_id in ["0000"]:  # "0001", "0002"
-                    self.samples.append((patient_id, mask_id))
+                for modality in modalities:
+                    # Check for mask files 0000, 0001, 0002
+                    for mask_id in ["0000"]:  # "0001", "0002"
+                        self.samples.append((patient_id, modality, mask_id))
 
         if self.mode in ['autoencoder']:
             self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
@@ -302,6 +304,8 @@ class DataSet(Dataset):
                 self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
             elif self.latent_shape == (4, 32, 32, 20):
                 self.intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
+            else:
+                self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
         self.autoencoder_pad = transforms.SpatialPad(spatial_size=(240, 240, 160))
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
@@ -332,13 +336,15 @@ class DataSet(Dataset):
         return self.dir_data / patient / 'processed' / 'growth_model.nii.gz'
     def _get_file_tissue_segmentation(self, patient):
         return self.dir_data / patient / 'processed' / 'tissue_segmentation.nii.gz'
+    def _get_file_tumor_segmentation(self, patient):
+        return self.dir_data / patient / 'processed' / 'tumor_segmentation.nii.gz'
     # get files latents
     def _get_file_latent_modality(self, patient, modality):
         return self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_{modality}.pt'
     def _get_file_latent_conditioning(self, patient):
         return self.dir_data / patient / f'latents_{self.latent_shape_string}' / f'latent_conditioning.pt'
     # get files inpainting
-    def _get_file_modality_voided(self, patient, mask, modality):
+    def _get_file_modality_voided(self, patient, modality, mask):
         return self.dir_data / patient / 'voided' / f"{modality}-voided-{mask}.nii.gz"
     def _get_file_mask(self, patient, mask, healthy=False):
         if healthy:
@@ -356,16 +362,14 @@ class DataSet(Dataset):
         return torch.as_tensor(normalized).unsqueeze(0)  # 1, 240, 240, 155
     def _pad(self, data):
         padded = self.autoencoder_pad(data)
-        return torch.as_tensor(padded)  # 1, 240, 240, 160
-    # def _process_mask(self, data):
-    #     return torch.as_tensor(data).unsqueeze(0)  # 1, 240, 240, 155
-    # def _process_interpolation(self, original, mode='nearest'):
-    #     latent = torch.nn.functional.interpolate(
-    #         original.unsqueeze(0),
-    #         size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
-    #         mode=mode
-    #     )[0]
-    #     return latent  # 4, 60, 60, 40
+        return torch.as_tensor(padded)  # 1, 256, 256, 160
+    def _process_interpolation(self, original, mode='nearest'):
+        latent = torch.nn.functional.interpolate(
+            original.unsqueeze(0),
+            size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
+            mode=mode
+        )[0]
+        return latent
 
     def __len__(self):
         return len(self.samples)
@@ -399,6 +403,12 @@ class DataSet(Dataset):
 
                 if self.mask_conditioning is not None:
                     conditioning = self._load_torch(self._get_file_latent_conditioning(patient))  # 8, 64, 64, 40 or 8, 32, 32, 20
+                    
+                    if self.mask_conditioning == 'scalar':
+                        data_tumor_segmentation = self._get_data(self._get_file_tumor_segmentation(patient))
+                        scalar_tumor_segmentation = (data_tumor_segmentation > 0).sum().item() / data_tumor_segmentation.numel()
+                        conditioning[:4, :, :, :] = scalar_tumor_segmentation
+
                     return_['conditioning'] = conditioning.float()
 
                 return return_
@@ -427,98 +437,50 @@ class DataSet(Dataset):
 
                 if self.mask_conditioning is not None:
                     conditioning = self._load_torch(self._get_file_latent_conditioning(patient))  # 8, 64, 64, 40 or 8, 32, 32, 20
+                    
+                    if self.mask_conditioning == 'scalar':
+                        data_tumor_segmentation = self._get_data(self._get_file_tumor_segmentation(patient))
+                        scalar_tumor_segmentation = (data_tumor_segmentation > 0).sum().item() / data_tumor_segmentation.numel()
+                        conditioning[:4, :, :, :] = scalar_tumor_segmentation
+
                     return_['conditioning'] = conditioning.float()
 
                 return return_
             else:
                 raise NotImplementedError("Validation without latents is not implemented.")
 
-        elif self.mode in ['inpainting_inference_healthy', 'inpainting_inference_tumor']:
-            patient, mask = self.samples[idx]
+        elif self.mode in ['inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal']:            
+            patient, modality, mask = self.samples[idx]
 
-            affine = self._get_affine(self._get_file_modality(patient, 't1'))
+            affine = self._get_affine(self._get_file_modality(patient, modality))
 
-            data_t1 = self._get_data(self._get_file_modality(patient, 't1'))
-            original_t1 = self._to_torch(data_t1)  # 1, 240, 240, 155
+            normalized_modality = self._normalize(self._get_data(self._get_file_modality(patient, modality)))  # 1, 240, 240, 155                
+            latent_modality = self._load_torch(self._get_file_latent_modality(patient, modality))  # 4, 64, 64, 40 or 4, 32, 32, 20
 
-            data_t1_voided = self._get_data(self._get_file_modality_voided(patient, mask, 't1'))
-            original_t1_voided = self._to_torch(data_t1_voided)  # 1, 240, 240, 155
-            normalized_t1_voided = self._normalize(data_t1_voided)  # 1, 240, 240, 155
-            autoencoder_t1_voided = self._pad(normalized_t1_voided)  # 1, 240, 240, 160
+            # always use combined mask -> only for evaluation relevant!
+            original_mask = self._to_torch(self._get_data(self._get_file_mask(patient, mask)))  # 1, 240, 240, 155
+            latent_mask = self._process_interpolation(original_mask)  # 1, 64, 64, 40
+
+            conditioning = self._load_torch(self._get_file_latent_conditioning(patient))  # 8, 64, 64, 40 or 8, 32, 32, 20
+            if self.mode == 'inpainting_healthy_tissue':
+                assert conditioning.shape[0] == 8
+                conditioning[:4, :, :, :] = torch.zeros_like(conditioning[:4, :, :, :])
             
-            original_mask = self._process_mask(self._get_data(self._get_file_mask(patient, mask)))  # 1, 240, 240, 155
-            latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
-            
-            original_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))  # 240, 240, 155
-            if self.mode == 'inpainting_inference_healthy':
-                original_growth_model = torch.zeros(240, 240, 155)
-            elif self.mode == 'inpainting_inference_tumor':
-                original_growth_model = self._get_data(self._get_file_growth_model(patient))  # 240, 240, 155
-            original_conditioning = create_conditioning(original_growth_model, original_tissue_segmentation)  # 4, 240, 240, 155
-            latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
-
             return {
                 'mode': self.mode,
                 'patient': patient,
-                'mask': mask,
-                'affine': affine,
-
-                'original_t1': original_t1.float(),
-                'original_t1_voided': original_t1_voided.float(),
-                'normalized_t1_voided': normalized_t1_voided.float(),
-                'autoencoder_t1_voided': autoencoder_t1_voided.float(),
-
-                'original_mask': original_mask.float(),
-                'latent_mask': latent_mask.float(),
-
-                'original_conditioning': original_conditioning.float(),
-                'latent_conditioning': latent_conditioning.float(),
-            }            
-
-        elif self.mode == 'inpainting_inference_challenge':
-            patient = self.samples[idx]
-
-            path_data_challenge_t1_voided = self.dir_data_challenge / patient / f"{patient}-t1n-voided.nii.gz"
-            path_data_challenge_mask = self.dir_data_challenge / patient / f"{patient}-mask.nii.gz"
-
-            affine = self._get_affine(path_data_challenge_t1_voided)
-
-            data_t1_voided = self._get_data(path_data_challenge_t1_voided)
-            original_t1_voided = self._to_torch(data_t1_voided)  # 1, 240, 240, 155
-            normalized_t1_voided = self._normalize(data_t1_voided)  # 1, 240, 240, 155
-            autoencoder_t1_voided = self._pad(normalized_t1_voided)  # 1, 240, 240, 160
-
-            original_mask = self._process_mask(self._get_data(path_data_challenge_mask))  # 1, 240, 240, 155
-            latent_mask = self._process_interpolation(original_mask)  # 1, 60, 60, 40
-
-            path_original_conditioning = self.dir_data_challenge / patient / 'conditioning.pt'
-            if path_original_conditioning.exists():
-                exists_conditioning = True
-                original_conditioning = torch.load(path_original_conditioning)  # 4, 240, 240, 155
-                latent_conditioning = self._process_interpolation(original_conditioning)  # 4, 60, 60, 40
-            else:
-                exists_conditioning = False
-                original_conditioning = torch.zeros(4, 240, 240, 155)
-                latent_conditioning = torch.zeros(4, self.latent_shape[0], self.latent_shape[1], self.latent_shape[2])
-
-            return {
-                'mode': self.mode,
-                'patient': patient,
-                'affine': affine,
-
-                'original_t1_voided': original_t1_voided.float(),
-                'normalized_t1_voided': normalized_t1_voided.float(),
-                'autoencoder_t1_voided': autoencoder_t1_voided.float(),
                 
+                'affine': affine,
+                'normalized_modality': normalized_modality.float(),
+
+                'modality': modality,
+                'latent_modality': latent_modality.float(),
+
+                'mask': mask,
                 'original_mask': original_mask.float(),
                 'latent_mask': latent_mask.float(),
 
-                'original_conditioning': original_conditioning.float(),
-                'latent_conditioning': latent_conditioning.float(),
-                'exists_conditioning': exists_conditioning,
-
-                'path_original_t1_voided': str(path_data_challenge_t1_voided),
-                'path_original_mask': str(path_data_challenge_mask),
+                'conditioning': conditioning.float(),
             }
 
         elif self.mode == 'baseline':

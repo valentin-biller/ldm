@@ -10,7 +10,7 @@ class UNet(nn.Module):
         config_unet = {
             "spatial_dims": 3,
             "in_channels": 4,
-            "out_channels": 4 if scheduler_ == 'ddpm' else 8,  # output 8 channels to learn sigma
+            "out_channels": 8 if scheduler_ == 'iddpm' else 4,  # output 8 channels to learn sigma
             "channels": (64, 128, 256, 512) if latent_shape == (4, 64, 64, 40) else (128, 256, 512),
             "attention_levels": [False, False, True, True] if latent_shape == (4, 64, 64, 40) else [False, True, True],
             "num_head_channels": (0, 0, 32, 32) if latent_shape == (4, 64, 64, 40) else (0, 32, 32),

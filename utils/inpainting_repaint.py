@@ -1,19 +1,24 @@
- # Repaint
-self.betas = self._repaint_get_named_beta_schedule('linear', self.num_train_timesteps, use_scale=True)
-self.betas = np.array(self.betas, dtype=np.float64)
-self.alphas = 1.0 - self.betas
-self.alphas_cumprod = np.cumprod(self.alphas, axis=0)
+import torch
+import numpy as np
+from collections import defaultdict
+from scipy.ndimage import binary_dilation
 
 
-def _repaint_generate_denoising(self, latent_conditioning, latent_voided=None, latent_mask=None):
-    self.scheduler.set_timesteps(self.num_inference_steps)
+def _repaint_init(self):
+    self.betas = _repaint_get_named_beta_schedule(self, 'linear', self.num_inference_steps, use_scale=True)
+    self.betas = np.array(self.betas, dtype=np.float64)
+    self.alphas = 1.0 - self.betas
+    self.alphas_cumprod = np.cumprod(self.alphas, axis=0)
+
+def _repaint_start(self, patients, modality, conditioning, affines, latent_modality=None, latent_mask=None, spatio_temporal=None):
+    self.scheduler_inference.set_timesteps(self.num_inference_steps)
 
     final = None
-    for sample in self._repaint_p_sample_loop_progressive(latent_conditioning, latent_voided, latent_mask):
+    for sample in _repaint_p_sample_loop_progressive(self, modality, conditioning, latent_modality=latent_modality, latent_mask=latent_mask, spatio_temporal=spatio_temporal):
         final = sample
     return final["sample"]
 
-def _repaint_p_sample_loop_progressive(self, latent_conditioning, latent_voided=None, latent_mask=None):
+def _repaint_p_sample_loop_progressive(self, modality, conditioning, latent_modality=None, latent_mask=None, spatio_temporal=None):
     """
     Generate samples from the model and yield intermediate samples from
     each timestep of diffusion.
@@ -22,7 +27,7 @@ def _repaint_p_sample_loop_progressive(self, latent_conditioning, latent_voided=
     Returns a generator over dicts, where each dict is the return value of
     p_sample().
     """
-    shape = latent_conditioning.shape
+    shape = latent_modality.shape
 
     image_after_step = torch.randn(
         shape,
@@ -43,7 +48,7 @@ def _repaint_p_sample_loop_progressive(self, latent_conditioning, latent_voided=
     jump_length = 10
     jump_n_sample = 10
 
-    times = self._repaint_get_schedule_jump(t_T=t_T, n_sample=n_sample, jump_length=jump_length, jump_n_sample=jump_n_sample)
+    times = _repaint_get_schedule_jump(self, t_T=t_T, n_sample=n_sample, jump_length=jump_length, jump_n_sample=jump_n_sample)
 
     time_pairs = list(zip(times[:-1], times[1:]))
 
@@ -55,12 +60,15 @@ def _repaint_p_sample_loop_progressive(self, latent_conditioning, latent_voided=
         if t_cur < t_last:  # reverse
             with torch.no_grad():
                 image_before_step = image_after_step.clone()
-                out = self._repaint_p_sample(
+                out = _repaint_p_sample(
+                    self,
                     image_after_step,
                     t_last_t,
-                    latent_conditioning=latent_conditioning,
-                    latent_voided=latent_voided,
+                    modality,
+                    conditioning,
+                    latent_modality=latent_modality,
                     latent_mask=latent_mask,
+                    spatio_temporal=spatio_temporal
                 )
                 image_after_step = out["sample"]
                 pred_xstart = out["pred_xstart"]
@@ -73,18 +81,10 @@ def _repaint_p_sample_loop_progressive(self, latent_conditioning, latent_voided=
             t_shift = 1
 
             image_before_step = image_after_step.clone()
-            image_after_step = self._repaint_undo(
-                image_before_step, image_after_step,
-                est_x_0=out['pred_xstart'], t=t_last_t+t_shift, debug=False)
+            image_after_step = _repaint_undo(self, image_before_step, image_after_step, est_x_0=out['pred_xstart'], t=t_last_t+t_shift, debug=False)
             pred_xstart = out["pred_xstart"]
     
-def _repaint_p_sample(
-    self,
-    x,
-    t,
-    latent_conditioning,
-    latent_voided,
-    latent_mask):
+def _repaint_p_sample(self, x, t, modality, conditioning, latent_modality=None, latent_mask=None, spatio_temporal=None):
     """
     Sample x_{t-1} from the model at the given timestep.
 
@@ -106,10 +106,9 @@ def _repaint_p_sample(
     mask_np = latent_mask.cpu().numpy()
     dilated_mask_np = binary_dilation(mask_np, iterations=1)
     gt_keep_mask = 1 - torch.from_numpy(dilated_mask_np).to(latent_mask.device).float().clamp(0, 1)
-    gt = latent_voided  # model_kwargs['gt']
+    gt = latent_modality  # model_kwargs['gt']
 
-    alpha_cumprod = self._repaint_extract_into_tensor(
-        self.alphas_cumprod, t, x.shape)
+    alpha_cumprod = _repaint_extract_into_tensor(self, self.alphas_cumprod, t, x.shape)
 
     gt_weight = torch.sqrt(alpha_cumprod)
     gt_part = gt_weight * gt
@@ -124,10 +123,10 @@ def _repaint_p_sample(
     noise_pred = self._predict_noise(
         x,  # x is the current sample
         t,  # t is the current timestep
-        modality,
-        latent_conditioning
+        modality=modality,
+        conditioning=conditioning
     )
-    step_result = self.scheduler.step(noise_pred, t[0], x)
+    step_result = self.scheduler_inference.step(noise_pred, t[0], x)
 
     sample = step_result[0]
     pred_xstart = step_result[1]
@@ -135,7 +134,7 @@ def _repaint_p_sample(
     result = {
         "sample": sample,
         "pred_xstart": pred_xstart,
-        "gt": latent_voided
+        "gt": latent_modality
     }
     
     return result
@@ -215,7 +214,7 @@ def _repaint_get_schedule_jump(self, t_T, n_sample, jump_length, jump_n_sample,
 
     ts.append(-1)
 
-    self._repaint_check_times(ts, -1, t_T)
+    _repaint_check_times(self, ts, -1, t_T)
 
     return ts
 
@@ -275,10 +274,10 @@ def _repaint_get_named_beta_schedule(self, schedule_name, num_diffusion_timestep
         )
 
 def _repaint_undo(self, image_before_step, img_after_model, est_x_0, t, debug=False):
-    return self._repaint__undo(img_after_model, t)
+    return _repaint__undo(self, img_after_model, t)
 
 def _repaint__undo(self, img_out, t):
-    beta = self._repaint_extract_into_tensor(self.betas, t, img_out.shape)
+    beta = _repaint_extract_into_tensor(self, self.betas, t, img_out.shape)
 
     img_in_est = torch.sqrt(1 - beta) * img_out + \
         torch.sqrt(beta) * torch.randn_like(img_out)

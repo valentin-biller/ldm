@@ -42,7 +42,7 @@ def main():
     parser.add_argument("--use_distribution_shift", action="store_true", help="Activate using distribution shift.")
 
     parser.add_argument("--model", type=str, default="unet", choices=["unet", "dit"], help="Model Type")
-    parser.add_argument("--mask_conditioning", type=str, default="64", choices=["64", "32", "none"], help="Mask Conditioning")
+    parser.add_argument("--mask_conditioning", type=str, default="64", choices=["64", "32", "scalar", "none"], help="Mask Conditioning")
     parser.add_argument("--modality_conditioning", action="store_false", help="Disable Modality Conditioning")
     parser.add_argument("--denoising", type=str, default="own", choices=["own", "repaint"], help="Denoising Type")
     parser.add_argument("--scheduler", type=str, default="ddpm", choices=["ddpm", "iddpm", "flow_matching"], help="Scheduler Type")
@@ -79,6 +79,8 @@ def main():
     # processing argparser arguments (type conversions)
     if args.mask_conditioning == "none":
         args.mask_conditioning = None
+    elif args.mask_conditioning == "scalar":
+        args.mask_conditioning = "scalar"
     else:
         args.mask_conditioning = int(args.mask_conditioning)
     args.latent_shape = tuple(int(s) for s in args.latent_shape.split(','))
@@ -86,7 +88,7 @@ def main():
 
 
     # automatic checks and changes
-    if args.mask_conditioning == 64:
+    if args.latent_shape[1] == 64:
         args.batch_size = 8 if args.model == "unet" else 4
         args.num_workers = 4
         args.accumulate_grad_batches = 4
