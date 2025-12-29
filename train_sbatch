@@ -24,16 +24,9 @@ uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 11 --model unet -
 ###  dit:  ddpm - mask:  64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 4 --model dit --scheduler ddpm --mask_conditioning 64
 ###  dit: iddpm - mask:  64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 5 --model dit --scheduler iddpm --mask_conditioning 64
 
-### LRZ ###
-### unet:  ddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 6 --model unet --scheduler ddpm --mask_conditioning 32 --latent_shape 4,32,32,20
-###  dit:  ddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 7 --model dit --scheduler ddpm --mask_conditioning 32 --latent_shape 4,32,32,20
-
-### unet: iddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 8 --model unet --scheduler iddpm --mask_conditioning 32 --latent_shape 4,32,32,20
-###  dit: iddpm - mask:  32 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 9 --model dit --scheduler iddpm --mask_conditioning 32 --latent_shape 4,32,32,20
+### tumor scalar ###
+### unet: ddpm - mask: scalar / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 6 --model unet --scheduler ddpm --mask_conditioning scalar
 
 ### flow matching ###
-###  dit: flow_matching - mask: 64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 10 --model dit --scheduler flow_matching --mask_conditioning 64
-### unet: flow_matching - mask: 64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 12 --model unet --scheduler flow_matching --mask_conditioning 64
-
-### tumor scalar ###
-### unet: ddpm - mask: scalar / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 11 --model unet --scheduler ddpm --mask_conditioning scalar
+###  dit: flow_matching - mask: 64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 7 --model dit --scheduler flow_matching --mask_conditioning 64
+### unet: flow_matching - mask: 64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 8 --model unet --scheduler flow_matching --mask_conditioning 64

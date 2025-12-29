@@ -139,16 +139,26 @@ class LatentDiffusion(L.LightningModule):
         elif self.scheduler_ == 'iddpm':
             scheduler_to_device(self, self.scheduler)
     
-    def _predict_noise(self, sample, timesteps, modality=None, conditioning=None):
+    def _predict_noise(self, sample, timesteps, modality=None, conditioning=None, latent_modality=None, latent_mask=None, noise_gt=None):
         """
         Modular function to get noise prediction from (ControlNet +) UNet
         """
         if self.scheduler_ == 'flow_matching':
+            batch_size = sample.shape[0]
+            # timesteps
             timesteps_max = 1000
+            timesteps_inpainting =  timesteps.clone()
             timesteps = timesteps * (timesteps_max - 1)
             timesteps = timesteps.floor().long()
             if timesteps.dim() == 0:
-                timesteps = timesteps.expand(sample.shape[0])
+                timesteps = timesteps.expand(batch_size)
+
+            # inpainting
+            if latent_modality is not None and latent_mask is not None:
+                noisy_gt = (1 - timesteps_inpainting) * noise_gt + timesteps_inpainting * latent_modality
+                sample = (sample * latent_mask + noisy_gt * (1 - latent_mask)).float()  # latent_mask = dilated_mask     
+                
+        ##################################################
 
         modality = torch.tensor([self.modality_class_mapping[m] for m in modality], device=self.device, dtype=torch.long)
 
@@ -176,19 +186,29 @@ class LatentDiffusion(L.LightningModule):
         
         batch_size = len(modality)
 
-        if latent_mask is not None:
-            latent_mask_np = latent_mask.cpu().numpy()
-            dilated_mask_np = binary_dilation(latent_mask_np, iterations=1)
-            dilated_mask = torch.from_numpy(dilated_mask_np).to(latent_mask.device).float().clamp(0, 1)
-
         # Initialize with pure noise
         sample = torch.randn(
             (batch_size, *self.latent_shape),
             device=self.device
         )
 
-        if spatio_temporal is not None:  # experiment 'spatio_temporal'
-            spatio_temporal_time = 375
+        # inpainting
+        if latent_modality is not None and latent_mask is not None:
+            latent_mask_np = latent_mask.cpu().numpy()
+            dilated_mask_np = binary_dilation(latent_mask_np, iterations=1)
+            dilated_mask = torch.from_numpy(dilated_mask_np).to(latent_mask.device).float().clamp(0, 1)
+            noise_gt = torch.randn(
+                (batch_size, *self.latent_shape),
+                device=self.device
+            )
+        else:
+            dilated_mask = None
+            noise_gt = None
+
+        # spatio_temporal
+        if spatio_temporal is not None:
+            spatio_temporal_time_ddpm = 375
+            spatio_temporal_time_flow_matching = 500  # TODO
             if self.spatio_temporal_previous is None:
                 temp = spatio_temporal.to(self.device)
             else:
@@ -196,14 +216,15 @@ class LatentDiffusion(L.LightningModule):
             assert temp.shape == sample.shape
 
             if self.scheduler_ == 'ddpm':
-                sample = self.scheduler_training.add_noise(temp, sample, torch.tensor([spatio_temporal_time], device=self.device))
+                sample = self.scheduler_training.add_noise(temp, sample, torch.tensor([spatio_temporal_time_ddpm], device=self.device))
             elif self.scheduler_ == 'flow_matching':
-                raise NotImplementedError("Flow Matching not implemented for spatio-temporal yet.")
+                t_start = 1.0 - (spatio_temporal_time_flow_matching / 1000)
+                sample = (1 - t_start) * sample + t_start * temp
 
         if self.scheduler_ in ['ddpm', 'iddpm']:
             # Denoising loop
             if spatio_temporal is not None:
-                num_steps = spatio_temporal_time
+                num_steps = spatio_temporal_time_ddpm
             else:
                 num_steps = self.num_inference_steps
 
@@ -213,10 +234,6 @@ class LatentDiffusion(L.LightningModule):
                 # inpainting
                 if latent_modality is not None and latent_mask is not None:
                     # Pixel injection: preserve known regions (add noise to ground truth based on timestep)
-                    noise_gt = torch.randn(
-                        (batch_size, *self.latent_shape),
-                        device=self.device
-                    )
                     noisy_gt = self.scheduler_training.add_noise(latent_modality, noise_gt, t)
                     sample = (sample * dilated_mask + noisy_gt * (1 - dilated_mask)).float()
 
@@ -257,12 +274,17 @@ class LatentDiffusion(L.LightningModule):
                         helpers._save_generate_denoising_outputs(self, generate_denoising_outputs)
 
         elif self.scheduler_ == 'flow_matching':
+            if spatio_temporal is not None:
+                t_start = t_start
+            else:
+                t_start = 0.0
+
             solver = ODESolver(
                 velocity_model=lambda x, t, **kwargs: 
                 self._predict_noise(x, t, **kwargs)
             )
 
-            time_grid = torch.linspace(0, 1, self.solver_config["time_points"], device=self.device)
+            time_grid = torch.linspace(t_start, 1, self.solver_config["time_points"], device=self.device)
 
             sample = solver.sample(
                 x_init=sample,
@@ -272,6 +294,9 @@ class LatentDiffusion(L.LightningModule):
                 return_intermediates=False,
                 modality=modality,
                 conditioning=conditioning,
+                latent_modality = latent_modality,
+                latent_mask = dilated_mask,
+                noise_gt = noise_gt,
             )
 
         if latent_modality is not None and latent_mask is not None:
@@ -461,7 +486,7 @@ class LatentDiffusion(L.LightningModule):
                 growth_model = self.autoencoder_crop(conditioning[:, 0, ...]).unsqueeze(1)  # (B, 1, 240, 240, 155)
                 tissue_segmentation = self.autoencoder_crop(conditioning[:, 1, ...]).unsqueeze(1)  # (B, 1, 240, 240, 155)
                 step = (step, growth_model, tissue_segmentation)
-                original_mask, latent_mask = helpers._get_inpainting_masks(self, growth_model)
+                original_mask, latent_mask = helpers._get_inpainting_masks(self, growth_model, original_mask)
 
             # latent for tissue segmentation
             latent_tissue_segmentation = self._get_encoded(conditioning[:, 1, ...].unsqueeze(1))            
@@ -527,17 +552,16 @@ class LatentDiffusion(L.LightningModule):
                 # original_min, original_max = voided_modality.min(), voided_modality.max()
                 # reconstructed = reconstructed * (original_max - original_min) + original_min
                 helpers._save_inpainting(self, inpainting_output, mode, 'inpainted', conditioning, original_mask, normalized_modality, reconstructed, affines, patients, modality, masks, step=step)
-                
-                ########## Histogram Equalization
+
+                ########## Histogram Equalization OR Poisson Blending
 
                 reconstructed_he = inpainting_postprocessing._histogram_equalization(self, reconstructed, voided_modality)  # (B, 1, 240, 240, 155)
                 helpers._save_inpainting(self, inpainting_output, mode, 'histogram_equalization', conditioning, original_mask, normalized_modality, reconstructed_he, affines, patients, modality, masks, step=step)
 
-                # ########## Poisson Blending
-                reconstructed_pb = inpainting_postprocessing._poisson_blending(self, reconstructed_he, voided_modality, original_mask)  # (B, 1, 240, 240, 155)
+                reconstructed_pb = inpainting_postprocessing._poisson_blending(self, reconstructed, voided_modality, original_mask)  # (B, 1, 240, 240, 155)
                 helpers._save_inpainting(self, inpainting_output, mode, 'poisson_blending', conditioning, original_mask, normalized_modality, reconstructed_pb, affines, patients, modality, masks, step=step)
 
-                ########## Pixel Injection
+                ########## Pixel Injection (on reconstructed_pb)
                 
                 reconstructed_pi = inpainting_postprocessing._pixel_injection(self, reconstructed_pb, voided_modality, original_mask)  # (B, 1, 240, 240, 155)
                 helpers._save_inpainting(self, inpainting_output, mode, 'pixel_injection', conditioning, original_mask, normalized_modality, reconstructed_pi, affines, patients, modality, masks, step=step)

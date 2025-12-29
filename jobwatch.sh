@@ -3,9 +3,9 @@
 # printf 'jobs=(%s)\n' "$(squeue -u bilv -h -o '%i' | sort -n | xargs)"
 # printf 'jobs=(%s)\n' "$(squeue -u ge65mod2 -h -o '%i %j' | awk '$2 ~ /^vb_/ {print $1}' | sort -n | xargs)"
 
-jobs=(77859 77868 82764 85185)  # 77623
-file=/vol/miltank/users/bilv/ldm/slurm/77623_3.txt  # 77623
- 
+jobs=(77859 77868 82764 85185)
+file=""
+
 SLACK_WEBHOOK_URL=
 SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:?set Slack webhook}
 

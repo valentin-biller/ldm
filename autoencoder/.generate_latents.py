@@ -35,8 +35,8 @@ models = {
     'f8d16_autoencoder': (4, 32, 32, 20),
 }
 
-model = 'maisi_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
-domain = ['condition']  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
+model = 'maisi_f8_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
+domain = ['modality']  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
 mode = ['psnr']  # 'ae_latent' and/or 'psnr'  # TODO
 save_latent_modality = False  # TODO
 

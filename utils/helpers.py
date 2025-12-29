@@ -232,14 +232,19 @@ def _save_inpainting(self, inpainting_output, mode, identfier, conditioning, ori
         reconstructed_nii = nib.Nifti1Image(reconstructed_[0], affine)
         nib.save(reconstructed_nii, dir_images / f"reconstructed_{modality[i]}_{masks[i]}.nii.gz")
 
-def _get_inpainting_masks(self, growth_model, threshold=0.001, margin=1):
+def _get_inpainting_masks(self, growth_model, original_mask, threshold=0.001, margin=0): # TODO margin
     # growth_model: (1, 1, 240, 240, 155)
-    original_mask = growth_model > threshold
+    original_mask_tumor = growth_model > threshold
     if margin > 0:
-        original_mask = original_mask.cpu().numpy()
-        original_mask = binary_dilation(original_mask, iterations=margin)
-        original_mask = torch.from_numpy(original_mask).to(self.device).float().clamp(0, 1)
+        original_mask_tumor = original_mask_tumor.cpu().numpy()
+        original_mask_tumor = binary_dilation(original_mask_tumor, iterations=margin)
+        original_mask_tumor = torch.from_numpy(original_mask_tumor).to(self.device).float().clamp(0, 1)
+    else:
+        original_mask_tumor = original_mask_tumor.to(self.device).float().clamp(0, 1)
 
+    original_mask = original_mask + original_mask_tumor
+    original_mask[original_mask >= 1] = 1
+    
     latent_mask = torch.nn.functional.interpolate(
         original_mask,
         size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
