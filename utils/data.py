@@ -306,7 +306,7 @@ class DataSet(Dataset):
                 self.intensity = transforms.ScaleIntensity(minv=-1.0, maxv=1.0)
             else:
                 self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
-        self.autoencoder_pad = transforms.SpatialPad(spatial_size=(240, 240, 160))
+        self.autoencoder_pad = transforms.SpatialPad(spatial_size=(256, 256, 160))
         self.autoencoder_crop = transforms.CenterSpatialCrop(roi_size=(240, 240, 155))
 
     # loading with nibabel

@@ -51,8 +51,8 @@ class LatentDiffusion(L.LightningModule):
         scheduler_='ddpm',  # ddpm, iddpm, flow_matching
         latent_shape=None,
         learning_rate=1e-4,
-        num_train_timesteps=1000,  # TODO 4000 for iddpm (fixed in schedulers.py)
-        num_inference_steps=100,  # TODO
+        num_train_timesteps=1000,  # 4000 for iddpm (fixed in schedulers.py)
+        num_inference_steps=100,
         **kwargs
     ):
         super().__init__()
@@ -92,7 +92,7 @@ class LatentDiffusion(L.LightningModule):
         self._scheduler_ = schedulers.Scheduler(self.scheduler_, self.num_train_timesteps, self.num_inference_steps)
         if self.scheduler_ == 'ddpm':
             self.scheduler_training = self._scheduler_.scheduler_training
-            if self.num_inference_steps <= 100:  # TODO
+            if self.num_inference_steps <= 100:
                 print('========== USING DDIM FOR INFERENCE =============')
                 self.scheduler_inference = self._scheduler_.scheduler_inference
             else:
@@ -155,7 +155,7 @@ class LatentDiffusion(L.LightningModule):
 
             # inpainting
             if latent_modality is not None and latent_mask is not None:
-                noisy_gt = (1 - timesteps_inpainting) * noise_gt + timesteps_inpainting * latent_modality
+                noisy_gt = (1 - timesteps_inpainting) * noise_gt + timesteps_inpainting * latent_modality  # could have also used path.sample
                 sample = (sample * latent_mask + noisy_gt * (1 - latent_mask)).float()  # latent_mask = dilated_mask     
                 
         ##################################################
@@ -208,7 +208,7 @@ class LatentDiffusion(L.LightningModule):
         # spatio_temporal
         if spatio_temporal is not None:
             spatio_temporal_time_ddpm = 375
-            spatio_temporal_time_flow_matching = 500  # TODO
+            spatio_temporal_time_flow_matching = 375  # TODO
             if self.spatio_temporal_previous is None:
                 temp = spatio_temporal.to(self.device)
             else:
@@ -219,7 +219,11 @@ class LatentDiffusion(L.LightningModule):
                 sample = self.scheduler_training.add_noise(temp, sample, torch.tensor([spatio_temporal_time_ddpm], device=self.device))
             elif self.scheduler_ == 'flow_matching':
                 t_start = 1.0 - (spatio_temporal_time_flow_matching / 1000)
-                sample = (1 - t_start) * sample + t_start * temp
+                t_start_timesteps = torch.full((batch_size,), t_start, device=self.device)
+
+                sample_info = self.path.sample(t=t_start_timesteps, x_0=sample, x_1=temp)
+                sample = sample_info.x_t
+                t_start_timesteps = sample_info.t
 
         if self.scheduler_ in ['ddpm', 'iddpm']:
             # Denoising loop
@@ -513,10 +517,9 @@ class LatentDiffusion(L.LightningModule):
                 ).float()  # (B, 4, 64, 64, 40)
                 reconstructed = self._get_decoded(denoised)  # (B, 1, 240, 240, 155)
 
-                # TODO
+                # TODO post-processing?
                 reconstructed[reconstructed < 0.001] = 0
                 reconstructed = transforms.ScaleIntensity(minv=0.0, maxv=1.0)(reconstructed)
-                # TODO
 
                 return reconstructed
 
