@@ -1,19 +1,25 @@
 import sys
 from pathlib import Path
 dir_current = Path(__file__).resolve().parent
+dir_metrics = dir_current.parent.parent / '.metrics'  # image metrics
 dir_tumor_growth = dir_current.parent.parent / '.tumor_growth'  # tumor growth
+sys.path.append(str(dir_metrics))
 sys.path.append(str(dir_tumor_growth))
 
 import json
-import torch
 import shutil
 import pickle
 import numpy as np
+import pandas as pd
 import nibabel as nib
 from tqdm import tqdm
 from pathlib import Path
 from monai import transforms
 from torchmetrics.image import PeakSignalNoiseRatio
+
+import torch
+import torch_fidelity
+from torch.utils.data import Dataset
 
 from maisi_autoencoder import MaisiAutoencoder
 from maisi_f8_autoencoder import MaisiF8Autoencoder
@@ -25,6 +31,9 @@ from TumorGrowthToolkit.FK import Solver
 dir_data = Path('/vol/miltank/users/bilv/data')
 dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
 
+dir_temp = dir_current / 'temp' 
+dir_reconstructed = dir_temp / 'reconstructed'
+
 path_ae_latent = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent.pkl")
 path_ae_latent_patients = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent_patients.pkl")
 
@@ -35,9 +44,9 @@ models = {
     'f8d16_autoencoder': (4, 32, 32, 20),
 }
 
-model = 'maisi_f8_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
-domain = ['modality']  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
-mode = ['psnr']  # 'ae_latent' and/or 'psnr'  # TODO
+model = 'maisi_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
+domain = []  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
+mode = ['image_metrics']  # 'ae_latent' and/or 'psnr'  # TODO
 save_latent_modality = False  # TODO
 
 
@@ -129,6 +138,9 @@ def _encode(data, normalize=True):
 def _get_data(file_path):
     img = nib.load(file_path)
     return torch.as_tensor(img.get_fdata())
+def _get_affine(file_path):
+    img = nib.load(file_path)
+    return img.affine
 
 # get files default
 def _get_file_growth_model(patient):
@@ -244,10 +256,20 @@ for folder in pbar:
             if 'ae_latent' in mode and patient in ae_latent_patients['mean'][modality].keys() and path_latent_modality.exists():
                 continue
 
+            path_reconstructed = dir_reconstructed / patient / f'{modality}.nii.gz'
+            path_psnr = dir_temp / 'psnr.csv'
+            path_psnr_average = dir_temp / 'psnr.txt'
+            if 'psnr' in mode and 'image_metrics' in mode:
+                if path_psnr.exists():
+                    df_psnr = pd.read_csv(path_psnr)
+                    if ((df_psnr['patient'] == patient) & (df_psnr['modality'] == modality)).any():
+                        continue
+
             if save_latent_modality == True and path_latent_modality.exists():
                 continue
 
             data_modality = _get_data(folder / f'{modality}.nii.gz')  # 240, 240, 155
+            affine_modality = _get_affine(folder / f'{modality}.nii.gz')
             latent_modality, normalized_modality = _encode(data_modality)  # B, 4, 64, 64, 40
 
             if save_latent_modality == True:
@@ -266,26 +288,31 @@ for folder in pbar:
                 # nib.save(nib.Nifti1Image(latent_modality[0][0].cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_latent.nii.gz')
 
                 reconstructed_modality = _get_decoded(autoencoder, latent_modality)  # B, 240, 240, 155
+                reconstructed_modality = transforms.ScaleIntensity(minv=0.0, maxv=1.0)(reconstructed_modality)
                 assert (reconstructed_modality.min() >= 0.0 or reconstructed_modality.min() >= -1.0) and reconstructed_modality.max() <= 1.0, "Intensity values should be in the range [0, 1] or [-1, 1]"
 
-                nib.save(nib.Nifti1Image(reconstructed_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_reconstructed.nii.gz')
-                # nib.save(nib.Nifti1Image(normalized_modality.squeeze(0).cpu().float().numpy(), np.eye(4)), f'/vol/miltank/users/bilv/ldm/autoencoder/temp/{patient}_{modality}_normalized.nii.gz')
+                if 'image_metrics' in mode:
+                    path_reconstructed.parent.mkdir(parents=True, exist_ok=True)
+                    nib.save(nib.Nifti1Image(reconstructed_modality.squeeze(0).cpu().float().numpy(), affine_modality), path_reconstructed)
 
                 assert reconstructed_modality.shape == normalized_modality.shape
                 psnr_normalized = psnr(reconstructed_modality.to('cpu'), torch.as_tensor(normalized_modality).to('cpu'))
-                tqdm.write(f'PSNR Normalized: {psnr_normalized}')
 
-                if psnr_normalized < 30:
-                    count_psnr_below_threshold += 1
-                tqdm.write(f'PSNR too low for {count_psnr_below_threshold} images')
+                path_psnr.parent.mkdir(parents=True, exist_ok=True)
+                if path_psnr.exists():
+                    df_psnr = pd.read_csv(path_psnr)
+                    assert not ((df_psnr['patient'] == patient) & (df_psnr['modality'] == modality)).any(), f"PSNR for patient {patient} and modality {modality} already exists in {path_psnr}"
+                else:
+                    df_psnr = pd.DataFrame(columns=['patient', 'modality', 'psnr'])
+                df_psnr = pd.concat([df_psnr, pd.DataFrame([{
+                    'patient': patient,
+                    'modality': modality,
+                    'psnr': psnr_normalized.item(),
+                }])], ignore_index=True)
+                df_psnr.to_csv(path_psnr, index=False)
 
-                psnr_normalized_total.append(psnr_normalized.item())
-                tqdm.write(f'PSNR Normalized Total: {sum(psnr_normalized_total) / len(psnr_normalized_total)}')
-
-                # dir_temp = Path(f'/vol/miltank/users/bilv/ldm/autoencoder/output/{patient}')
-                # dir_temp.mkdir(parents=True, exist_ok=True)
-                # nib.save(nib.Nifti1Image(original.float().numpy(), np.eye(4)), dir_temp / 't1_original.nii.gz')
-                # nib.save(nib.Nifti1Image(reconstruction.float().numpy(), np.eye(4)), dir_temp / 't1_reconstruction.nii.gz')
+                # assert len(df_psnr) == (count_patients-1) * len(MODALITIES) + MODALITIES.index(modality) + 1
+                assert len(df_psnr) == len(df_psnr[['patient', 'modality']].drop_duplicates())
 
 print(f'Total patients processed: {count_patients} (should be 3801)')
 
@@ -320,3 +347,110 @@ if 'ae_latent' in mode:
     with path_ae_latent.open("wb") as f:
         pickle.dump(ae_latent, f, protocol=pickle.HIGHEST_PROTOCOL)
     print(f"Saved latent stats to: {path_ae_latent}")
+
+if 'psnr' in mode:
+    df_psnr = pd.read_csv(path_psnr)
+    df_psnr = df_psnr.sort_values(by=['patient', 'modality']).reset_index(drop=True)
+    assert len(df_psnr) == count_patients * len(MODALITIES)
+    with open(path_psnr_average, 'w') as f:
+        f.write(f'{df_psnr["psnr"].mean()}\n')
+
+### FID / KID / SSIM ###
+if 'image_metrics' in mode:
+
+    class DatasetMetrics(Dataset):
+        def __init__(self, dir_root, modality):
+            self.dir_root = Path(dir_root)
+            self.modality = modality
+
+            self.patients = []
+            for folder in sorted(self.dir_root.iterdir()):
+                if folder.is_dir():
+                    self.patients.append(folder.name)
+            assert len(self.patients) == 3801, f"Expected 3801 patients, got {len(self.patients)}"
+
+            self.intensity = transforms.ScaleIntensity(minv=0.0, maxv=1.0)
+
+        def __len__(self):
+            return len(self.patients)
+        
+        def __getitem__(self, idx):
+            patient = self.patients[idx]
+            file_name = f'{self.modality}.nii.gz'
+            data = torch.as_tensor(nib.load(self.dir_root / patient / file_name).get_fdata())
+
+            normalized = self.intensity(data).unsqueeze(0)
+            normalized = normalized.permute(0, 3, 1, 2)  # c, d, h, w
+            return normalized.to(torch.float64)
+
+    '''
+    EXAMPLE
+    metrics = torch_fidelity.calculate_metrics(
+        input1=torch_fidelity.GenerativeModelModuleWrapper(G, args.z_size, args.z_type, num_classes),
+        input1_model_num_samples=args.num_samples_for_metrics,
+        input2="cifar10-train",
+        isc=True,
+        fid=True,
+        kid=True,
+        ppl=True,
+        ppl_epsilon=1e-2,
+        ppl_sample_similarity_resize=64,
+        prc=True,
+    )
+    '''
+
+    image_metrics_rows = []
+    for modality in MODALITIES:
+        print(f"========== Processing modality: {modality}")
+
+        dataset_reconstruction = DatasetMetrics(dir_root=dir_reconstructed, modality=modality)
+        dataset_ground_truth = DatasetMetrics(dir_root=dir_data, modality=modality)
+        assert len(dataset_reconstruction) == len(dataset_ground_truth)
+
+        # .../.metrics/torch_fidelity/utils.py
+        # line: 146 - 'if batch.dim() == 5:'
+        # number of images: 16 !!!
+        metrics_view = torch_fidelity.calculate_metrics(
+            vol_mode=None,
+            input1=dataset_reconstruction,
+            input2=dataset_ground_truth,
+            # input1=dir_reconstruction_modality,
+            # input2=dir_data_modality,
+            isc=True,
+            msssim=False,
+            fid=True,
+            kid=True,
+            kid_subset_size=min(len(dataset_reconstruction), 1000),
+            prc=True,
+            # only with generator model:
+            # ppl=True,  
+            # ppl_epsilon=1e-2,
+            # ppl_sample_similarity_resize=64,
+            batch_size=4,
+            feature_extractor='med3dnet-50',
+            feature_extractor_weights_path=str(dir_metrics / "resnet_50.pth"),
+            feature_layer_isc='256',
+            feature_layer_fid='256',
+            feature_layer_kid='256',
+            feature_layer_prc='256',
+            cuda=True if torch.cuda.is_available() else False,
+            verbose=False,
+        )
+
+        image_metrics_rows.append({
+            "modality": modality,
+            **metrics_view
+        })
+    
+    path_metrics = dir_temp / 'image_metrics.csv'
+    path_metrics_average = dir_temp / 'image_metrics.txt'
+    path_metrics.parent.mkdir(parents=True, exist_ok=True)
+
+    metrics = pd.DataFrame(image_metrics_rows)
+    metrics.to_csv(path_metrics, index=False)
+
+    metrics = pd.read_csv(path_metrics)
+    with open(path_metrics_average, 'w') as f:
+        for col in metrics.columns:
+            if col != 'modality':
+                f.write(f'{col}: {metrics[col].mean()}\n')
