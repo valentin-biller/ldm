@@ -28,7 +28,7 @@ from f8d16_autoencoder import F8D16Autoencoder
 from TumorGrowthToolkit.FK import Solver
 
 
-dir_data = Path('/vol/miltank/users/bilv/data')
+dir_data = Path('/vol/miltank/users/bilv/data_lumiere')  # TODO remove lumiere
 dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
 
 dir_temp = dir_current / 'temp' 
@@ -45,9 +45,9 @@ models = {
 }
 
 model = 'maisi_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
-domain = []  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
-mode = ['image_metrics']  # 'ae_latent' and/or 'psnr'  # TODO
-save_latent_modality = False  # TODO
+domain = ['condition', 'modality']  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
+mode = []  # 'ae_latent' and/or 'psnr' and/or 'image_metrics'  # TODO
+save_latent_modality = True  # TODO
 
 
 # initialization
@@ -169,11 +169,21 @@ psnr_normalized_total = []
 latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}"
 
 pbar = tqdm(sorted(dir_data.iterdir()))
+# TODO remove
+temp = []
+for folder in sorted(dir_data.iterdir()):
+    if folder.is_dir() and not folder.name.startswith('.'):
+        for sub in folder.iterdir():
+            if sub.is_dir():
+                temp.append(sub)
+pbar = tqdm(sorted(temp, reverse=True))
+# TODO remove
 for folder in pbar:
     if not folder.is_dir():
         continue
     count_patients += 1
-    patient = folder.name
+    # patient = folder.name  # TODO comment in
+    patient = f'{folder.parent.name}/{folder.name}'  # TODO remove
     pbar.set_description(f"Patient: {patient}")
 
     if 'tumor_concentrations' in domain:
@@ -236,7 +246,9 @@ for folder in pbar:
                     torch.save(result, path_result)
 
     if 'condition' in domain:
+        path_latent_conditioning = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_conditioning.pt'  # TODO
         path_latent_conditioning = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_conditioning.pt'
+
         path_latent_conditioning.parent.mkdir(parents=True, exist_ok=True)
         if not path_latent_conditioning.exists():
             data_growth_model = _get_data(_get_file_growth_model(patient))  # 240, 240, 155

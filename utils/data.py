@@ -41,6 +41,15 @@ def get_baseline_slices(data_growth_model, baseline_shape, threshold=0.001):
     return baseline_slices
 
 
+def process_interpolation(original, latent_shape, mode='nearest'):
+    latent = torch.nn.functional.interpolate(
+        original.unsqueeze(0),
+        size=(latent_shape[1], latent_shape[2], latent_shape[3]),
+        mode=mode
+    )[0]
+    return latent
+
+
 class DataModule(L.LightningDataModule):
     """
     PyTorch Lightning data module for brain MRI data
@@ -83,7 +92,7 @@ class DataModule(L.LightningDataModule):
         self.latent_shape = latent_shape
         self.train_val_split = train_val_split
 
-        assert self.mode in ['autoencoder', 'training', 'baseline', 'inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal'], f"Invalid mode: {self.mode}."
+        assert self.mode in ['autoencoder', 'training', 'baseline', 'med_ddpm_pretrained', 'lumiere', 'inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal'], f"Invalid mode: {self.mode}."
     
         self.print_length = 25
         L.seed_everything(42)
@@ -286,8 +295,17 @@ class DataSet(Dataset):
             for patient_id in self.patients:
                 for modality in modalities:
                     self.samples.append((patient_id, modality))
-        elif self.mode in ['baseline']:
+        elif self.mode in ['baseline', 'med_ddpm_pretrained']:
             self.samples = self.patients
+        elif self.mode == 'lumiere':
+            self.samples = []
+            self.dir_data = Path(str(self.dir_data) + '_lumiere')
+            for folder in sorted(self.dir_data.iterdir()):
+                if folder.is_dir() and not folder.name.startswith('.'):
+                    patient_id = f'{folder.name}/preop'
+                    for modality in MODALITIES:
+                        self.samples.append((patient_id, modality))
+            self.mode = 'validation'
         elif self.mode in ['inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal']:
             self.samples = []
             modalities = MODALITIES if self.modality_conditioning else ['t1']
@@ -334,6 +352,8 @@ class DataSet(Dataset):
         return self.dir_data / patient / f"{modality}.nii.gz"
     def _get_file_growth_model(self, patient):
         return self.dir_data / patient / 'processed' / 'growth_model.nii.gz'
+    def _get_file_tumor_segmentation(self, patient):
+        return self.dir_data / patient / 'processed' / 'tumor_segmentation.nii.gz'
     def _get_file_tissue_segmentation(self, patient):
         return self.dir_data / patient / 'processed' / 'tissue_segmentation.nii.gz'
     def _get_file_tumor_segmentation(self, patient):
@@ -363,13 +383,6 @@ class DataSet(Dataset):
     def _pad(self, data):
         padded = self.autoencoder_pad(data)
         return torch.as_tensor(padded)  # 1, 256, 256, 160
-    def _process_interpolation(self, original, mode='nearest'):
-        latent = torch.nn.functional.interpolate(
-            original.unsqueeze(0),
-            size=(self.latent_shape[1], self.latent_shape[2], self.latent_shape[3]),
-            mode=mode
-        )[0]
-        return latent
 
     def __len__(self):
         return len(self.samples)
@@ -459,7 +472,7 @@ class DataSet(Dataset):
 
             # always use combined mask -> only for evaluation relevant!
             original_mask = self._to_torch(self._get_data(self._get_file_mask(patient, mask)))  # 1, 240, 240, 155
-            latent_mask = self._process_interpolation(original_mask)  # 1, 64, 64, 40
+            latent_mask = process_interpolation(original_mask, self.latent_shape)  # 1, 64, 64, 40
 
             conditioning = self._load_torch(self._get_file_latent_conditioning(patient))  # 8, 64, 64, 40 or 8, 32, 32, 20
             if self.mode == 'inpainting_healthy_tissue':
@@ -481,6 +494,45 @@ class DataSet(Dataset):
                 'latent_mask': latent_mask.float(),
 
                 'conditioning': conditioning.float(),
+            }
+
+        elif self.mode == 'med_ddpm_pretrained':
+            # 192x192x144
+            # mask: 0 for the background, class 1 for the head, and class 2 for the tumor
+
+            self.latent_shape = (None, 192, 192, 144)
+
+            patient = self.samples[idx]
+
+            affine = self._get_affine(self._get_file_modality(patient, 't1'))
+
+            data_modalities = self._collect_data_modalities(patient)
+            normalized_modalities = self._collect_normalized_modalities(data_modalities)
+
+            baseline_modalities = {}
+            for key, value in normalized_modalities.items():
+                baseline_modalities[key] = process_interpolation(value, self.latent_shape, mode='trilinear').float()  # 1, 192, 192, 144
+            baseline_modalities = torch.cat([baseline_modalities[key] for key in baseline_modalities.keys()], dim=0)  # 4, 192, 192, 144
+
+            data_growth_model = self._get_data(self._get_file_growth_model(patient))
+            # necrotic_label: 1, edema_label: 2, enhancing_label: 3
+            data_tumor_segmentation = self._get_data(self._get_file_tumor_segmentation(patient))
+            data_tissue_segmentation = self._get_data(self._get_file_tissue_segmentation(patient))
+
+            original_conditioning = torch.zeros(4, *data_growth_model.shape).float()  # 4, 240, 240, 155
+            original_conditioning[0][data_tumor_segmentation == 1] = 1.0  # necrotic
+            original_conditioning[1][(data_growth_model >= 0.2) & (data_growth_model < 0.6)] = 1.0  # edema
+            original_conditioning[2][(data_growth_model >= 0.6)] = 1.0  # enhancing
+            original_conditioning[3][data_tissue_segmentation > 0] = 1.0
+
+            conditioning = process_interpolation(original_conditioning, self.latent_shape, mode='nearest')  # 4, 192, 192, 144
+
+            return {
+                'patient': patient,
+                'affine': affine,
+                'original_conditioning': original_conditioning.float(),
+                'baseline_modalities': baseline_modalities,
+                'baseline_conditioning': conditioning.float(),
             }
 
         elif self.mode == 'baseline':

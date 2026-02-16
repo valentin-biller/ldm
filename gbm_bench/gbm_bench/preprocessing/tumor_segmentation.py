@@ -5,8 +5,8 @@ import numpy as np
 import nibabel as nib
 from pathlib import Path
 from loguru import logger
-from brats import AdultGliomaPreTreatmentSegmenter, AdultGliomaPostTreatmentSegmenter
-from brats.constants import AdultGliomaPreTreatmentAlgorithms, AdultGliomaPostTreatmentAlgorithms
+# from brats import AdultGliomaPreTreatmentSegmenter, AdultGliomaPostTreatmentSegmenter
+# from brats.constants import AdultGliomaPreTreatmentAlgorithms, AdultGliomaPostTreatmentAlgorithms
 from gbm_bench.utils.constants import TUMORSEG_EDEMA_SCHEMA, TUMORSEG_SCHEMA, TUMORSEG_CORE_SCHEMA
 
 

@@ -181,7 +181,7 @@ class LatentDiffusion(L.LightningModule):
 
         return noise_pred
 
-    def _generate_denoising(self, patients, modality, conditioning, affines, latent_modality=None, latent_mask=None, spatio_temporal=None):
+    def _generate_denoising(self, patients, modality, conditioning, affines, latent_modality=None, latent_mask=None, spatio_temporal=None, spatio_temporal_steps=None):
         helpers._swap_ema(self, apply_ema=True)
         
         batch_size = len(modality)
@@ -207,8 +207,8 @@ class LatentDiffusion(L.LightningModule):
 
         # spatio_temporal
         if spatio_temporal is not None:
-            spatio_temporal_time_ddpm = 375
-            spatio_temporal_time_flow_matching = 375  # TODO
+            spatio_temporal_time_ddpm = spatio_temporal_steps  # 375
+            spatio_temporal_time_flow_matching = spatio_temporal_steps  # 375
             if self.spatio_temporal_previous is None:
                 temp = spatio_temporal.to(self.device)
             else:
@@ -455,7 +455,7 @@ class LatentDiffusion(L.LightningModule):
             'val/loss_l1': loss_l1,
         }
 
-    def test_step(self, batch, batch_idx, spatio_temporal=None, inpainting_output=None):
+    def test_step(self, batch, batch_idx, spatio_temporal=None, spatio_temporal_steps=None, inpainting_output=None):
         """Test step"""
         mode = batch['mode'][0]
         patients = batch['patient']  # (B,)
@@ -513,7 +513,8 @@ class LatentDiffusion(L.LightningModule):
                     modality,
                     conditioning,
                     affines,
-                    spatio_temporal=spatio_temporal
+                    spatio_temporal=spatio_temporal,
+                    spatio_temporal_steps=spatio_temporal_steps,
                 ).float()  # (B, 4, 64, 64, 40)
                 reconstructed = self._get_decoded(denoised)  # (B, 1, 240, 240, 155)
 
