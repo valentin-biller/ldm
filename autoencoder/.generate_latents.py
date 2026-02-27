@@ -28,7 +28,8 @@ from f8d16_autoencoder import F8D16Autoencoder
 from TumorGrowthToolkit.FK import Solver
 
 
-dir_data = Path('/vol/miltank/users/bilv/data_lumiere')  # TODO remove lumiere
+dir_data_default = Path('/vol/miltank/users/bilv/data')
+dir_data_lumiere = Path('/vol/miltank/users/bilv/data_lumiere')
 dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
 
 dir_temp = dir_current / 'temp' 
@@ -44,11 +45,17 @@ models = {
     'f8d16_autoencoder': (4, 32, 32, 20),
 }
 
+_data_ = 'lumiere'  # 'default' or 'lumiere'  # TODO
 model = 'maisi_autoencoder'  # 'maisi_autoencoder', 'maisi_f8_autoencoder' or 'f8d16_autoencoder'
 domain = ['condition', 'modality']  # 'modality' and/or 'condition' and/or 'tumor_concentrations'  # TODO
 mode = []  # 'ae_latent' and/or 'psnr' and/or 'image_metrics'  # TODO
 save_latent_modality = True  # TODO
 
+
+if _data_ == 'default':
+    dir_data = dir_data_default
+elif _data_ == 'lumiere':
+    dir_data = dir_data_lumiere
 
 # initialization
 MODALITIES = ['t1', 't1c', 't2', 'flair']
@@ -168,22 +175,25 @@ psnr_normalized_total = []
 
 latent_shape_string = f"{latent_shape[1]}_{latent_shape[2]}_{latent_shape[3]}"
 
-pbar = tqdm(sorted(dir_data.iterdir()))
-# TODO remove
-temp = []
-for folder in sorted(dir_data.iterdir()):
-    if folder.is_dir() and not folder.name.startswith('.'):
-        for sub in folder.iterdir():
-            if sub.is_dir():
-                temp.append(sub)
-pbar = tqdm(sorted(temp, reverse=True))
-# TODO remove
+if _data_ == 'default':
+    pbar = tqdm(sorted(dir_data.iterdir()))
+elif _data_ == 'lumiere':
+    temp = []
+    for folder in sorted(dir_data.iterdir()):
+        if folder.is_dir() and not folder.name.startswith('.'):
+            for sub in folder.iterdir():
+                if sub.is_dir():
+                    temp.append(sub)
+    pbar = tqdm(sorted(temp, reverse=False))
+
 for folder in pbar:
     if not folder.is_dir():
         continue
     count_patients += 1
-    # patient = folder.name  # TODO comment in
-    patient = f'{folder.parent.name}/{folder.name}'  # TODO remove
+    if _data_ == 'default':
+        patient = folder.name
+    elif _data_ == 'lumiere':
+        patient = f'{folder.parent.name}/{folder.name}'
     pbar.set_description(f"Patient: {patient}")
 
     if 'tumor_concentrations' in domain:
@@ -246,7 +256,6 @@ for folder in pbar:
                     torch.save(result, path_result)
 
     if 'condition' in domain:
-        path_latent_conditioning = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_conditioning.pt'  # TODO
         path_latent_conditioning = dir_data / patient / f'latents_{latent_shape_string}' / f'latent_conditioning.pt'
 
         path_latent_conditioning.parent.mkdir(parents=True, exist_ok=True)

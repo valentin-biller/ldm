@@ -92,7 +92,7 @@ class DataModule(L.LightningDataModule):
         self.latent_shape = latent_shape
         self.train_val_split = train_val_split
 
-        assert self.mode in ['autoencoder', 'training', 'baseline', 'med_ddpm_pretrained', 'lumiere', 'inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal'], f"Invalid mode: {self.mode}."
+        assert self.mode in ['autoencoder', 'training', 'baseline', 'med_ddpm_pretrained', 'lumiere_med_ddpm_pretrained', 'lumiere', 'inpainting_healthy_tissue', 'inpainting_tumorous_tissue', 'inpainting_spatio_temporal'], f"Invalid mode: {self.mode}."
     
         self.print_length = 25
         L.seed_everything(42)
@@ -297,6 +297,14 @@ class DataSet(Dataset):
                     self.samples.append((patient_id, modality))
         elif self.mode in ['baseline', 'med_ddpm_pretrained']:
             self.samples = self.patients
+        elif self.mode == 'lumiere_med_ddpm_pretrained':
+            self.samples = []
+            self.dir_data = Path(str(self.dir_data) + '_lumiere')
+            for folder in sorted(self.dir_data.iterdir()):
+                if folder.is_dir() and not folder.name.startswith('.'):
+                    patient_id = f'{folder.name}/preop'
+                    self.samples.append(patient_id)
+            self.mode = 'med_ddpm_pretrained'
         elif self.mode == 'lumiere':
             self.samples = []
             self.dir_data = Path(str(self.dir_data) + '_lumiere')
@@ -428,7 +436,7 @@ class DataSet(Dataset):
             else:
                 raise NotImplementedError("Training without latents is not implemented.")
         
-        elif self.mode == 'validation':
+        elif self.mode in ['validation']:
             patient, modality = self.samples[idx]
 
             affine = self._get_affine(self._get_file_modality(patient, modality))
