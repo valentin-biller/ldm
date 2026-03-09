@@ -28,15 +28,19 @@ from f8d16_autoencoder import F8D16Autoencoder
 from TumorGrowthToolkit.FK import Solver
 
 
-dir_data_default = Path('/vol/miltank/users/bilv/data')
-dir_data_lumiere = Path('/vol/miltank/users/bilv/data_lumiere')
-dir_autoencoder = Path('/vol/miltank/users/bilv/ldm/autoencoder/checkpoints')
+dir_ = dir_current.parent.parent
+
+dir_data_default = dir_ / 'data'
+dir_data_lumiere = dir_ / 'data_lumiere'
+dir_autoencoder = dir_ / 'ldm' / 'autoencoder' / 'checkpoints'
 
 dir_temp = dir_current / 'temp' 
 dir_reconstructed = dir_temp / 'reconstructed'
 
-path_ae_latent = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent.pkl")
-path_ae_latent_patients = Path("/vol/miltank/users/bilv/ldm/autoencoder/ae_latent_patients.pkl")
+path_ae_latent = dir_ / 'ldm' / 'autoencoder' / 'ae_latent.pkl'
+path_ae_latent_patients = dir_ / 'ldm' / 'autoencoder' / 'ae_latent_patients.pkl'
+
+path_patients_val = dir_ / 'ldm' / 'utils' / '.patients_val.txt'
 
 
 models = {
@@ -164,7 +168,7 @@ def _pad(data):
     return torch.as_tensor(padded)  # 1, 256, 256, 160
 
 # patients val
-with open('/vol/miltank/users/bilv/ldm/utils/.patients_val.txt', "r") as f:
+with open(path_patients_val, "r") as f:
     patients_val = [line.strip() for line in f if line.strip()]
 
 

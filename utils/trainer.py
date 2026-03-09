@@ -192,7 +192,7 @@ class LatentDiffusion(L.LightningModule):
             device=self.device
         )
 
-        # inpainting
+        ### INPAINTING
         if latent_modality is not None and latent_mask is not None:
             latent_mask_np = latent_mask.cpu().numpy()
             dilated_mask_np = binary_dilation(latent_mask_np, iterations=1)
@@ -204,8 +204,9 @@ class LatentDiffusion(L.LightningModule):
         else:
             dilated_mask = None
             noise_gt = None
+        ### INPAINTING
 
-        # spatio_temporal
+        ### SPATIO TEMPORAL
         if spatio_temporal is not None:
             spatio_temporal_time_ddpm = spatio_temporal_steps  # 375
             spatio_temporal_time_flow_matching = spatio_temporal_steps  # 375
@@ -224,6 +225,7 @@ class LatentDiffusion(L.LightningModule):
                 sample_info = self.path.sample(t=t_start_timesteps, x_0=sample, x_1=temp)
                 sample = sample_info.x_t
                 t_start_timesteps = sample_info.t
+        ### SPATIO TEMPORAL
 
         if self.scheduler_ in ['ddpm', 'iddpm']:
             # Denoising loop

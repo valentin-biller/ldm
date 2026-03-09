@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=vb
-#SBATCH --output=/vol/miltank/users/bilv/ldm/slurm/%x-%A.out  ###/vol/miltank/users/bilv/master-thesis/models/ldm-diffusion/slurm/%x-%A.out
-#SBATCH --error=/vol/miltank/users/bilv/ldm/slurm/%x-%A.err  ###/vol/miltank/users/bilv/master-thesis/models/ldm-diffusion/slurm/%x-%A.err
+#SBATCH --output=/vol/miltank/users/bilv/ldm/slurm/%x-%A.out
+#SBATCH --error=/vol/miltank/users/bilv/ldm/slurm/%x-%A.err
 #SBATCH --mail-user=valentin.biller@tum.de
 #SBATCH --mail-type=ALL
 #SBATCH --partition=universe
@@ -15,7 +15,6 @@
 cd /vol/miltank/users/bilv/ldm
 
 /u/home/bilv/.local/bin/uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 1 --model dit --scheduler ddpm --mask_conditioning 64
-# /u/home/bilv/.local/bin/uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 5 --model unet --scheduler flow_matching --mask_conditioning 64
 
 ### ddpm ###
 ###  dit:  ddpm - mask:  64 / modality: yes - uv run /vol/miltank/users/bilv/ldm/train.py --mlflow_info_slot 1 --model dit --scheduler ddpm --mask_conditioning 64

@@ -3,8 +3,8 @@ from simple_slurm import Slurm
 slurm = Slurm(
     job_name='vb_ae',
     qos='mcml',
-    output='/dss/dsshome1/01/ge65mod2/valentin/master-thesis/master-thesis/models/ldm-autoencoder/slurm/%x-%A.out',
-    error='/dss/dsshome1/01/ge65mod2/valentin/master-thesis/master-thesis/models/ldm-autoencoder/slurm/%x-%A.err',
+    output='/slurm/%x-%A.out',
+    error='/slurm/%x-%A.err',
     partition='mcml-hgx-h100-94x4',
     time='2-0:00:00',
     nodes=1,
@@ -16,8 +16,8 @@ slurm = Slurm(
 )
 
 command = """
-cd /dss/dsshome1/01/ge65mod2/valentin/master-thesis/ldm
-uv run /dss/dsshome1/01/ge65mod2/valentin/master-thesis/ldm/autoencoder/training/train.py
+cd ...
+uv run ...
 """
 
 for i in range(3):

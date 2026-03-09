@@ -1,23 +1,47 @@
-# Latent Diffusion Model
+# Latent Generative Model for 3D Brain MRI Synthesis
 
-This repository contains a framework for training and evaluating a Latent Diffusion Model (LDM) on 3d brain imaging data.
+A framework for training and evaluating **Latent Flow Matching** and **Latent Diffusion Models** on 3D brain MRI data, with support for conditional synthesis, tumor inpainting and longitudinal generation.
 
-## Core Components
+> Paper: [arxiv.org/abs/2603.04058](https://arxiv.org/abs/2603.04058)
 
-- **Autoencoder Finetuning**: [`train_autoencoder.py`](/ldm/train_autoencoder.py)
-- **LDM Training**: [`train_diffusion.py`](/ldm/train_diffusion.py)
-- **LDM Inference**: [`inference_diffusion.py`](/ldm/inference_diffusion.py)
+---
 
-## Getting Started
+## Overview
 
-### Installation
+The model operates in two stages:
 
-This project uses `uv` for dependency management. Install dependencies with:
+1. **Autoencoder** — compresses 240×240×155 MRI volumes into compact latents (e.g. 4×64×64×40)
+2. **Latent Generative Model** — a UNet or DiT trained on latents, conditioned on tumour growth model and tissue segmentation
+
+Supported schedulers: `ddpm` · `flow_matching`
+
+---
+
+## Installation
 
 ```sh
 uv sync
 ```
 
-### Usage
+---
 
-The diffusion model can be trained from scratch or from a checkpoint. The evaluation script currently only supports the inpainting task.
+## Usage
+
+```sh
+uv run train.py
+  --model unet
+  --scheduler flow_matching
+```
+
+---
+
+## Project Structure
+
+```
+lgm/
+├── train.py               # Main Training Script
+├── utils/
+│   ├── data.py            # DataModule & Dataset
+│   └── trainer.py         # LightningModule
+└── autoencoder/           # Autoencoder
+```
