@@ -210,7 +210,7 @@ class DataModule(L.LightningDataModule):
     
         
     def _print_numbers(self, identifier, patients):
-        length = self.print_length - 5
+        length = self._print_width - 5
         print(f"{'Patients ' + identifier + ':':<{length}}{len(patients):>5}")
 
     def _count_prefixes(self, identifier, patients, prefixes):
@@ -221,8 +221,8 @@ class DataModule(L.LightningDataModule):
                     groups[prefix].append(patient)
                     break
         identifier_str = str(identifier)
-        side = (self.print_length - len(identifier_str) - 2) // 2
-        extra = (self.print_length - len(identifier_str) - 2) % 2
+        side = (self._print_width - len(identifier_str) - 2) // 2
+        extra = (self._print_width - len(identifier_str) - 2) % 2
         print(f"{'=' * (side + extra)} {identifier_str} {'=' * side}")
         for prefix in prefixes:
             count = len(groups[prefix])
